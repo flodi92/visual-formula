@@ -1,27 +1,14 @@
 import { ID } from "../types";
 import GAbstractRoot from "../expression/gExpression/GAbstractRoot";
 
-export abstract class Configuration {
-    private _id: number;
-    private _badPreference: number;
-
-    public get id(): number {
-        return this._id;
-    }
-    public set id(value: number) {
-        this._id = value;
-    }
-
-    public get badPreference(): number {
-        return this._badPreference;
-    }
-    public set badPreference(value: number) {
-        this._badPreference = value;
-    }
+export class Configuration {
+    public constructor(
+        public readonly id: ID,
+        public readonly badPreference: number) { }
 }
 
 export interface AutoAdaption<ConfigurationT extends Configuration> {
-    root: GAbstractRoot;
+    root?: GAbstractRoot;
     getAdaptedIds(): ID[];
     getPossibleConfigurations: (id: ID) => ConfigurationT[];
     applyConfiguration: (configuration: ConfigurationT) => void;

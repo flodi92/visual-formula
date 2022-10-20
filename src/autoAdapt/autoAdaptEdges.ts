@@ -8,44 +8,37 @@ import { find } from "../utils/expression";
 import { getGAbstractValueIds, isEdgePossible } from "../utils/gExpression";
 import { oppositeDirection } from "../utils/general";
 
-class EdgeConfiguration extends Configuration {
-    private _xEdge: XDirection;
-    private _yEdge: YDirection;
-    private _edge: Direction;
+abstract class EdgesConfiguration extends Configuration { }
 
-    public get xEdge(): XDirection {
-        return this._xEdge;
+class OneEdgeConfiguration extends EdgesConfiguration {
+    public constructor(id: ID, badPreference: number,
+        public readonly edge: Direction) {
+        super(id, badPreference);
     }
-    public set xEdge(value: XDirection) {
-        this._xEdge = value;
-    }
-    public get yEdge(): YDirection {
-        return this._yEdge;
-    }
-    public set yEdge(value: YDirection) {
-        this._yEdge = value;
-    }
-    public get edge(): Direction {
-        return this._edge;
-    }
-    public set edge(value: Direction) {
-        this._edge = value;
+
+}
+class TwoEdgesConfiguration extends EdgesConfiguration {
+    public constructor(id: ID, badPreference: number,
+        public readonly xEdge: YDirection,
+        public readonly yEdge: XDirection) {
+        super(id, badPreference);
     }
 }
 
-class AutoEdgeAdaption implements AutoAdaption<EdgeConfiguration> {
-    private _root: GAbstractRoot;
-    public get root(): GAbstractRoot {
+class AutoEdgeAdaption implements AutoAdaption<EdgesConfiguration> {
+    private _root?: GAbstractRoot;
+    public get root(): GAbstractRoot | undefined {
         return this._root;
     }
-    public set root(value: GAbstractRoot) {
+    public set root(value: GAbstractRoot | undefined) {
         this._root = value;
     }
     getAdaptedIds(): ID[] {
-        return getGAbstractValueIds(this.root);
+        return this.root ? getGAbstractValueIds(this.root) : [];
     }
     getPossibleConfigurations(id: ID) {
-        let buffer: EdgeConfiguration[] = []
+        let buffer: EdgesConfiguration[] = []
+        if (!this._root) return []
 
         const expression = find(id, this._root);
         if (!expression) return [];
@@ -60,13 +53,10 @@ class AutoEdgeAdaption implements AutoAdaption<EdgeConfiguration> {
 
 
         if (expression instanceof GValue) {
-            possibleXdirections.forEach(xEdge =>
-                possibleYdirections.forEach(yEdge => {
-                    const config = new EdgeConfiguration();
-                    config.badPreference = 1; // TODO
-                    config.id = id;
-                    config.xEdge = xEdge;
-                    config.yEdge = yEdge;
+            possibleYdirections.forEach(xEdge =>
+                possibleXdirections.forEach(yEdge => {
+                    const badPreference = 1; // TODO
+                    const config = new TwoEdgesConfiguration(id, badPreference, xEdge, yEdge);
                     buffer.push(config)
                 }
                 )
@@ -74,10 +64,8 @@ class AutoEdgeAdaption implements AutoAdaption<EdgeConfiguration> {
 
         } else if (expression instanceof GSimpleValue) {
             [...possibleXdirections, ...possibleYdirections].forEach(edge => {
-                const config = new EdgeConfiguration();
-                config.badPreference = 1; // TODO
-                config.id = id;
-                config.edge = edge;
+                const badPreference = 1; // TODO
+                const config = new OneEdgeConfiguration(id, badPreference, edge);
                 buffer.push(config)
             }
             )
@@ -85,7 +73,9 @@ class AutoEdgeAdaption implements AutoAdaption<EdgeConfiguration> {
 
         return buffer;
     }
-    applyConfiguration(configuration: EdgeConfiguration) {
+    applyConfiguration(configuration: EdgesConfiguration) {
+        if (!this._root) return;
+
         const expression = find(configuration.id, this._root) as GExpression;
         if (!expression) return null;
 
@@ -95,13 +85,15 @@ class AutoEdgeAdaption implements AutoAdaption<EdgeConfiguration> {
             // expression.yEdge = configuration.yEdge;
         }
         else if (expression instanceof GSimpleValue) {
-            expression.edge = configuration.edge;
+            expression.edge = (configuration as OneEdgeConfiguration).edge;
         }
     };
-    applyConfigurations(configurations: EdgeConfiguration[]) {
+    applyConfigurations(configurations: EdgesConfiguration[]) {
         configurations.map(configuration => this.applyConfiguration(configuration));
     };
-    resetConfiguration(configuration: EdgeConfiguration) {
+    resetConfiguration(configuration: EdgesConfiguration) {
+        if (!this._root) return;
+
         const expression = find(configuration.id, this._root) as GExpression;
         if (!expression) return null;
 
@@ -113,7 +105,7 @@ class AutoEdgeAdaption implements AutoAdaption<EdgeConfiguration> {
             expression.edge = undefined;
         }
     };
-    resetConfigurations(configurations: EdgeConfiguration[]) {
+    resetConfigurations(configurations: EdgesConfiguration[]) {
         configurations.map(configuration => this.resetConfiguration(configuration));
     };
 }
