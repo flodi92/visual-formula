@@ -6,11 +6,11 @@ export default class MValue extends MExpression {
         return [];
     }
 
-    private _mValue: string;
-    public get mValue(): string {
+    private _mValue?: string | undefined;
+    public get mValue(): string | undefined {
         return this._mValue;
     }
-    public set mValue(value: string) {
+    public set mValue(value: string | undefined) {
         this._mValue = value;
     }
 }

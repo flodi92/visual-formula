@@ -1,6 +1,6 @@
 import Expression from "../Expression";
 import { getWidths, getHeights, } from "../../utils/gExpression";
-import { DEFAULT_TRANSFORMATION, Transformation } from "../../types";
+import { DEFAULT_TRANSFORMATION, Transformation, TypeInParent } from "../../types";
 import GEquation from "./GEquation";
 
 export default abstract class GExpression extends Expression {
@@ -46,7 +46,8 @@ export default abstract class GExpression extends Expression {
 
     get unscaledX(): number {
         if (!this.typeInParent) return 0;
-        const [getLefts, getOfParentX] = {
+
+        const [getLefts, getOfParentX] = this.typeInParent ? {
             gSummand: ["getLeftSummands", "unscaledX"],
             gMinuend: [null, "gMinuendX"],
             gSubtrahend: [null, "gSubtrahendX"],
@@ -62,8 +63,17 @@ export default abstract class GExpression extends Expression {
             gTerm2: [null, null],
             gTerm: [null, null],
             mValue: [null, null],
-            mSimpleValue: [null, null],
-        }[this.typeInParent] || [undefined, undefined]
+            mSimpleValue:[null, null],
+            mSummand: [null, null],
+            mMinuend: [null, null],
+            mSubtrahend: [null, null],
+            mFactor: [null, null],
+            mDivident: [null, null],
+            mDivisor: [null, null],
+            mTerm1: [null, null],
+            mTerm2: [null, null],
+            mTerm: [null, null],
+        }[this.typeInParent as TypeInParent] : [undefined, undefined]
         const parent = this?.parent as Expression;
 
         const dX = getLefts ? getWidths(parent[getLefts](this)).map((prev, val) => prev + val, 0) : 0;
@@ -72,7 +82,8 @@ export default abstract class GExpression extends Expression {
     }
     get unscaledY(): number {
         if (!this.typeInParent) return 0;
-        const [getTops, getOfParentY] = {
+
+        const [getTops, getOfParentY] = this.typeInParent ? {
             gSummand: ["getRightSummands", "unscaledY"],
             gMinuend: [null, "gMinuendY"],
             gSubtrahend: [null, "gSubtrahendY"],
@@ -88,8 +99,18 @@ export default abstract class GExpression extends Expression {
             gTerm2: [null, null],
             gTerm: [null, null],
             mValue: [null, null],
-            mSimpleValue: [null, null],
-        }[this.typeInParent] || [undefined, undefined]
+            mSimpleValue:[null, null],
+            mSummand: [null, null],
+            mMinuend: [null, null],
+            mSubtrahend: [null, null],
+            mFactor: [null, null],
+            mDivident: [null, null],
+            mDivisor: [null, null],
+            mTerm1: [null, null],
+            mTerm2: [null, null],
+            mTerm: [null, null],
+        }[this.typeInParent as TypeInParent] : [undefined, undefined]
+        
         const parent = this?.parent as Expression;
 
         const dY = getTops ? getHeights(parent[getTops](this)).map((prev, val) => prev + val, 0) : 0;

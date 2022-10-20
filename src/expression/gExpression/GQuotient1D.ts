@@ -49,19 +49,26 @@ export default class GQuotient extends GAbstractDirectedExpression {
         return this.unscaledWidth + dy;
     }
     public get gSimpleDivisorX(): number {
+
         const dx =
-            {
-                left: -(this.gSimpleDivisor?.unscaledWidth || 0),
-                right: this.unscaledWidth || 0,
-            }[this.startDirection] || 0;
+            this.startDirection ?
+                {
+                    left: -(this.gSimpleDivisor?.unscaledWidth || 0),
+                    right: this.unscaledWidth || 0,
+                    top: 0,
+                    bottom: 0,
+                }[this.startDirection] : 0;
         return this.unscaledWidth + dx;
     }
     public get gSimpleDivisorY(): number {
         const dy =
-            {
-                top: -(this.gSimpleDivisor?.unscaledHeight || 0),
-                bottom: this.unscaledHeight || 0,
-            }[this.startDirection] || 0;
+            this.startDirection ?
+                {
+                    top: -(this.gSimpleDivisor?.unscaledHeight || 0),
+                    bottom: this.unscaledHeight || 0,
+                    left: 0,
+                    right: 0
+                }[this.startDirection] : 0;
         return this.unscaledHeight + dy;
     }
 }

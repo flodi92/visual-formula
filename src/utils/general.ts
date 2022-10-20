@@ -7,7 +7,7 @@ export const oppositeDirection = (direction?: Direction) => direction && ({
     bottom: 'top'
 }[direction]) as Direction | undefined
 
-export const directionToXY = (direction: Direction) => ({
+export const directionToXY = (direction?: Direction) => (direction && {
     left: 'X',
     right: 'X',
     top: 'Y',

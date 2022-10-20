@@ -50,7 +50,7 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 0) => {
         return str;
     };
 
-    const _getMExpressionFromString = (str = "", id: ID) => {
+    const _getMExpressionFromString = (str = "", id: ID): MExpression => {
         str = _removeBracketTrim(str);
 
         let [positions, type] = [_getOperatorPositions(str, "="), "MEquation"];
@@ -82,7 +82,7 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 0) => {
                 (expression as MDifference).mSubtrahend = children[1];
             } else if (type === "MProduct") {
                 expression = new MProduct();
-                (expression as MProduct).mFactor = children;
+                (expression as MProduct).mFactors = children;
             } else if (type === "MQuotient") {
                 expression = new MQuotient();
                 (expression as MQuotient).mDivident = children[0];
@@ -180,9 +180,9 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 0) => {
     return expression;
 }
 
-const getJSONFromExpression = (expression?: Expression) => {
+const getJSONFromExpression = (expression?: Expression): object | undefined | string => {
 
-    if (!expression) return null;
+    if (!expression) return undefined;
     else if (expression instanceof GEquation) {
         return {
             type: 'GEquation',
@@ -253,7 +253,7 @@ const getJSONFromExpression = (expression?: Expression) => {
         }
     }
     else if (expression instanceof MSum) {
-        return `(${expression.mSummands?.map(mSummand => getJSONFromExpression(mSummand)).join('+')})` ;
+        return `(${expression.mSummands?.map(mSummand => getJSONFromExpression(mSummand)).join('+')})`;
     }
     else if (expression instanceof MDifference) {
         return `(${expression.mMinuend}-${expression.mSubtrahend})`

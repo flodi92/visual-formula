@@ -6,11 +6,11 @@ export default class GValue extends GAbstractValue {
     protected childrenTypesInParentDefinition(): TypeInParent[] {
         return ['mValue']
     }
-    private _unscaledWidth: number;
-    private _unscaledHeight: number;
+    private _unscaledWidth?: number | undefined;
+    private _unscaledHeight?: number | undefined;
 
-    private _xEdge?: YDirection | undefined;
-    private _yEdge?: XDirection | undefined;
+    private _xEdge?: YDirection;
+    private _yEdge?: XDirection;
 
 
     public get mValue() {
@@ -19,17 +19,17 @@ export default class GValue extends GAbstractValue {
     public set mValue(child: MExpression | undefined) {
         super.setChild('mValue', child);
     }
-    set unscaledWidth(value: number) {
+    set unscaledWidth(value: number | undefined) {
         this._unscaledWidth = value;
     }
     get unscaledWidth(): number {
-        return this._unscaledWidth;
+        return this._unscaledWidth || 0;
     }
-    set unscaledHeight(value: number) {
+    set unscaledHeight(value: number | undefined) {
         this._unscaledHeight = value;
     }
     get unscaledHeight(): number {
-        return this._unscaledHeight;
+        return this._unscaledHeight || 0;
     }
 
     public get isNormX(): boolean {

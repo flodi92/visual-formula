@@ -10,7 +10,7 @@ export default class GSum extends GAbstractDirectedExpression {
         return "gSummand"
     }
     public get gSummands() {
-        return super.children as GExpression[] | undefined;
+        return this.children as GExpression[] | undefined;
     }
     public set gSummands(vals: GExpression[] | undefined) {
         super.setChildren(vals, 'gSummand');

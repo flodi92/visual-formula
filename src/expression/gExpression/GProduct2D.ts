@@ -7,9 +7,9 @@ export default class GProduct2D extends GAbstractDirectedExpression {
         return ['gFactorX', 'gFactorY']
     }
 
-    private _xEdge: YDirection;
-    private _yEdge: XDirection;
-
+    private _xEdge?: YDirection | undefined;
+    private _yEdge?: XDirection | undefined;
+    
     public get gFactorX() {
         return super.getChild('gFactorX') as GExpression | undefined;
     }
@@ -22,17 +22,17 @@ export default class GProduct2D extends GAbstractDirectedExpression {
     public set gFactorY(child: GExpression | undefined) {
         super.setChild('gFactorY', child);
     }
-
-    public get xEdge(): YDirection {
+    
+    public get xEdge(): YDirection | undefined {
         return this._xEdge;
     }
-    public set xEdge(value: YDirection) {
+    public set xEdge(value: YDirection | undefined) {
         this._xEdge = value;
     }
-    public get yEdge(): XDirection {
+    public get yEdge(): XDirection | undefined {
         return this._yEdge;
     }
-    public set yEdge(value: XDirection) {
+    public set yEdge(value: XDirection | undefined) {
         this._yEdge = value;
     }
 

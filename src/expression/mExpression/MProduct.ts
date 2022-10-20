@@ -6,7 +6,7 @@ export default class MProduct extends MExpression {
         return 'mFactor';
     }
     public get mFactors() {
-        return super.children as MExpression[] | undefined;
+        return this.children as MExpression[] | undefined;
     }
     public set mFactors(vals: MExpression[] | undefined) {
         super.setChildren(vals, 'mFactor');

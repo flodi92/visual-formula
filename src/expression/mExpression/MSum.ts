@@ -6,7 +6,7 @@ export default class MSum extends MExpression {
         return 'mSummand';
     }
     public get mSummands() {
-        return super.children as MExpression[] | undefined;
+        return this.children as MExpression[] | undefined;
     }
     public set mSummands(vals: MExpression[] | undefined) {
         super.setChildren(vals, 'mSummand');

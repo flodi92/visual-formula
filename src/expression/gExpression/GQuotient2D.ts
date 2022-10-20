@@ -8,9 +8,9 @@ export default class GQuotient2D extends GAbstractDirectedExpression {
         return ['gDivident', 'gDivisor']
     }
 
-    private _divisorEdge: Direction;
-    private _resultEdge: Direction;
-
+    private _divisorEdge?: Direction | undefined;
+    private _resultEdge?: Direction | undefined;
+    
     public get gDivident() {
         return super.getChild('gDivident') as GExpression | undefined;
     }
@@ -23,17 +23,17 @@ export default class GQuotient2D extends GAbstractDirectedExpression {
     public set gDivisor(child: GExpression | undefined) {
         super.setChild('gDivisor', child);
     }
-
-    public get divisorEdge(): Direction {
+    
+    public get divisorEdge(): Direction | undefined {
         return this._divisorEdge;
     }
-    public set divisorEdge(value: Direction) {
+    public set divisorEdge(value: Direction | undefined) {
         this._divisorEdge = value;
     }
-    public get resultEdge(): Direction {
+    public get resultEdge(): Direction | undefined {
         return this._resultEdge;
     }
-    public set resultEdge(value: Direction) {
+    public set resultEdge(value: Direction | undefined) {
         this._resultEdge = value;
     }
 
