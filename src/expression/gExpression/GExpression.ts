@@ -76,7 +76,9 @@ export default abstract class GExpression extends Expression {
         }[this.typeInParent as TypeInParent] : [undefined, undefined]
         const parent = this?.parent as Expression;
 
-        const dX = getLefts ? getWidths(parent[getLefts](this)).map((prev, val) => prev + val, 0) : 0;
+        // @ts-ignore
+        const dX = getLefts ? getWidths(parent[getLefts](this)).reduce((prev, val) => prev + val, 0) : 0;
+        // @ts-ignore
         const dWidth = getOfParentX ? parent[getOfParentX] : 0;
         return dX + dWidth;
     }
@@ -113,7 +115,9 @@ export default abstract class GExpression extends Expression {
         
         const parent = this?.parent as Expression;
 
-        const dY = getTops ? getHeights(parent[getTops](this)).map((prev, val) => prev + val, 0) : 0;
+        // @ts-ignore
+        const dY = getTops ? getHeights(parent[getTops](this)).reduce((prev, val) => prev + val, 0) : 0;
+        // @ts-ignore
         const dHeight = getOfParentY ? parent[getOfParentY] : 0;
         return dY + dHeight;
     }
