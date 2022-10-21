@@ -14,7 +14,7 @@ export const directionToXY = (direction?: Direction) => (direction && {
     bottom: 'Y'
 }[direction]) as XY;
 
-export const getOtherXY = (direction: XY) => ({
+export const getOtherXY = (direction?: XY) => (direction && {
     Y: 'X',
     X: 'Y',
 }[direction]) as XY;
@@ -27,5 +27,5 @@ export const directionToNumber = (val: Direction) =>
     left: 3,
 }[val]);
 
-export const isOrthogonal = (a: Direction, b: Direction) =>
-    directionToNumber(a) % 2 !== directionToNumber(b) % 2;
+export const isOrthogonal = (a?: Direction, b?: Direction) =>
+    a && b && directionToNumber(a) % 2 !== directionToNumber(b) % 2;

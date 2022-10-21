@@ -11,13 +11,10 @@ import GTerm from "../../expression/gExpression/GTerm";
 
 import { isOrthogonal, oppositeDirection } from "../general";
 import { Direction, CommonEdgeValue } from "../../types";
-
-import {
-    flatten, first, last
-} from 'lodash';
+import { first, flatten, last } from "lodash";
 
 export const getCommonEdgeValues = (expression: GExpression, direction: Direction): CommonEdgeValue[] => {
-    const _testDownward = (expression: GExpression | undefined, direction: Direction, orthDirection?: Direction): CommonEdgeValue[] => {
+    const _testDownward = (expression: GExpression | undefined, direction?: Direction, orthDirection?: Direction): CommonEdgeValue[] => {
         if (!expression) return [];
 
         const parent = expression.parent;
@@ -154,7 +151,7 @@ export const getCommonEdgeValues = (expression: GExpression, direction: Directio
             }
         }
         else if (parent instanceof GEquation) {
-            let otherTerm = typeInParent === "gTerm1" ? "term2" : "gTerm1";
+            let otherTerm = (typeInParent === "gTerm1" ? "term2" : "gTerm1") as ('gTerm1' | 'gTerm2');
             return _testUpward(parent[otherTerm], direction, orthDirection);
         }
         else if (parent instanceof GTerm) {
@@ -162,8 +159,8 @@ export const getCommonEdgeValues = (expression: GExpression, direction: Directio
         }
         return []
     }
-    const _testUpward = (expression: GExpression | undefined, direction: Direction, orthDirection?: Direction): CommonEdgeValue[] => {
-        if (!expression) return [];
+    const _testUpward = (expression: GExpression | undefined, direction?: Direction, orthDirection?: Direction): CommonEdgeValue[] => {
+        if (!expression || !direction) return [];
         if (expression instanceof GAbstractValue) { return [{ gValue: expression, direction }] }
         else if (expression instanceof GSum) {
             if (expression.startDirection === direction) {

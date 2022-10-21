@@ -14,7 +14,7 @@ import {
     flatten,
 } from 'lodash';
 
- const getNeighbours = (expression: GExpression | undefined, xy: XY) => {
+const getNeighbours = (expression: GExpression | undefined, xy: XY) => {
     const _getNeighbours = (expression: GExpression | undefined, visited = Array<number>()) => {
         if (!expression?.id || visited.includes(expression.id)) return [];
         visited.push(expression.id);
@@ -42,7 +42,7 @@ import {
             }
         } else if (expression instanceof GProduct2D) {
             buffer.push(
-                ..._getNeighbours(expression[`factor${getOtherXY(xy)}`](), visited)
+                ..._getNeighbours(xy === 'X' ? expression.gFactorY : expression.gFactorX, visited)
             );
             isCheckParent = false;
         } else if (expression instanceof GEquation) {

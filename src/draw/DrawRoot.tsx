@@ -17,11 +17,11 @@ const HIDDEN_STROKE_WIDTH = 1;
 
 
 class DrawValue {
-  private _gaValue: GAbstractValue;
-  public get gaValue(): GAbstractValue {
+  private _gaValue?: GAbstractValue | undefined;
+  public get gaValue(): GAbstractValue | undefined {
     return this._gaValue;
   }
-  public set gaValue(value: GAbstractValue) {
+  public set gaValue(value: GAbstractValue | undefined) {
     this._gaValue = value;
   }
 
@@ -30,6 +30,7 @@ class DrawValue {
   }
 
   private renderGValue(gValue: GValue): ReactNode {
+    if (!this.gaValue) return <></>
     const { x, y, width, height } = this.gaValue
     const edges = [gValue.xEdge, gValue.yEdge].filter(edge => !!edge) as Direction[];
 
