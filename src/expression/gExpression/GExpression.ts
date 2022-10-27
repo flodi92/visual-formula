@@ -59,16 +59,18 @@ export default abstract class GExpression extends Expression {
     }
 
     public get unscaledX(): number {
-        const lefts = (this.parent as GExpression)?.getLefts(this);
+        if (!this.parent) return 0;
+        const lefts = (this.parent as GExpression).getLefts(this);
         const dx = lefts && getWidths(lefts).reduce((prev, val) => prev + val, 0);
-        const x = this.typeInParent && this.getOfParentX(this.typeInParent);
+        const x = this.typeInParent && (this.parent as GExpression).getOfParentX(this.typeInParent);
         return x && dx ? x + dx : 0;
 
     }
     public get unscaledY(): number {
-        const tops = (this.parent as GExpression)?.getTops(this);
+        if (!this.parent) return 0;
+        const tops = (this.parent as GExpression).getTops(this);
         const dy = tops && getHeights(tops).reduce((prev, val) => prev + val, 0);
-        const y = this.typeInParent && this.getOfParentY(this.typeInParent);
+        const y = this.typeInParent && (this.parent as GExpression).getOfParentY(this.typeInParent);
         return y && dy ? y + dy : 0;
     }
 
