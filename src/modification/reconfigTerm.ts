@@ -4,8 +4,10 @@ import {
   GExpression,
   GAbstractDirectedExpression,
   GAbstractValue,
+  GValue,
+  GSimpleValue,
 } from "../expression/gExpression";
-import { ID, XDirection, XY, YDirection } from "../types";
+import { Direction, XDirection, YDirection, ID, XY } from "../types";
 import { find } from "../utils/expression";
 import { oppositeDirection, getRotatedDirection, getSwappedDirection } from "../utils/general";
 
@@ -82,8 +84,9 @@ export const rotate = ({ expression, id, isClockwise }:
 };
 
 export const reverse = ({ expression, id, xy }:
-  { expression?: GExpression, id?: ID, xy: XY }) => {
-  const _reverse = (expression: GExpression): boolean => {
+  { expression?: GExpression, id?: ID, xy?: XY }) => {
+  if (!xy) return false;
+  const _reverse = (expression: GExpression): boolean => {    
     if (!expression) return false;
     else if (expression instanceof GAbstractDirectedExpression) {
       expression.startDirection = oppositeDirection(expression.startDirection, xy);
@@ -96,11 +99,15 @@ export const reverse = ({ expression, id, xy }:
       [expression.divisorEdge, expression.resultEdge] = [
         oppositeDirection(expression.divisorEdge, xy),
         oppositeDirection(expression.resultEdge, xy)];
-    } else if (expression instanceof GAbstractValue) {
-      /* nothing */
-    } else {
-      return false;
+    } else if (expression instanceof GValue) {
+      [expression.xEdge, expression.yEdge] = [
+        oppositeDirection(expression.xEdge, xy) as YDirection | undefined,
+        oppositeDirection(expression.yEdge, xy) as XDirection | undefined,
+      ];
+    } else if (expression instanceof GSimpleValue) {
+      expression.edge = oppositeDirection(expression.edge, xy) as Direction | undefined;
     }
+
     return (expression.children)?.reduce((prev, child) => {
       if (!!child && child instanceof GExpression)
         return prev && _reverse(child)
