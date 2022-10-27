@@ -2,7 +2,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { TestGValue } from './TestGValue';
 
 export default {
-  title: 'Example/TestGValue',
+  title: 'GExpression-Render/TestGValue',
   component: TestGValue,
   argTypes: {},
 } as ComponentMeta<typeof TestGValue>;
