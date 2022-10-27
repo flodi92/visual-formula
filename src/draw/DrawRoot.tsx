@@ -6,13 +6,13 @@ import GAbstractValue from "../expression/gExpression/GAbstractValue";
 import GSimpleValue from '../expression/gExpression/GSimpleValue';
 import GValue from '../expression/gExpression/GValue';
 
-import { zip, isEqual } from 'lodash';
-import { Direction, ID } from '../types';
+import { zip } from 'lodash';
+import { ID } from '../types';
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
 import { getGAbstractValueIds, getGAbstractValues } from '../utils/gExpression';
 
 const STANDARD_STROKE_WIDHT = 1;
-const HIDDEN_STROKE_WIDTH = 1;
+// const HIDDEN_STROKE_WIDTH = 1;
 
 class DrawValue {
   private _gaValue?: GAbstractValue | undefined;
@@ -78,6 +78,7 @@ class DrawValue {
           id={`path-${this.gaValue.id}`}
           key={`path-${this.gaValue.id}`}
           d={d} strokeWidth={STANDARD_STROKE_WIDHT}
+          stroke="red"
           fill="none" />
       );
 
@@ -146,7 +147,7 @@ class DrawValue {
 }
 
 
-const DrawRoot = ({ root }: { root: GAbstractRoot }) => {
+const DrawRoot = ({ root, style }: { root: GAbstractRoot, style: any }) => {
 
   const [drawValues, setDrawValues] = useState<DrawValue[]>([]);
 
@@ -167,9 +168,10 @@ const DrawRoot = ({ root }: { root: GAbstractRoot }) => {
     })
 
     setDrawValues(_drawValues);
+    // eslint-disable-next-line
   }, [root]);
 
-  return <svg>{drawValues.map(drawValue => drawValue.render())}</svg>
+  return <svg {...{ style }}>{drawValues.map(drawValue => drawValue.render())}</svg>
 
 }
 
