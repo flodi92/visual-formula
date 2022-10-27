@@ -1,7 +1,6 @@
 import Expression from "../Expression";
 import { getWidths, getHeights, } from "../../utils/gExpression";
 import { DEFAULT_TRANSFORMATION, Transformation, TypeInParent } from "../../types";
-import GEquation from "./GEquation";
 
 export default abstract class GExpression extends Expression {
     public get x(): number {
@@ -24,22 +23,9 @@ export default abstract class GExpression extends Expression {
     }
 
     public get layerTransformation(): Transformation {
-        if (!(this.parent instanceof GEquation) || !this.parent.gTerm1 || !this.parent.gTerm2) return DEFAULT_TRANSFORMATION;
-
-        const [gTerm1, gTerm2] = [this.parent.gTerm1, this.parent.gTerm2];
-        const [x, y] = [gTerm1?.unscaledX, gTerm1?.unscaledY]
-
-        let scaleX: number, scaleY: number;
-        if (this === gTerm1) {
-            scaleX = (gTerm1.unscaledWidth < gTerm2.unscaledWidth) ? 1 : gTerm2.unscaledWidth / gTerm1.unscaledWidth
-            scaleY = (gTerm1.unscaledHeight < gTerm2.unscaledHeight) ? 1 : gTerm2.unscaledHeight / gTerm1.unscaledHeight
-        } else { // if (this === gTerm2)
-            scaleX = (gTerm2.unscaledWidth < gTerm1.unscaledWidth) ? 1 : gTerm1.unscaledWidth / gTerm2.unscaledWidth
-            scaleY = (gTerm2.unscaledHeight < gTerm1.unscaledHeight) ? 1 : gTerm1.unscaledHeight / gTerm2.unscaledHeight
-        }
-
-        return { x, y, scaleX, scaleY }
+        return this.getLayerTransformationOfTerm(this.typeInParent);
     }
+
 
     abstract get unscaledWidth(): number;
     abstract get unscaledHeight(): number;
@@ -56,6 +42,10 @@ export default abstract class GExpression extends Expression {
     }
     protected getOfParentY(askingType: TypeInParent): number | undefined {
         return undefined;
+    }
+
+    protected getLayerTransformationOfTerm(askingType?: TypeInParent): Transformation {
+        return DEFAULT_TRANSFORMATION;
     }
 
     public get unscaledX(): number {
