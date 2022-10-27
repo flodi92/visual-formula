@@ -86,56 +86,27 @@ class DrawValue {
   }
 
   private renderGSimpleValue(gValue: GSimpleValue): ReactNode {
+    if (!this.gaValue) return <></>
+    const { x, y, width, height } = this.gaValue;
+    const edge = gValue.edge;
 
+    const [x1, y1, x2, y2] =
+      edge === "top" ? [x, y, x + width, y]
+        : edge === "left" ? [x, y, x, y + height]
+          : edge === "bottom" ? [x, y + height, x + width, y + height]
+            : edge === "right" ? [x + width, y, x + width, y + height]
+              : []
 
-
-    // const edge = gValue.edge();
-
-    // const { x1, y1, x2, y2 } = getEdgeCoordinates({
-    //   edge,
-    //   x,
-    //   y,
-    //   width,
-    //   height,
-    // });
-
-    // const d = `M${x1} ${y1} L ${x2} ${y2}`;
-
-    // positioning = {
-    //   left: { top: "50%", left: 0 },
-    //   right: { top: "50%", right: 0 },
-    //   top: { left: "50%", top: 0 },
-    //   bottom: { left: "50%", bottom: 0 },
-    // }[gValue.edge()];
-
-    // const [cx, cy] = {
-    //   top: [x1, y1],
-    //   left: [x1, y1],
-    //   bottom: [x2, y2],
-    //   right: [x2, y2],
-    // }[gValue.parent()?.startDirection()];
-
-    // path = (
-    //   <>
-    //     <circle cx={cx} cy={cy} r={13} />
-    //     <path
-    //       d={d}
-    //       strokeWidth={STANDARD_STROKE_WIDHT}
-    //       strokeDasharray={"5,5"}
-    //       fill="none"
-    //     />
-    //     <path
-    //       d={d}
-    //       className="transparent"
-    //       strokeWidth={HIDDEN_STROKE_WIDTH}
-    //     />
-    //   </>
-    // );
-
-
-
-
-    return <></>
+    const d = `M${x1} ${y1} L ${x2} ${y2}`;
+    return (
+      <path
+        id={`path-${this.gaValue.id}`}
+        key={`path-${this.gaValue.id}`}
+        d={d} strokeWidth={STANDARD_STROKE_WIDHT}
+        stroke="red"
+        strokeDasharray={"5,5"}
+        fill="none" />
+    );
   }
 
   public render(): ReactNode {

@@ -6,6 +6,8 @@ export default class GSimpleValue extends GAbstractValue {
     protected childrenTypesInParentDefinition(): TypeInParent[] {
         return ['mSimpleValue']
     }
+    private _unscaledWidth?: number | undefined;
+    private _unscaledHeight?: number | undefined;
 
     private _edge?: Direction | undefined;
 
@@ -15,17 +17,23 @@ export default class GSimpleValue extends GAbstractValue {
     public set edge(value: Direction | undefined) {
         this._edge = value;
     }
-    
+
     public get mSimpleValue() {
         return super.getChild('mSimpleValue') as MExpression | undefined;
     }
     public set mSimpleValue(child: MExpression | undefined) {
         super.setChild('mSimpleValue', child);
     }
+    set unscaledWidth(value: number | undefined) {
+        this._unscaledWidth = value;
+    }
     get unscaledWidth(): number {
-        throw new Error("Method not implemented.");
+        return this._unscaledWidth || 0;
+    }
+    set unscaledHeight(value: number | undefined) {
+        this._unscaledHeight = value;
     }
     get unscaledHeight(): number {
-        throw new Error("Method not implemented.");
+        return this._unscaledHeight || 0;
     }
 }
