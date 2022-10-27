@@ -9,22 +9,22 @@ import getNeighbours from "./getNeighbours";
 import getCommonEdgeValues from "./getCommonEdgeValues";
 import isEdgePossible from "./isEdgePossible";
 
-export const getWidths = (expressions: GExpression[]) => expressions.map(_expression => _expression?.unscaledWidth || 0) || [];
-export const getHeights = (expressions: GExpression[]) => expressions.map(_expression => _expression?.unscaledHeight || 0) || [];
+const getWidths = (expressions: GExpression[]) => expressions.map(_expression => _expression?.unscaledWidth || 0) || [];
+const getHeights = (expressions: GExpression[]) => expressions.map(_expression => _expression?.unscaledHeight || 0) || [];
 
-export const getFixedWidthOfNeighbour = (gValue: GValue) => {
+const getFixedWidthOfNeighbour = (gValue: GValue) => {
     const neighbours = getNeighbours(gValue, 'Y');
     const normedNeighbour = neighbours.find(neighbour => neighbour.isNormY); // TODO expecting all neighbours of same height
     return normedNeighbour?.width
 }
 
-export const getFixedHeightOfNeighbour = (gValue: GValue) => {
+const getFixedHeightOfNeighbour = (gValue: GValue) => {
     const neighbours = getNeighbours(gValue, 'X');
     const normedNeighbour = neighbours.find(neighbour => neighbour.isNormX); // TODO expecting all neighbours of same height
     return normedNeighbour?.height
 }
 
-export const getGValues = (expression: GExpression): GValue[] => {
+const getGValues = (expression: GExpression): GValue[] => {
     if (expression instanceof GValue) return [expression];
     else if (expression instanceof GSimpleValue) {
         return []
@@ -34,7 +34,7 @@ export const getGValues = (expression: GExpression): GValue[] => {
     }
 }
 
-export const getGAbstractValues = (expression: GExpression): GAbstractValue[] => {
+const getGAbstractValues = (expression: GExpression): GAbstractValue[] => {
     if (expression instanceof GAbstractValue) {
         return !!expression ? [expression] : [];
     } else {
@@ -44,8 +44,19 @@ export const getGAbstractValues = (expression: GExpression): GAbstractValue[] =>
     }
 }
 
-export const getGAbstractValueIds = (expression: GExpression): ID[] => {
+const getGAbstractValueIds = (expression: GExpression): ID[] => {
     return getGAbstractValues(expression).map(gaValue => gaValue.id).filter(id => id !== undefined) as ID[]
 }
 
-export { getNeighbours, getCommonEdgeValues, isEdgePossible };
+export {
+    getWidths,
+    getHeights,
+    getFixedWidthOfNeighbour,
+    getFixedHeightOfNeighbour,
+    getGValues,
+    getGAbstractValues,
+    getGAbstractValueIds,
+    getNeighbours,
+    getCommonEdgeValues,
+    isEdgePossible
+};
