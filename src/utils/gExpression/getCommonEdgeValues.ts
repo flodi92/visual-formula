@@ -1,13 +1,15 @@
-import GExpression from "../../expression/gExpression/GExpression";
-import GEquation from "../../expression/gExpression/GEquation";
-import GAbstractValue from "../../expression/gExpression/GAbstractValue";
-import GProduct1D from "../../expression/gExpression/GProduct1D";
-import GQuotient1D from "../../expression/gExpression/GQuotient1D";
-import GProduct2D from "../../expression/gExpression/GProduct2D";
-import GQuotient2D from "../../expression/gExpression/GQuotient2D";
-import GSum from "../../expression/gExpression/GSum";
-import GDifference from "../../expression/gExpression/GDifference";
-import GTerm from "../../expression/gExpression/GTerm";
+import {
+    GExpression,
+    GEquation,
+    GAbstractValue,
+    GProduct1D,
+    GQuotient1D,
+    GProduct2D,
+    GQuotient2D,
+    GSum,
+    GDifference,
+    GTerm
+} from "../../expression/gExpression"
 
 import { isOrthogonal, oppositeDirection } from "../general";
 import { Direction, CommonEdgeValue } from "../../types";

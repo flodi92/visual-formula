@@ -1,7 +1,10 @@
-import GDifference from "../expression/gExpression/GDifference";
-import GExpression from "../expression/gExpression/GExpression";
-import GSum from "../expression/gExpression/GSum";
-import GValue from "../expression/gExpression/GValue";
+import {
+    GExpression,
+    GSum,
+    GDifference,
+    GValue,
+} from "../expression/gExpression"
+
 import { getFixedHeightOfNeighbour, getFixedWidthOfNeighbour, getGValues } from "../utils/gExpression";
 
 const autoConfigSize = (expression: GExpression) => {

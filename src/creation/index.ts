@@ -1,23 +1,28 @@
-import GAbstractRoot from "../expression/gExpression/GAbstractRoot";
-import GAbstractValue from "../expression/gExpression/GAbstractValue";
-import GExpression from "../expression/gExpression/GExpression";
-import GEquation from "../expression/gExpression/GEquation";
-import GAbstractDirectedExpression from "../expression/gExpression/GAbstractDirectedExpression";
-import GSum from "../expression/gExpression/GSum";
-import GDifference from "../expression/gExpression/GDifference";
-import GProduct1D from "../expression/gExpression/GProduct1D";
-import GProduct2D from "../expression/gExpression/GProduct2D";
-import GQuotient1D from "../expression/gExpression/GQuotient1D";
-import GQuotient2D from "../expression/gExpression/GQuotient2D";
-import GSimpleValue from "../expression/gExpression/GSimpleValue";
-import GTerm from "../expression/gExpression/GTerm";
-import GValue from "../expression/gExpression/GValue";
-import MEquation from "../expression/mExpression/MEquation";
-import MSum from "../expression/mExpression/MSum";
-import MDifference from "../expression/mExpression/MDifference";
-import MProduct from "../expression/mExpression/MProduct";
-import MQuotient from "../expression/mExpression/MQuotient";
-import MValue from "../expression/mExpression/MValue";
+import {
+    GAbstractRoot,
+    GAbstractValue,
+    GExpression,
+    GEquation,
+    GAbstractDirectedExpression,
+    GSum,
+    GDifference,
+    GProduct1D,
+    GProduct2D,
+    GQuotient1D,
+    GQuotient2D,
+    GSimpleValue,
+    GTerm,
+    GValue,
+} from "../expression/gExpression"
+import {
+    MEquation,
+    MSum,
+    MDifference,
+    MProduct,
+    MQuotient,
+    MValue,
+} from "../expression/mExpression"
+
 import { ID, Operator } from "../types";
 import MExpression from "../expression/mExpression/MExpression";
 import Expression from "../expression/Expression";
