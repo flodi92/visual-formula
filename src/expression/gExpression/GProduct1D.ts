@@ -59,4 +59,15 @@ export default class GProduct1D extends GAbstractDirectedExpression {
                 : 0;
         return this.unscaledY + dy;
     }
+
+    protected getOfParentX(askingType: TypeInParent): number | undefined {
+        return askingType === "gComplexFactor" ? this.gComplexFactorX
+            : askingType === "gSimpleFactor" ? this.gSimpleFactorX 
+            : undefined;
+    }
+    protected getOfParentY(askingType: TypeInParent): number | undefined {
+        return askingType === "gComplexFactor" ? this.gComplexFactorY
+        : askingType === "gSimpleFactor" ? this.gSimpleFactorY
+        : undefined;
+    }
 }

@@ -44,88 +44,38 @@ export default abstract class GExpression extends Expression {
     abstract get unscaledWidth(): number;
     abstract get unscaledHeight(): number;
 
-    get unscaledX(): number {
-        if (!this.typeInParent) return 0;
-
-        const [getLefts, getOfParentX] = this.typeInParent ? {
-            gSummand: ["getLeftSummands", "unscaledX"],
-            gMinuend: [null, "gMinuendX"],
-            gSubtrahend: [null, "gSubtrahendX"],
-            gFactorX: [null, 'gFactorXX'],
-            gFactorY: [null, 'gFactorYX'],
-            gComplexFactor: [null, 'gComplexFactorX'],
-            gSimpleFactor: [null, 'gSimpleFactorX'],
-            gDivident: [null, 'gDividentX'],
-            gDivisor: [null, 'gDivisorX'],
-            gComplexDivident: [null, 'gComplexDividentX'],
-            gSimpleDivisor: [null, 'gSimpleDivisorX'],
-            gTerm1: [null, null],
-            gTerm2: [null, null],
-            gTerm: [null, null],
-            mValue: [null, null],
-            mSimpleValue:[null, null],
-            mSummand: [null, null],
-            mMinuend: [null, null],
-            mSubtrahend: [null, null],
-            mFactor: [null, null],
-            mDivident: [null, null],
-            mDivisor: [null, null],
-            mTerm1: [null, null],
-            mTerm2: [null, null],
-            mTerm: [null, null],
-        }[this.typeInParent as TypeInParent] : [undefined, undefined]
-        const parent = this?.parent as Expression;
-
-        // @ts-ignore
-        const dX = getLefts ? getWidths(parent[getLefts](this)).reduce((prev, val) => prev + val, 0) : 0;
-        // @ts-ignore
-        const dWidth = getOfParentX ? parent[getOfParentX] : 0;
-        return dX + dWidth;
+    protected getLefts(askingExpression: GExpression): GExpression[] | undefined {
+        return undefined;
     }
-    get unscaledY(): number {
-        if (!this.typeInParent) return 0;
+    protected getTops(askingExpression: GExpression): GExpression[] | undefined {
+        return undefined;
+    }
 
-        const [getTops, getOfParentY] = this.typeInParent ? {
-            gSummand: ["getRightSummands", "unscaledY"],
-            gMinuend: [null, "gMinuendY"],
-            gSubtrahend: [null, "gSubtrahendY"],
-            gFactorX: [null, 'gFactorXY'],
-            gFactorY: [null, 'gFactorYY'],
-            gComplexFactor: [null, 'gComplexFactorY'],
-            gSimpleFactor: [null, 'gSimpleFactorY'],
-            gDivident: [null, 'gDividentY'],
-            gDivisor: [null, 'gDivisorY'],
-            gComplexDivident: [null, 'gComplexDividentY'],
-            gSimpleDivisor: [null, 'gSimpleDivisorY'],
-            gTerm1: [null, null],
-            gTerm2: [null, null],
-            gTerm: [null, null],
-            mValue: [null, null],
-            mSimpleValue:[null, null],
-            mSummand: [null, null],
-            mMinuend: [null, null],
-            mSubtrahend: [null, null],
-            mFactor: [null, null],
-            mDivident: [null, null],
-            mDivisor: [null, null],
-            mTerm1: [null, null],
-            mTerm2: [null, null],
-            mTerm: [null, null],
-        }[this.typeInParent as TypeInParent] : [undefined, undefined]
-        
-        const parent = this?.parent as Expression;
+    protected getOfParentX(askingType: TypeInParent): number | undefined {
+        return undefined;
+    }
+    protected getOfParentY(askingType: TypeInParent): number | undefined {
+        return undefined;
+    }
 
-        // @ts-ignore
-        const dY = getTops ? getHeights(parent[getTops](this)).reduce((prev, val) => prev + val, 0) : 0;
-        // @ts-ignore
-        const dHeight = getOfParentY ? parent[getOfParentY] : 0;
-        return dY + dHeight;
+    public get unscaledX(): number {
+        const lefts = (this.parent as GExpression)?.getLefts(this);
+        const dx = lefts && getWidths(lefts).reduce((prev, val) => prev + val, 0);
+        const x = this.typeInParent && this.getOfParentX(this.typeInParent);
+        return x && dx ? x + dx : 0;
+
+    }
+    public get unscaledY(): number {
+        const tops = (this.parent as GExpression)?.getTops(this);
+        const dy = tops && getHeights(tops).reduce((prev, val) => prev + val, 0);
+        const y = this.typeInParent && this.getOfParentY(this.typeInParent);
+        return y && dy ? y + dy : 0;
     }
 
     public get isNormX(): boolean {
-        throw new Error("Method not implemented.");
+        return this.unscaledX === 1;
     }
     public get isNormY(): boolean {
-        throw new Error("Method not implemented.");
+        return this.unscaledY === 1;
     }
 }

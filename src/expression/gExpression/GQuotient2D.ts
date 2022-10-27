@@ -92,4 +92,15 @@ export default class GQuotient2D extends GAbstractDirectedExpression {
                             : 0;
         return this.unscaledX + dy;
     }
+
+    protected getOfParentX(askingType: TypeInParent): number | undefined {
+        return askingType === "gDivident" ? this.gDividentX
+            : askingType === "gDivisor" ? this.gDivisorX 
+            : undefined;
+    }
+    protected getOfParentY(askingType: TypeInParent): number | undefined {
+        return askingType === "gDivident" ? this.gDividentY
+        : askingType === "gDivisor" ? this.gDivisorY 
+        : undefined;
+    }
 }

@@ -71,4 +71,15 @@ export default class GQuotient extends GAbstractDirectedExpression {
                 }[this.startDirection] : 0;
         return this.unscaledHeight + dy;
     }
+    
+    protected getOfParentX(askingType: TypeInParent): number | undefined {
+        return askingType === "gComplexDivident" ? this.gComplexDividentX
+            : askingType === "gSimpleDivisor" ? this.gSimpleDivisorX 
+            : undefined;
+    }
+    protected getOfParentY(askingType: TypeInParent): number | undefined {
+        return askingType === "gComplexDivident" ? this.gComplexDividentY
+            : askingType === "gSimpleDivisor" ? this.gSimpleDivisorY 
+            : undefined;
+    }
 }

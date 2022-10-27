@@ -70,4 +70,16 @@ export default class GDifference extends GAbstractDirectedExpression {
                     : 0;
         return this.unscaledY + dy;
     }
+
+
+    protected getOfParentX(askingType: TypeInParent): number | undefined {
+        return askingType === "gMinuend" ? this.gMinuendX
+            : askingType === "gSubtrahend" ? this.gSubtrahendX 
+            : undefined;
+    }
+    protected getOfParentY(askingType: TypeInParent): number | undefined {
+        return askingType === "gMinuend" ? this.gMinuendY
+        : askingType === "gSubtrahend" ? this.gSubtrahendY 
+        : undefined;
+    }
 }

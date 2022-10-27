@@ -37,11 +37,24 @@ export default class GSum extends GAbstractDirectedExpression {
                 takeRightWhile(this.gSummands, (exp: GExpression) => exp?.id !== askingExpression?.id) :
                 [];
     }
-    public getRightSummands(askingExpression: GExpression): GExpression[] {
+    public getTopSummands(askingExpression: GExpression): GExpression[] {
         return this.startDirection === 'top' ?
             takeWhile(this.gSummands, (exp: GExpression) => exp?.id !== askingExpression?.id) :
             this.startDirection === 'bottom' ?
                 takeRightWhile(this.gSummands, (exp: GExpression) => exp?.id !== askingExpression?.id) :
                 [];
+    }
+
+    protected getLefts(askingExpression: GExpression): GExpression[] | undefined {
+        return this.getLeftSummands(askingExpression);
+    }
+    protected getTops(askingExpression: GExpression): GExpression[] | undefined {
+        return this.getTopSummands(askingExpression);
+    }
+    protected getOfParentX(): number | undefined {
+        return this.unscaledX;
+    }
+    protected getOfParentY(): number | undefined {
+        return this.unscaledY;
     }
 }
