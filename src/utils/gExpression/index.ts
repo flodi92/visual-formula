@@ -5,12 +5,11 @@ import GValue from "../../expression/gExpression/GValue";
 
 import { ID, } from "../../types";
 
+import getWidths from "./getWidths";
+import getHeights from "./getHeights";
 import getNeighbours from "./getNeighbours";
 import getCommonEdgeValues from "./getCommonEdgeValues";
 import isEdgePossible from "./isEdgePossible";
-
-const getWidths = (expressions: GExpression[]) => expressions.map(_expression => _expression?.unscaledWidth || 0) || [];
-const getHeights = (expressions: GExpression[]) => expressions.map(_expression => _expression?.unscaledHeight || 0) || [];
 
 const getFixedWidthOfNeighbour = (gValue: GValue) => {
     const neighbours = getNeighbours(gValue, 'Y');

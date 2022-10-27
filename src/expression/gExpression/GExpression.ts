@@ -1,5 +1,6 @@
 import Expression from "../Expression";
-import { getWidths, getHeights, } from "../../utils/gExpression";
+import getWidths from "../../utils/gExpression/getWidths";
+import getHeights from "../../utils/gExpression/getHeights";
 import { DEFAULT_TRANSFORMATION, Transformation, TypeInParent } from "../../types";
 
 export default abstract class GExpression extends Expression {
