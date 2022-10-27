@@ -1,8 +1,7 @@
 import React, { useLayoutEffect, useState } from 'react'
 
-import { Component, ReactNode } from 'react'
+import { ReactNode } from 'react'
 
-// import React from "react";
 import GAbstractValue from "../expression/gExpression/GAbstractValue";
 import GSimpleValue from '../expression/gExpression/GSimpleValue';
 import GValue from '../expression/gExpression/GValue';
@@ -14,7 +13,6 @@ import { getGAbstractValueIds, getGAbstractValues } from '../utils/gExpression';
 
 const STANDARD_STROKE_WIDHT = 1;
 const HIDDEN_STROKE_WIDTH = 1;
-
 
 class DrawValue {
   private _gaValue?: GAbstractValue | undefined;
@@ -32,39 +30,40 @@ class DrawValue {
   private renderGValue(gValue: GValue): ReactNode {
     if (!this.gaValue) return <></>
     const { x, y, width, height } = this.gaValue
-    const edges = [gValue.xEdge, gValue.yEdge].filter(edge => !!edge) as Direction[];
+    const [xEdge, yEdge] = [gValue.xEdge, gValue.yEdge];
 
     const xNorm = gValue.isNormX;
     const yNorm = gValue.isNormY;
 
-    const [[p11, p12], [p21, p22]] = edges.map(
-      (edge) =>
-      ({
-        left: [
-          [x, y],
-          [x, y + height],
-        ],
-        right: [
-          [x + width, y],
-          [x + width, y + height],
-        ],
-        top: [
-          [x, y],
-          [x + width, y],
-        ],
-        bottom: [
-          [x, y + height],
-          [x + width, y + height],
-        ],
-      }[edge])
-    );
+    const [a, b, c] =
+      (
+        (xEdge === "top" && yEdge === "left")
+          ? [
+            [x, y + height],
+            [x, y],
+            [x + width, y],
+          ] :
+          (xEdge === "bottom" && yEdge === "left")
+            ? [
+              [x, y],
+              [x, y + height],
+              [x + width, y + height],
+            ] :
+            (xEdge === "bottom" && yEdge === "right")
+              ? [
+                [x + width, y],
+                [x + width, y + height],
+                [x, y + height],
+              ] :
+              (xEdge === "top" && yEdge === "right")
+                ? [
+                  [x, y],
+                  [x + width, y],
+                  [x + width, y + height],
+                ] :
+                [])
 
-    const b = [p11, p12].find((p) =>
-      [p21, p22].some((_p) => isEqual(_p, p))
-    ) as number[]; //corner
-
-    const a = [p11, p12].find((p) => !isEqual(p, b)) as number[];
-    const c = [p21, p22].find((p) => !isEqual(p, b)) as number[];
+    if (!a || !b || !c) return <></>
 
     if (!xNorm && !yNorm) {
       const ba = zip(b, a).map(

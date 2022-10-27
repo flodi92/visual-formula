@@ -22,32 +22,12 @@ export default abstract class GExpression extends Expression {
         const { x: x2, y: y2, scaleX: scaleX2, scaleY: scaleY2 } = (this.parent as GExpression)?.transformation || DEFAULT_TRANSFORMATION;
         return { x: x1 + scaleX1 * x2, y: y1 + scaleY1 * y2, scaleX: scaleX1 * scaleX2, scaleY: scaleY1 * scaleY2 }
     }
-
     public get layerTransformation(): Transformation {
         return this.getLayerTransformationOfTerm(this.typeInParent);
     }
 
-
     abstract get unscaledWidth(): number;
     abstract get unscaledHeight(): number;
-
-    protected getLefts(askingExpression: GExpression): GExpression[] | undefined {
-        return undefined;
-    }
-    protected getTops(askingExpression: GExpression): GExpression[] | undefined {
-        return undefined;
-    }
-
-    protected getOfParentX(askingType: TypeInParent): number | undefined {
-        return undefined;
-    }
-    protected getOfParentY(askingType: TypeInParent): number | undefined {
-        return undefined;
-    }
-
-    protected getLayerTransformationOfTerm(askingType?: TypeInParent): Transformation {
-        return DEFAULT_TRANSFORMATION;
-    }
 
     public get unscaledX(): number {
         if (!this.parent) return 0;
@@ -70,5 +50,21 @@ export default abstract class GExpression extends Expression {
     }
     public get isNormY(): boolean {
         return this.unscaledY === 1;
+    }
+
+    protected getLefts(askingExpression: GExpression): GExpression[] | undefined {
+        return undefined;
+    }
+    protected getTops(askingExpression: GExpression): GExpression[] | undefined {
+        return undefined;
+    }
+    protected getOfParentX(askingType: TypeInParent): number | undefined {
+        return undefined;
+    }
+    protected getOfParentY(askingType: TypeInParent): number | undefined {
+        return undefined;
+    }
+    protected getLayerTransformationOfTerm(askingType?: TypeInParent): Transformation {
+        return DEFAULT_TRANSFORMATION;
     }
 }
