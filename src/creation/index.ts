@@ -214,6 +214,7 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
         return {
             type: 'GSum',
             gSummands: expression.gSummands?.map(gSummand => getJSONFromExpression(gSummand)),
+            startDirection: expression.startDirection,
         }
     }
     else if (expression instanceof GDifference) {
@@ -221,6 +222,7 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
             type: 'GDifference',
             gMinuend: getJSONFromExpression(expression.gMinuend),
             gSubtrahend: getJSONFromExpression(expression.gSubtrahend),
+            startDirection: expression.startDirection,
         }
     }
     else if (expression instanceof GProduct1D) {
@@ -228,6 +230,7 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
             type: 'GProduct1D',
             gSimpleFactor: getJSONFromExpression(expression.gSimpleFactor),
             gComplexFactor: getJSONFromExpression(expression.gComplexFactor),
+            startDirection: expression.startDirection,
         }
     }
     else if (expression instanceof GProduct2D) {
@@ -242,6 +245,7 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
             type: 'GQuotient1D',
             gSimpleDivisor: getJSONFromExpression(expression.gSimpleDivisor),
             gComplexDivident: getJSONFromExpression(expression.gComplexDivident),
+            startDirection: expression.startDirection,
         }
     }
     else if (expression instanceof GQuotient2D) {
