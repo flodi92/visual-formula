@@ -1,24 +1,31 @@
 import React from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
+import GAbstractRoot from './expression/gExpression/GAbstractRoot';
+import DrawRoot from './draw/DrawRoot';
+import { getExpressionFromJSON } from './creation';
+
+
+const Test = () => {
+  const root = getExpressionFromJSON({
+    type: 'GValue',
+    mValue: '1',
+    xEdge: 'bottom',
+    yEdge: 'left',
+    unscaledWidth: 2,
+    unscaledHeight: 2,
+    numbericValue: 2,
+  }) as GAbstractRoot;
+
+  root.layerTransformation = { x: 30, y: 30, scaleX: 10, scaleY: 10 }
+
+  return <DrawRoot root={root} style={{ backgroundColor: 'gray', width: '100%', height: '100%' }} />
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Test />
     </div>
   );
 }
