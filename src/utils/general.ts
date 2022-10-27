@@ -1,10 +1,10 @@
 import { Direction, XY } from "../types";
 
-export const oppositeDirection = (direction?: Direction) => direction && ({
-    left: 'right',
-    right: 'left',
-    top: 'bottom',
-    bottom: 'top'
+export const oppositeDirection = (direction: Direction | undefined, xy?: XY) => direction && ({
+    left: xy === 'Y' ? 'right' : 'left',
+    right: xy === 'Y' ? 'left' : 'right',
+    top: xy === 'X' ? 'top' : 'bottom',
+    bottom: xy === 'X' ? 'bottom' : 'top'
 }[direction]) as Direction | undefined
 
 export const directionToXY = (direction?: Direction) => (direction && {
@@ -19,13 +19,49 @@ export const getOtherXY = (direction?: XY) => (direction && {
     X: 'Y',
 }[direction]) as XY;
 
-export const directionToNumber = (val: Direction) =>
-({
+export const directionToNumber = (val?: Direction) =>
+(val && {
     top: 0,
     right: 1,
     bottom: 2,
     left: 3,
 }[val]);
 
+export const getSwappedDirection = (direction?: Direction) =>
+    (direction && {
+        top: "left",
+        right: "bottom",
+        bottom: "right",
+        left: "top",
+    }[direction]) as (Direction | undefined);
+
+export const getRotatedDirection = (direction: Direction | undefined, isClockwise: boolean) =>
+    (direction && (isClockwise
+        ? {
+            left: "top",
+            bottom: "left",
+            right: "bottom",
+            top: "right",
+        }
+        : {
+            top: "left",
+            left: "bottom",
+            bottom: "right",
+            right: "top",
+        })[direction]) as (Direction | undefined);
+
 export const isOrthogonal = (a?: Direction, b?: Direction) =>
-    a && b && directionToNumber(a) % 2 !== directionToNumber(b) % 2;
+    a && b && (directionToNumber(a) as number) % 2 !== (directionToNumber(b) as number) % 2;
+
+export const isClockwise = (fromDirection?: Direction, toDirection?: Direction) => {
+    if(!fromDirection || !toDirection) return;
+    const [fromNumber, toNumber] = [fromDirection, toDirection].map((direction) =>
+        direction && directionToNumber(direction) as number
+    );
+    return {
+        0: null,
+        1: true, // clockwise
+        2: null,
+        3: false, // anticlickwise
+    }[(toNumber - fromNumber + 4) % 4];
+};
