@@ -34,7 +34,7 @@ export default abstract class GExpression extends Expression {
         const lefts = (this.parent as GExpression).getLefts(this);
         const dx = lefts && getWidths(lefts).reduce((prev, val) => prev + val, 0);
         const x = this.typeInParent && (this.parent as GExpression).getOfParentX(this.typeInParent);
-        return x && dx ? x + dx : 0;
+        return x !== undefined && dx !== undefined ? x + dx : 0;
 
     }
     public get unscaledY(): number {
@@ -42,7 +42,7 @@ export default abstract class GExpression extends Expression {
         const tops = (this.parent as GExpression).getTops(this);
         const dy = tops && getHeights(tops).reduce((prev, val) => prev + val, 0);
         const y = this.typeInParent && (this.parent as GExpression).getOfParentY(this.typeInParent);
-        return y && dy ? y + dy : 0;
+        return y !== undefined && dy !== undefined ? y + dy : 0;
     }
 
     public get isNormX(): boolean {
