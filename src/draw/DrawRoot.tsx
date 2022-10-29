@@ -12,6 +12,7 @@ import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
 import { getGAbstractValueIds, getGAbstractValues } from '../utils/gExpression';
 
 const STANDARD_STROKE_WIDHT = 1;
+const NORM_STROKE_WIDHT = 3;
 // const HIDDEN_STROKE_WIDTH = 1;
 
 class DrawValue {
@@ -64,14 +65,13 @@ class DrawValue {
                 [])
 
     if (!a || !b || !c) return <></>
-
+    const ba = zip(b, a).map(
+      ([_b, _a]) => _b as number + Math.sign(_a as number - (_b as number)) * 15
+    );
+    const bc = zip(b, c).map(
+      ([_b, _c]) => _b as number + Math.sign(_c as number - (_b as number)) * 15
+    );
     if (!xNorm && !yNorm) {
-      const ba = zip(b, a).map(
-        ([_b, _a]) => _b as number + Math.sign(_a as number - (_b as number)) * 15
-      );
-      const bc = zip(b, c).map(
-        ([_b, _c]) => _b as number + Math.sign(_c as number - (_b as number)) * 15
-      );
       const d = `M${a[0]},${a[1]} L${ba[0]},${ba[1]} Q${b[0]},${b[1]},${bc[0]},${bc[1]} L${c[0]},${c[1]}`;
       return (
         <path
@@ -81,6 +81,25 @@ class DrawValue {
           stroke="red"
           fill="none" />
       );
+    } else {
+      const d1 = `M${a[0]} ${a[1]} L${b[0]} ${b[1]}`;
+      const d2 = `M${b[0]} ${b[1]} L${c[0]} ${c[1]}`;
+      return (
+        <>
+          <path
+            id={`path1-${this.gaValue.id}`}
+            key={`path1-${this.gaValue.id}`}
+            d={d1} strokeWidth={xNorm ? STANDARD_STROKE_WIDHT : NORM_STROKE_WIDHT}
+            stroke="red"
+            fill="none" />
+          <path
+            id={`path2-${this.gaValue.id}`}
+            key={`path2-${this.gaValue.id}`}
+            d={d2} strokeWidth={yNorm ? STANDARD_STROKE_WIDHT : NORM_STROKE_WIDHT}
+            stroke="red"
+            fill="none" />
+        </>
+      )
 
     }
   }
