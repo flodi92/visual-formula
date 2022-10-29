@@ -141,6 +141,8 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 0) => {
                 break;
             case 'GProduct2D':
                 expression = new GProduct2D();
+                expression.xEdge = json.xEdge;
+                expression.yEdge = json.yEdge;
                 expression.gFactorX = _getExpressionFromJSON(json.gFactorX, idCount + 1);
                 expression.gFactorY = _getExpressionFromJSON(json.gFactorY, idCount + 2);
                 break;
@@ -151,6 +153,8 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 0) => {
                 break;
             case 'GQuotient2D':
                 expression = new GQuotient2D();
+                expression.divisorEdge = json.divisorEdge;
+                expression.resultEdge = json.resultEdge;
                 expression.gDivident = _getExpressionFromJSON(json.gDivident, idCount + 1);
                 expression.gDivisor = _getExpressionFromJSON(json.gDivisor, idCount + 2);
                 break;
