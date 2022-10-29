@@ -13,6 +13,7 @@ import { getGAbstractValueIds, getGAbstractValues } from '../utils/gExpression';
 
 const STANDARD_STROKE_WIDHT = 1;
 const NORM_STROKE_WIDHT = 3;
+const GVALUE_RADIUS = 15;
 // const HIDDEN_STROKE_WIDTH = 1;
 
 class DrawValue {
@@ -66,10 +67,10 @@ class DrawValue {
 
     if (!a || !b || !c) return <></>
     const ba = zip(b, a).map(
-      ([_b, _a]) => _b as number + Math.sign(_a as number - (_b as number)) * 15
+      ([_b, _a]) => _b as number + Math.sign(_a as number - (_b as number)) * GVALUE_RADIUS
     );
     const bc = zip(b, c).map(
-      ([_b, _c]) => _b as number + Math.sign(_c as number - (_b as number)) * 15
+      ([_b, _c]) => _b as number + Math.sign(_c as number - (_b as number)) * GVALUE_RADIUS
     );
     if (!xNorm && !yNorm) {
       const d = `M${a[0]},${a[1]} L${ba[0]},${ba[1]} Q${b[0]},${b[1]},${bc[0]},${bc[1]} L${c[0]},${c[1]}`;
