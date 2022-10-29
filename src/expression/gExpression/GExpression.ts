@@ -30,19 +30,19 @@ export default abstract class GExpression extends Expression {
     abstract get unscaledHeight(): number;
 
     public get unscaledX(): number {
-        if (!this.parent) return 0;
+        if (!this.parent || !this.typeInParent) return 0;
         const lefts = (this.parent as GExpression).getLefts(this);
-        const dx = lefts && getWidths(lefts).reduce((prev, val) => prev + val, 0);
-        const x = this.typeInParent && (this.parent as GExpression).getOfParentX(this.typeInParent);
-        return x !== undefined && dx !== undefined ? x + dx : 0;
+        const dx = !!lefts ? getWidths(lefts).reduce((prev, val) => prev + val, 0) : 0;
+        const x = (this.parent as GExpression).getOfParentX(this.typeInParent) || 0;
+        return x + dx;
 
     }
     public get unscaledY(): number {
-        if (!this.parent) return 0;
+        if (!this.parent || !this.typeInParent) return 0;
         const tops = (this.parent as GExpression).getTops(this);
-        const dy = tops && getHeights(tops).reduce((prev, val) => prev + val, 0);
-        const y = this.typeInParent && (this.parent as GExpression).getOfParentY(this.typeInParent);
-        return y !== undefined && dy !== undefined ? y + dy : 0;
+        const dy = !!tops ? getHeights(tops).reduce((prev, val) => prev + val, 0) : 0;
+        const y = (this.parent as GExpression).getOfParentY(this.typeInParent) || 0;
+        return y + dy;
     }
 
     public get isNormX(): boolean {

@@ -41,7 +41,7 @@ export default abstract class Expression {
             : this._childrenArray.map(() => this.childrenTypesInParentDefinition() as TypeInParent)
     }
 
-    public setParent(parent?: Expression, typeInParent?: TypeInParent) {
+    private setParent(parent?: Expression, typeInParent?: TypeInParent) {
         [this._parent, this._typeInParent] = [parent, typeInParent];
     }
 
