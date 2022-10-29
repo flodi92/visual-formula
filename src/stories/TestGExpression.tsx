@@ -67,7 +67,7 @@ export const TestGExpression = ({ type, startDirection, width1, height1, width2,
 
   const root = getExpressionFromJSON(json) as GAbstractRoot;
 
-  root.layerTransformation = { x: 40, y: 30, scaleX: 20, scaleY: 20 }
+  root.layerTransformation = { x: 160, y: 30, scaleX: 20, scaleY: 20 }
 
   return <DrawRoot root={root} style={{ width: '100%', height: '100%' }} />;
 };
