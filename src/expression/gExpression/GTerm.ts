@@ -13,9 +13,9 @@ export default class GTerm extends GAbstractRoot {
         super.setChild('gTerm', child);
     }
     public get unscaledWidth(): number {
-        throw 'TODO'
+        return this.gTerm?.unscaledWidth || 0;
     }
     public get unscaledHeight(): number {
-        throw 'TODO'
+        return this.gTerm?.unscaledHeight || 0;
     }
 }
