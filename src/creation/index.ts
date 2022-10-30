@@ -242,6 +242,8 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
             type: 'GProduct2D',
             gFactorX: getJSONFromExpression(expression.gFactorX),
             gFactorY: getJSONFromExpression(expression.gFactorY),
+            xEdge: expression.xEdge,
+            yEdge: expression.yEdge,
         }
     }
     else if (expression instanceof GQuotient1D) {
@@ -257,6 +259,8 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
             type: 'GQuotient2D',
             gDivident: getJSONFromExpression(expression.gDivident),
             gDivisor: getJSONFromExpression(expression.gDivisor),
+            divisorEdge: expression.divisorEdge,
+            resultEdge: expression.resultEdge,
         }
     }
     else if (expression instanceof GValue) {
@@ -265,6 +269,8 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
             mValue: getJSONFromExpression(expression.mValue),
             xEdge: expression.xEdge,
             yEdge: expression.yEdge,
+            unscaledWidth: expression.unscaledWidth,
+            unscaledHeight: expression.unscaledHeight,
         }
     }
     else if (expression instanceof GSimpleValue) {
@@ -272,6 +278,8 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
             type: 'GSimpleValue',
             mSimpleValue: getJSONFromExpression(expression.mSimpleValue),
             edge: expression.edge,
+            unscaledWidth: expression.unscaledWidth,
+            unscaledHeight: expression.unscaledHeight,
         }
     }
     else if (expression instanceof MSum) {
