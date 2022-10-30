@@ -85,18 +85,21 @@ class DrawValue {
     } else {
       const d1 = `M${a[0]} ${a[1]} L${b[0]} ${b[1]}`;
       const d2 = `M${b[0]} ${b[1]} L${c[0]} ${c[1]}`;
+      const isNorm1 = (a[0] === b[0] && yNorm) || (a[1] === b[1] && xNorm)
+      const isNorm2 = (b[0] === c[0] && yNorm) || (b[1] === c[1] && xNorm)
+
       return (
         <>
           <path
             id={`path1-${this.gaValue.id}`}
             key={`path1-${this.gaValue.id}`}
-            d={d1} strokeWidth={xNorm ? STANDARD_STROKE_WIDHT : NORM_STROKE_WIDHT}
+            d={d1} strokeWidth={isNorm1 ? NORM_STROKE_WIDHT : STANDARD_STROKE_WIDHT}
             stroke="red"
             fill="none" />
           <path
             id={`path2-${this.gaValue.id}`}
             key={`path2-${this.gaValue.id}`}
-            d={d2} strokeWidth={yNorm ? STANDARD_STROKE_WIDHT : NORM_STROKE_WIDHT}
+            d={d2} strokeWidth={isNorm2 ? NORM_STROKE_WIDHT : STANDARD_STROKE_WIDHT}
             stroke="red"
             fill="none" />
         </>
@@ -162,7 +165,18 @@ const DrawRoot = ({ root, style }: { root: GAbstractRoot, style: any }) => {
     // eslint-disable-next-line
   }, [root]);
 
-  return <svg {...{ style }}>{drawValues.map(drawValue => drawValue.render())}</svg>
+  return <svg {...{ style }}>
+    <rect
+      fill='#88888844'
+      {...{
+        x: root.x,
+        y: root.y,
+        width: root.width,
+        height: root.height
+      }}
+    />
+    {drawValues.map(drawValue => drawValue.render())}
+  </svg>
 
 }
 
