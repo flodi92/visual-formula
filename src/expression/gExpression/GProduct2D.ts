@@ -1,8 +1,7 @@
 import GExpression from "./GExpression";
-import GAbstractDirectedExpression from "./GAbstractDirectedExpression";
 import { TypeInParent, XDirection, YDirection } from "../../types";
 
-export default class GProduct2D extends GAbstractDirectedExpression {
+export default class GProduct2D extends GExpression {
     protected childrenTypesInParentDefinition(): TypeInParent[] {
         return ['gFactorX', 'gFactorY']
     }

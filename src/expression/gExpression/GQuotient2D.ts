@@ -1,9 +1,8 @@
 import GExpression from "./GExpression";
-import GAbstractDirectedExpression from "./GAbstractDirectedExpression";
 import { Direction, TypeInParent } from "../../types";
 import { directionToXY } from "../../utils/general";
 
-export default class GQuotient2D extends GAbstractDirectedExpression {
+export default class GQuotient2D extends GExpression {
     protected childrenTypesInParentDefinition(): TypeInParent[] {
         return ['gDivident', 'gDivisor']
     }
@@ -47,23 +46,23 @@ export default class GQuotient2D extends GAbstractDirectedExpression {
     }
 
     public get gDividentX(): number {
-        if (directionToXY(this.divisorEdge) === 'X') {
+        if (directionToXY(this.resultEdge) === 'Y') {
             return this.unscaledX;
         } else {
             return this.unscaledX +
                 (this.resultEdge === "left" ?
                     1 :
-                    -(this.gDivisor?.unscaledWidth || 0))
+                    -(this.gDivident?.unscaledWidth || 0))
         }
     }
     public get gDividentY(): number {
-        if (directionToXY(this.divisorEdge) === 'Y') {
+        if (directionToXY(this.resultEdge) === 'X') {
             return this.unscaledY;
         } else {
             return this.unscaledY +
                 (this.resultEdge === "top" ?
                     1 :
-                    -(this.gDivisor?.unscaledWidth || 0))
+                    -(this.gDivident?.unscaledHeight || 0))
         }
     }
     public get gDivisorX(): number {
