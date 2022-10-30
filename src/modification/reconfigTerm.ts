@@ -47,8 +47,8 @@ export const swapXToY = ({ expression, id }:
   return _swapXToY(_expression);
 };
 
-export const rotate = ({ expression, id, isClockwise }:
-  { expression: GExpression, id: ID, isClockwise: boolean }) => {
+export const rotate = ({ expression, id, isClockwise = false }:
+  { expression: GExpression, id?: ID, isClockwise?: boolean }) => {
   const _rotate = (expression: GExpression): boolean => {
     if (!expression) return false;
     else if (expression instanceof GAbstractDirectedExpression) {
@@ -76,7 +76,7 @@ export const rotate = ({ expression, id, isClockwise }:
     }, true)
   };
 
-  const _expression = find(id, expression);
+  const _expression = !!id && !!expression ? find(id, expression) : expression;
   if (!_expression || _expression instanceof GAbstractValue)
     return false;
 
@@ -86,7 +86,7 @@ export const rotate = ({ expression, id, isClockwise }:
 export const reverse = ({ expression, id, xy }:
   { expression?: GExpression, id?: ID, xy?: XY }) => {
   if (!xy) return false;
-  const _reverse = (expression: GExpression): boolean => {    
+  const _reverse = (expression: GExpression): boolean => {
     if (!expression) return false;
     else if (expression instanceof GAbstractDirectedExpression) {
       expression.startDirection = oppositeDirection(expression.startDirection, xy);
