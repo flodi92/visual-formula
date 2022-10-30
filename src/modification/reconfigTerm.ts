@@ -64,10 +64,18 @@ export const rotate = ({ expression, id, isClockwise = false }:
       [expression.divisorEdge, expression.resultEdge] = [
         getRotatedDirection(expression.divisorEdge, isClockwise),
         getRotatedDirection(expression.resultEdge, isClockwise)];
-    } else if (expression instanceof GAbstractValue) {
-      /* nothing */
-    } else {
-      return false;
+    } else if (expression instanceof GValue) {
+      [expression.xEdge, expression.yEdge] = [
+        getRotatedDirection(expression.yEdge, isClockwise) as YDirection | undefined,
+        getRotatedDirection(expression.xEdge, isClockwise) as XDirection | undefined,
+      ];
+      [expression.unscaledHeight, expression.unscaledWidth]
+        = [expression.unscaledWidth, expression.unscaledHeight]
+    }
+    else if (expression instanceof GSimpleValue) {
+      expression.edge = getRotatedDirection(expression.edge, isClockwise);
+      [expression.unscaledHeight, expression.unscaledWidth]
+        = [expression.unscaledWidth, expression.unscaledHeight];
     }
     return (expression.children)?.reduce((prev, child) => {
       if (!!child && child instanceof GExpression)
@@ -77,8 +85,6 @@ export const rotate = ({ expression, id, isClockwise = false }:
   };
 
   const _expression = !!id && !!expression ? find(id, expression) : expression;
-  if (!_expression || _expression instanceof GAbstractValue)
-    return false;
 
   return _rotate(_expression);
 };
