@@ -10,7 +10,7 @@ export default class GQuotient2D extends GAbstractDirectedExpression {
 
     private _divisorEdge?: Direction | undefined;
     private _resultEdge?: Direction | undefined;
-    
+
     public get gDivident() {
         return super.getChild('gDivident') as GExpression | undefined;
     }
@@ -23,7 +23,7 @@ export default class GQuotient2D extends GAbstractDirectedExpression {
     public set gDivisor(child: GExpression | undefined) {
         super.setChild('gDivisor', child);
     }
-    
+
     public get divisorEdge(): Direction | undefined {
         return this._divisorEdge;
     }
@@ -75,7 +75,7 @@ export default class GQuotient2D extends GAbstractDirectedExpression {
                     : this.resultEdge === "left"
                         ? 1
                         : this.resultEdge === "right"
-                            ? -this.unscaledWidth
+                            ? -(this.gDivident?.unscaledWidth || 0)
                             : 0;
         return this.unscaledX + dx;
     }
@@ -84,23 +84,23 @@ export default class GQuotient2D extends GAbstractDirectedExpression {
             this.divisorEdge === "top"
                 ? -1
                 : this.divisorEdge === "bottom"
-                    ? this.unscaledWidth
+                    ? this.unscaledHeight
                     : this.resultEdge === "top"
                         ? 1
                         : this.resultEdge === "bottom"
-                            ? -this.unscaledWidth
+                            ? -(this.gDivident?.unscaledHeight || 0)
                             : 0;
         return this.unscaledX + dy;
     }
 
     protected getOfParentX(askingType: TypeInParent): number | undefined {
         return askingType === "gDivident" ? this.gDividentX
-            : askingType === "gDivisor" ? this.gDivisorX 
-            : undefined;
+            : askingType === "gDivisor" ? this.gDivisorX
+                : undefined;
     }
     protected getOfParentY(askingType: TypeInParent): number | undefined {
         return askingType === "gDivident" ? this.gDividentY
-        : askingType === "gDivisor" ? this.gDivisorY 
-        : undefined;
+            : askingType === "gDivisor" ? this.gDivisorY
+                : undefined;
     }
 }
