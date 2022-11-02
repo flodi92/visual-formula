@@ -13,4 +13,7 @@ export default class MValue extends MExpression {
     public set mValue(value: string | undefined) {
         this._mValue = value;
     }
+    public get isConstant(): boolean {
+        return !parseInt(`${this._mValue}`) || !parseFloat(`${this._mValue}`);
+    }
 }

@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useLayoutEffect, useState } from 'react';
 
 import { ReactNode } from 'react'
 
@@ -10,11 +10,15 @@ import { zip } from 'lodash';
 import { ID } from '../types';
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
 import { getGAbstractValueIds, getGAbstractValues } from '../utils/gExpression';
+import {MExpression, MDifference, MEquation, MProduct, MQuotient, MSum, MValue } from '../expression/mExpression';
 
 const STANDARD_STROKE_WIDHT = 1;
 const NORM_STROKE_WIDHT = 3;
 const GVALUE_RADIUS = 15;
 // const HIDDEN_STROKE_WIDTH = 1;
+const ROUND_PADDING = 7;
+const CORNER_PADDING = 3;
+const FONT_SIZE = 11;
 
 class DrawValue {
   private _gaValue?: GAbstractValue | undefined;
@@ -132,11 +136,146 @@ class DrawValue {
     );
   }
 
+  // TODO rename mValue => mExpression
+  private rendeMValue(mValue?: MExpression) {
+    const _renderValue = (mExpression?: MExpression): ReactNode => {
+      if (!mExpression) return <></>
+
+      let buffer;
+      if (mExpression instanceof MValue) {
+        buffer = (
+          mExpression.isConstant ?
+            // @ts-ignore    
+            <mi>{(mExpression.mValue)}</mi>
+            // @ts-ignore    
+            : <mn>{(mExpression.mValue)}</mn>
+        );
+      } else if (mExpression instanceof MSum) {
+        buffer = (
+          mExpression?.mSummands?.map((mSummand, idx, { length }) => (
+            <>
+              {_renderValue(mSummand)}
+              {/* @ts-ignore */}
+              {idx < length - 1 && <mo>+</mo>}
+            </>))
+        );
+      } else if (mExpression instanceof MDifference) {
+        buffer = (
+          <>
+            {_renderValue(mExpression.mMinuend)}
+            {/* @ts-ignore */}
+            <mo>&minus;</mo>
+            {_renderValue(mExpression.mSubtrahend)}
+          </>
+        );
+      } else if (mExpression instanceof MProduct) {
+        buffer = mExpression?.mFactors?.map((mFactor, idx, { length }) => {
+          const isBracket = mFactor instanceof MValue;
+          return (
+            <>
+              {/* @ts-ignore */}
+              {isBracket && <mo>(</mo>}
+              {_renderValue(mFactor)}
+              {/* @ts-ignore */}
+              {isBracket && <mo>)</mo>}
+              {/* @ts-ignore */}
+              {idx < length - 1 && <mo>&times;</mo>}
+            </>
+          );
+        });
+      } else if (mExpression instanceof MQuotient) {
+        {/* TODO brackets */ }
+        buffer = (
+          // @ts-ignore
+          <mfrac>
+            {/* @ts-ignore */}
+            <mrow> {_renderValue(mExpression.mDivident)} </mrow>
+            {/* @ts-ignore */}
+            <mrow> {_renderValue(mExpression.mDivisor)} </mrow>
+            {/* @ts-ignore */}
+          </mfrac>
+        );
+      } else if (mExpression instanceof MEquation) {
+        buffer = (
+          <>
+            {_renderValue(mExpression.mTerm1)}
+            {/* @ts-ignore */}
+            <mo>=</mo>
+            {_renderValue(mExpression.mTerm2)}
+          </>
+        )
+      }
+      return buffer;
+    }
+
+    const style = {
+      fontFamily: "sans-serif",
+      fontWeight: "bold",
+    }
+    return (
+      ///@ts-ignore        
+      <math {...style}>{_renderValue(mValue)}</math>
+    );
+  }
+
+  private renderMValueInGValue(gValue: GAbstractValue) {
+
+    const positioning = gValue instanceof GSimpleValue && gValue.edge ? ({
+      left: { top: "50%", left: 0 },
+      right: { top: "50%", right: 0 },
+      top: { left: "50%", top: 0 },
+      bottom: { left: "50%", bottom: 0 },
+    }[gValue.edge]) :
+      gValue instanceof GValue ?
+        ({
+          ...(gValue.yEdge === "left" ? { left: "0" } : { right: "0" }),
+          ...(gValue.xEdge === "top" ? { top: "0" } : { bottom: "0" }),
+        }) : { top: 0, left: 0 };
+
+    const padding = gValue.isNormX || gValue.isNormY ?
+      CORNER_PADDING :
+      ROUND_PADDING;
+
+    const { x, y, width, height } = gValue;
+    return <foreignObject {...{ x, y, width, height }} style={{ padding: 0 }}>
+      <div
+        style={{
+          width: `${width - 2 * padding}px`,
+          height: `${height - 2 * padding}px`,
+          margin: `${padding}px`,
+          position: "relative",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            fontSize: `${FONT_SIZE}px`,
+            ...positioning,
+          }}
+        >
+          {gValue instanceof GSimpleValue ?
+            this.rendeMValue(gValue.mSimpleValue) :
+            gValue instanceof GValue ?
+              this.rendeMValue(gValue.mValue)
+              : <></>}
+        </div>
+      </div>
+    </foreignObject>
+  }
+
   public render(): ReactNode {
     return (this.gaValue instanceof GValue) ?
-      this.renderGValue(this.gaValue) :
+      <>
+        {this.renderGValue(this.gaValue)}
+        {this.renderMValueInGValue(this.gaValue)}
+      </>
+      :
       (this.gaValue instanceof GSimpleValue) ?
-        this.renderGSimpleValue(this.gaValue) : <></>
+        <>
+          {this.renderGSimpleValue(this.gaValue)}
+          {this.renderMValueInGValue(this.gaValue)}
+        </> :
+        <></>
   }
 }
 

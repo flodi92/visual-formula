@@ -95,7 +95,7 @@ GProduct1DExample.args = {
     },
     gSimpleFactor: {
       type: "GSimpleValue",
-      mValue: "2",
+      mSimpleValue: "2",
       numbericValue: 1,
       edge: "top",
 

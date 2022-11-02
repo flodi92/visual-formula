@@ -15,6 +15,7 @@ import {
     GValue,
 } from "../expression/gExpression"
 import {
+    MExpression,
     MEquation,
     MSum,
     MDifference,
@@ -24,7 +25,6 @@ import {
 } from "../expression/mExpression"
 
 import { ID, Operator } from "../types";
-import MExpression from "../expression/mExpression/MExpression";
 import Expression from "../expression/Expression";
 
 export const getExpressionFromJSON = (value: any, idCount: ID = 0) => {
@@ -168,7 +168,7 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 0) => {
                 break;
             case 'GSimpleValue':
                 expression = new GSimpleValue();
-                expression.mSimpleValue = _getExpressionFromJSON(json.mSimpleValue, idCount + 1);
+                expression.mSimpleValue = _getMExpressionFromString(json.mSimpleValue, idCount + 1);
                 expression.edge = json.edge;
                 expression.unscaledWidth = json.unscaledWidth;
                 expression.unscaledHeight = json.unscaledHeight;
