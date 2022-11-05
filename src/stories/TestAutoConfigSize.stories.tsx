@@ -12,6 +12,7 @@ const Template: ComponentStory<typeof TestAutoConfigSize> = (args) => <TestAutoC
 export const Primary = Template.bind({});
 
 Primary.args = {
+  rotations: 0,
   json: {
     type: "GSum",
     startDirection: "left",
@@ -35,3 +36,134 @@ Primary.args = {
 
   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
 };
+
+export const GDifferenceExample = Template.bind({});
+
+GDifferenceExample.args = {
+  rotations: 0,
+  json: {
+    type: "GDifference",
+    startDirection: "right",
+    gMinuend: {
+      type: 'GValue',
+      mValue: "12",
+      numericValue: 12,
+      xEdge: "top",
+      yEdge: "right",
+    },
+    gSubtrahend: {
+      type: 'GValue',
+      mValue: "8",
+      numericValue: 8,
+      xEdge: "bottom",
+      yEdge: "left",
+    }
+  },
+  layerTransformation: { x: 100, y: 100, scaleX: 20, scaleY: 20 }
+};
+
+export const GProduct1DExample = Template.bind({});
+
+GProduct1DExample.args = {
+  rotations: 0,
+  json: {
+    type: "GProduct1D",
+
+    startDirection: "left",
+
+    gComplexFactor: {
+      type: "GValue",
+      mValue: "2",
+      numericValue: 1,
+      xEdge: "top",
+      yEdge: "right",
+    },
+    gSimpleFactor: {
+      type: "GSimpleValue",
+      mSimpleValue: "2",
+      numericValue: 1,
+      edge: "top",
+    }
+  },
+
+  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+};
+
+export const GProduct2DExample = Template.bind({});
+
+GProduct2DExample.args = {
+  rotations: 0,
+  json: {
+    type: "GProduct2D",
+    xEdge: 'bottom',
+    yEdge: 'left',
+    gFactorX: {
+      type: 'GValue',
+      mValue: "6",
+      numericValue: 6,
+      xEdge: "bottom",
+      yEdge: "left",
+    },
+    gFactorY: {
+      type: 'GValue',
+      mValue: "4",
+      numericValue: 4,
+      xEdge: "bottom",
+      yEdge: "left",
+    },
+  },
+  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+};
+
+export const GQuotient1DExample = Template.bind({});
+
+GQuotient1DExample.args = {
+  rotations: 0,
+  json: {
+    type: "GQuotient1D",
+
+    startDirection: "left",
+
+    gComplexDivident: {
+      type: "GValue",
+      mValue: "6",
+      numericValue: 6,
+      xEdge: "top",
+      yEdge: "right",
+    },
+    gSimpleDivisor: {
+      type: "GSimpleValue",
+      mSimpleValue: "2",
+      numericValue: 2,
+      edge: "bottom",
+    }
+  },
+  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+};
+
+export const GQuotient2DExample = Template.bind({});
+
+GQuotient2DExample.args = {
+  rotations: 0,
+  json: {
+    type: "GQuotient2D",
+    divisorEdge: 'left',
+    resultEdge: 'bottom',
+    gDivident: {
+      type: 'GValue',
+      mValue: "2",
+      numericValue: 1,
+      xEdge: "bottom",
+      yEdge: "right",
+    },
+    gDivisor: {
+      type: 'GValue',
+      mValue: "2",
+      numericValue: 1,
+      xEdge: "top",
+      yEdge: "right",
+    }
+  },
+  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+};
+

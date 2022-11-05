@@ -5,23 +5,26 @@ import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
 import DrawRoot from '../draw/DrawRoot';
 import { getExpressionFromJSON, getJSONFromExpression } from '../creation';
 import { autoConfigSize } from '../autoAdapt/autoConfigSize';
+import { rotate } from '../modification/reconfigTerm';
 
 interface TestAutoConfigSizeProps {
+  rotations: 0 | 1 | 2 | 3,
   json: object,
   layerTransformation: { x: number, y: number, scaleX: number, scaleY: number }
 }
 
-export const TestAutoConfigSize = ({ json, layerTransformation }: TestAutoConfigSizeProps) => {
+export const TestAutoConfigSize = ({ rotations, json, layerTransformation }: TestAutoConfigSizeProps) => {
   const expression = getExpressionFromJSON(json) as GAbstractRoot;
 
+  for (let index = 0; index < rotations; index++)
+    rotate({ expression });
 
   autoConfigSize(expression);
-  
 
   expression.layerTransformation = layerTransformation;
 
   return <>
     <DrawRoot root={expression} style={{ width: '100%', height: '200px' }} />
-    <div style={{whiteSpace: "pre", fontSize: "10px"}}>{`${JSON.stringify(getJSONFromExpression(expression), null, 2)}`}</div>
+    <div style={{ whiteSpace: "pre", fontSize: "10px" }}>{`${JSON.stringify(getJSONFromExpression(expression), null, 2)}`}</div>
   </>
 };
