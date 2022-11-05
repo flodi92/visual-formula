@@ -18,11 +18,11 @@ export default class GEquation extends GAbstractRoot {
     public set gTerm2(child: GExpression | undefined) {
         super.setChild('gTerm2', child);
     }
-    public get unscaledWidth(): number {
-        throw 'TODO'
+    public get unscaledWidth(): number | undefined {
+        return this.gTerm1?.unscaledWidth;
     }
-    public get unscaledHeight(): number {
-        throw 'TODO'
+    public get unscaledHeight(): number | undefined {
+        return this.gTerm1?.unscaledHeight;
     }
 
     protected getLayerTransformationOfTerm(askingType?: TypeInParent): Transformation {
@@ -32,7 +32,10 @@ export default class GEquation extends GAbstractRoot {
         const [x, y] = [gTerm1?.unscaledX, gTerm1?.unscaledY];
 
         let scaleX: number, scaleY: number;
-        if (askingType === 'gTerm1') {
+        if (!gTerm1.unscaledWidth || !gTerm1.unscaledHeight || !gTerm2.unscaledWidth || !gTerm2.unscaledHeight) {
+            return DEFAULT_TRANSFORMATION;
+        }
+        else if (askingType === 'gTerm1') {
             scaleX = (gTerm1.unscaledWidth < gTerm2.unscaledWidth) ? 1 : gTerm2.unscaledWidth / gTerm1.unscaledWidth
             scaleY = (gTerm1.unscaledHeight < gTerm2.unscaledHeight) ? 1 : gTerm2.unscaledHeight / gTerm1.unscaledHeight
         } else if (askingType === 'gTerm2') {
