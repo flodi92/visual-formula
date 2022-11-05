@@ -16,11 +16,11 @@ import {
 
 const getNeighbours = (expression: GExpression | undefined, xy: XY) => {
     const _getNeighbours = (expression: GExpression | undefined, visited = Array<number>()) => {
-        if (!expression?.id || visited.includes(expression.id)) return [];
+        if (expression?.id === undefined || visited.includes(expression.id)) return [];
         visited.push(expression.id);
         let buffer = new Array<GExpression>();
         let isCheckParent = false;
-
+        
         if (expression instanceof GValue || expression instanceof GSimpleValue) {
             buffer.push(expression);
             isCheckParent = true;
@@ -36,11 +36,10 @@ const getNeighbours = (expression: GExpression | undefined, xy: XY) => {
                     )
                 );
                 isCheckParent = true;
-            } else {
-                buffer.push(expression); // do not check children
-                isCheckParent = false;
-            }
-        } else if (expression instanceof GProduct2D) {
+            } 
+        }
+        
+        else if (expression instanceof GProduct2D) {
             buffer.push(
                 ..._getNeighbours(xy === 'X' ? expression.gFactorY : expression.gFactorX, visited)
             );
@@ -77,7 +76,7 @@ const getNeighbours = (expression: GExpression | undefined, xy: XY) => {
         return buffer;
     };
 
-    return _getNeighbours(expression);
+    return _getNeighbours(expression).filter(gValue => gValue.id !== expression?.id);
 }
 
 

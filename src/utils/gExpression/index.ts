@@ -13,14 +13,14 @@ import isEdgePossible from "./isEdgePossible";
 
 const getFixedWidthOfNeighbour = (gValue: GValue) => {
     const neighbours = getNeighbours(gValue, 'Y');
-    const normedNeighbour = neighbours.find(neighbour => neighbour.isNormY); // TODO expecting all neighbours of same height
-    return normedNeighbour?.width
+    const normedNeighbour = neighbours.find(neighbour => neighbour.unscaledWidth !== undefined); // TODO expecting all neighbours of same height
+    return normedNeighbour?.unscaledWidth || undefined
 }
 
 const getFixedHeightOfNeighbour = (gValue: GValue) => {
     const neighbours = getNeighbours(gValue, 'X');
-    const normedNeighbour = neighbours.find(neighbour => neighbour.isNormX); // TODO expecting all neighbours of same height
-    return normedNeighbour?.height
+    const normedNeighbour = neighbours.find(neighbour => neighbour.unscaledHeight !== undefined); // TODO expecting all neighbours of same height
+    return normedNeighbour?.unscaledHeight || undefined
 }
 
 const getGValues = (expression: GExpression): GValue[] => {
