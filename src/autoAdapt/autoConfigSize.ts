@@ -32,7 +32,7 @@ export const autoConfigSize = (gExpression: GExpression) => {
             startLength = gValues.length;
 
             gValues = gValues.filter(gValue => {
-                if (([gValue.unscaledWidth, gValue.unscaledHeight].some(size => size !== undefined))) return true;
+                if (([gValue.unscaledWidth, gValue.unscaledHeight].some(size => size !== undefined))) return false;
 
                 const width = getFixedWidthOfNeighbour(gValue);
                 const height = getFixedHeightOfNeighbour(gValue);
@@ -80,9 +80,9 @@ const getNormedValues = (gExpression: GExpression | undefined, xy: XY): GAbstrac
             return isNormed ? [gExpression] : [];
         } else if (gExpression instanceof GProduct2D) {
             if (xy === "X") {
-                return gExpression?.gFactorY ? _down(gExpression.gFactorY, true) : [];
+                return !!gExpression?.gFactorY ? _down(gExpression.gFactorY, true) : [];
             } else { // xy === "Y"
-                return gExpression?.gFactorX ? _down(gExpression.gFactorX, true) : [];
+                return !!gExpression?.gFactorX ? _down(gExpression.gFactorX, true) : [];
             }
         } else if (gExpression instanceof GQuotient2D) {
             return (
@@ -99,7 +99,7 @@ const getNormedValues = (gExpression: GExpression | undefined, xy: XY): GAbstrac
                     .reduce((prev, current) => [...prev, ...current], [])
                 : []
         } else if (gExpression instanceof GEquation) {
-            return [..._down(gExpression.gTerm1), ..._down(gExpression.gTerm2)]
+            return [..._down(gExpression.gTerm1, isNormed), ..._down(gExpression.gTerm2, isNormed)]
         } else if (gExpression instanceof GTerm) {
             return _down(gExpression.gTerm);
         }
