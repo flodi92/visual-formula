@@ -6,9 +6,6 @@ export default class GValue extends GAbstractValue {
     protected childrenTypesInParentDefinition(): TypeInParent[] {
         return ['mValue']
     }
-    private _unscaledWidth?: number | undefined;
-    private _unscaledHeight?: number | undefined;
-
     private _xEdge?: YDirection;
     private _yEdge?: XDirection;
 
@@ -19,26 +16,6 @@ export default class GValue extends GAbstractValue {
     public set mValue(child: MExpression | undefined) {
         super.setChild('mValue', child);
     }
-    set unscaledWidth(value: number | undefined) {
-        this._unscaledWidth = value;
-    }
-    get unscaledWidth(): number | undefined {
-        return this._unscaledWidth;
-    }
-    set unscaledHeight(value: number | undefined) {
-        this._unscaledHeight = value;
-    }
-    get unscaledHeight(): number | undefined {
-        return this._unscaledHeight;
-    }
-
-    public get isNormX(): boolean {
-        return this._unscaledWidth === 1;
-    }
-    public get isNormY(): boolean {
-        return this._unscaledHeight === 1;
-    }
-
     public get xEdge(): YDirection | undefined {
         return this._xEdge;
     }
