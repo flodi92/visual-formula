@@ -27,7 +27,7 @@ import {
 import { ID, Operator } from "../types";
 import Expression from "../expression/Expression";
 
-export const getExpressionFromJSON = (value: any, idCount: ID = 0) => {
+export const getExpressionFromJSON = (value: any, idCount: ID = 2) => {
     if (typeof value === 'string' && value.includes('{')) value = JSON.parse(value);
 
     const _getOperatorPositions = (str: string, operator: Operator): number[] => {
@@ -110,7 +110,7 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 0) => {
         return undefined;
     };
 
-    const _getExpressionFromJSON = (json: any, idCount: ID = 0) => {
+    const _getExpressionFromJSON = (json: any, idCount: ID = 2) => {
         if (!json) return undefined;
         let expression: any;
         switch (json.type) {
@@ -195,6 +195,7 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 0) => {
     if (expression instanceof GExpression && !(expression instanceof GAbstractRoot)) {
         const gTerm = new GTerm()
         gTerm.gTerm = expression;
+        gTerm.id = 1;
         expression = gTerm;
     }
     return expression;

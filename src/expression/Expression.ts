@@ -9,7 +9,7 @@ export default abstract class Expression {
     private _childrenArray = new Array<Expression>();
 
     public get id() { return this._id }
-    protected set id(val) { this._id = val }
+    public set id(val) { this._id = val }
 
     protected getChild(typeInParent: TypeInParent) {
         return this._childrenMap.get(typeInParent);
