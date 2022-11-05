@@ -22,14 +22,14 @@ export default class GValue extends GAbstractValue {
     set unscaledWidth(value: number | undefined) {
         this._unscaledWidth = value;
     }
-    get unscaledWidth(): number {
-        return this._unscaledWidth || 0;
+    get unscaledWidth(): number | undefined {
+        return this._unscaledWidth;
     }
     set unscaledHeight(value: number | undefined) {
         this._unscaledHeight = value;
     }
-    get unscaledHeight(): number {
-        return this._unscaledHeight || 0;
+    get unscaledHeight(): number | undefined {
+        return this._unscaledHeight;
     }
 
     public get isNormX(): boolean {

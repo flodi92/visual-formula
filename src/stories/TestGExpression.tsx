@@ -19,21 +19,21 @@ export const TestGExpression = ({ type, startDirection, width1, height1, width2,
   const child1 = {
     type: 'GValue',
     mValue: '1',
-    numbericValue: 2,
+    numericValue: 2,
     xEdge: "bottom", yEdge: "left",
     unscaledWidth: width1, unscaledHeight: height1,
   };
   const child2 = {
     type: 'GValue',
     mValue: '1',
-    numbericValue: 2,
+    numericValue: 2,
     xEdge: "top", yEdge: "right",
     unscaledWidth: width2, unscaledHeight: height2,
   };
   const simpleChild1 = {
     type: 'GSimpleValue',
     mValue: '1',
-    numbericValue: 2,
+    numericValue: 2,
     edge: "bottom",
     unscaledWidth: width1, unscaledHeight: height1,
   };

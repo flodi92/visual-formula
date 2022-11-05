@@ -14,7 +14,7 @@ const Test = () => {
     yEdge: 'left',
     unscaledWidth: 2,
     unscaledHeight: 2,
-    numbericValue: 2,
+    numericValue: 2,
   }) as GAbstractRoot;
 
   root.layerTransformation = { x: 30, y: 30, scaleX: 10, scaleY: 10 }

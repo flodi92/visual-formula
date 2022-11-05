@@ -11,10 +11,10 @@ export default abstract class GExpression extends Expression {
         return this.unscaledY * this.transformation.scaleY + this.transformation.y;
     }
     public get width(): number {
-        return this.unscaledWidth * this.transformation.scaleX;
+        return (this.unscaledWidth || 0) * this.transformation.scaleX;
     }
     public get height(): number {
-        return this.unscaledHeight * this.transformation.scaleY;
+        return (this.unscaledHeight || 0) * this.transformation.scaleY;
     }
 
     public get transformation(): Transformation {
@@ -26,8 +26,8 @@ export default abstract class GExpression extends Expression {
         return this.getLayerTransformationOfTerm(this.typeInParent);
     }
 
-    abstract get unscaledWidth(): number;
-    abstract get unscaledHeight(): number;
+    abstract get unscaledWidth(): number | undefined;
+    abstract get unscaledHeight(): number | undefined;
 
     public get unscaledX(): number {
         if (!this.parent || !this.typeInParent) return 0;

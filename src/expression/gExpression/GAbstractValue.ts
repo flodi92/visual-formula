@@ -1,12 +1,11 @@
 import GExpression from "./GExpression";
 
 export default abstract class GAbstractValue extends GExpression {
-    private _numbericValue?: number;
-
-    public get numericValue(): number {
-        return this._numbericValue || 0;
+    private _numericValue: number | undefined;
+    public get numericValue(): number | undefined {
+        return this._numericValue;
     }
-    public set numericValue(val: number) {
-        this._numbericValue = val;
+    public set numericValue(value: number | undefined) {
+        this._numericValue = value;
     }
 }

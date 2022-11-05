@@ -165,6 +165,7 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 0) => {
                 expression.yEdge = json.yEdge;
                 expression.unscaledWidth = json.unscaledWidth;
                 expression.unscaledHeight = json.unscaledHeight;
+                expression.numericValue = json.numericValue;
                 break;
             case 'GSimpleValue':
                 expression = new GSimpleValue();
@@ -172,6 +173,7 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 0) => {
                 expression.edge = json.edge;
                 expression.unscaledWidth = json.unscaledWidth;
                 expression.unscaledHeight = json.unscaledHeight;
+                expression.numericValue = json.numericValue;
                 break;
         }
         expression.id = idCount;
@@ -179,9 +181,9 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 0) => {
         if (expression instanceof GAbstractDirectedExpression) {
             expression.startDirection = json.startDirection;
         }
-        else if (expression instanceof GAbstractValue) {
-            expression.numericValue = json.numericValue;
-        }
+        // else if (expression instanceof GAbstractValue) {
+        //     expression.numericValue = json.numericValue;
+        // }
 
         return expression as GExpression;
     }
@@ -271,6 +273,7 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
             yEdge: expression.yEdge,
             unscaledWidth: expression.unscaledWidth,
             unscaledHeight: expression.unscaledHeight,
+            numericValue: expression.numericValue,
         }
     }
     else if (expression instanceof GSimpleValue) {
@@ -280,6 +283,7 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
             edge: expression.edge,
             unscaledWidth: expression.unscaledWidth,
             unscaledHeight: expression.unscaledHeight,
+            numericValue: expression.numericValue,
         }
     }
     else if (expression instanceof MSum) {

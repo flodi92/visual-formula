@@ -18,7 +18,7 @@ Primary.args = {
     gFactorX: {
       type: 'GValue',
       mValue: "6",
-      numbericValue: 6,
+      numericValue: 6,
       xEdge: "bottom",
       yEdge: "left",
 
@@ -28,7 +28,7 @@ Primary.args = {
     gFactorY: {
       type: 'GValue',
       mValue: "4",
-      numbericValue: 4,
+      numericValue: 4,
       xEdge: "bottom",
       yEdge: "left",
 
@@ -50,7 +50,7 @@ GQuotient2DExample.args = {
     gDivident: {
       type: 'GValue',
       mValue: "2",
-      numbericValue: 1,
+      numericValue: 1,
       xEdge: "top",
       yEdge: "right",
 
@@ -60,7 +60,7 @@ GQuotient2DExample.args = {
     gDivisor: {
       type: 'GValue',
       mValue: "2",
-      numbericValue: 1,
+      numericValue: 1,
       xEdge: "bottom",
       yEdge: "left",
 

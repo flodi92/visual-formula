@@ -19,7 +19,7 @@ Primary.args = {
       {
         type: 'GValue',
         mValue: "2",
-        numbericValue: 1,
+        numericValue: 1,
         xEdge: "bottom",
         yEdge: "left",
 
@@ -29,7 +29,7 @@ Primary.args = {
       {
         type: 'GValue',
         mValue: "2",
-        numbericValue: 1,
+        numericValue: 1,
         xEdge: "bottom",
         yEdge: "left",
 
@@ -51,7 +51,7 @@ GDifferenceExample.args = {
     gMinuend: {
       type: 'GValue',
       mValue: "2",
-      numbericValue: 1,
+      numericValue: 1,
       xEdge: "top",
       yEdge: "right",
 
@@ -61,7 +61,7 @@ GDifferenceExample.args = {
     gSubtrahend: {
       type: 'GValue',
       mValue: "2",
-      numbericValue: 1,
+      numericValue: 1,
       xEdge: "bottom",
       yEdge: "left",
 
@@ -86,7 +86,7 @@ GProduct1DExample.args = {
     gComplexFactor: {
       type: "GValue",
       mValue: "2",
-      numbericValue: 1,
+      numericValue: 1,
       xEdge: "top",
       yEdge: "right",
 
@@ -96,7 +96,7 @@ GProduct1DExample.args = {
     gSimpleFactor: {
       type: "GSimpleValue",
       mSimpleValue: "2",
-      numbericValue: 1,
+      numericValue: 1,
       edge: "top",
 
       unscaledWidth: 6,
@@ -118,7 +118,7 @@ GProduct2DExample.args = {
     gFactorX: {
       type: 'GValue',
       mValue: "6",
-      numbericValue: 6,
+      numericValue: 6,
       xEdge: "bottom",
       yEdge: "left",
 
@@ -128,7 +128,7 @@ GProduct2DExample.args = {
     gFactorY: {
       type: 'GValue',
       mValue: "4",
-      numbericValue: 4,
+      numericValue: 4,
       xEdge: "bottom",
       yEdge: "left",
 
@@ -150,7 +150,7 @@ GQuotient2DExample.args = {
     gDivident: {
       type: 'GValue',
       mValue: "2",
-      numbericValue: 1,
+      numericValue: 1,
       xEdge: "bottom",
       yEdge: "right",
 
@@ -160,7 +160,7 @@ GQuotient2DExample.args = {
     gDivisor: {
       type: 'GValue',
       mValue: "2",
-      numbericValue: 1,
+      numericValue: 1,
       xEdge: "top",
       yEdge: "right",
 

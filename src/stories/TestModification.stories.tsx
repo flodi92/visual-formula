@@ -19,7 +19,7 @@ Primary.args = {
       {
         type: 'GValue',
         mValue: "2",
-        numbericValue: 1,
+        numericValue: 1,
         xEdge: "bottom",
         yEdge: "left",
 
@@ -29,7 +29,7 @@ Primary.args = {
       {
         type: 'GValue',
         mValue: "2",
-        numbericValue: 1,
+        numericValue: 1,
         xEdge: "bottom",
         yEdge: "left",
 
@@ -51,7 +51,7 @@ GDifferenceExample.args = {
     gMinuend: {
       type: 'GValue',
       mValue: "2",
-      numbericValue: 1,
+      numericValue: 1,
       xEdge: "top",
       yEdge: "right",
 
@@ -61,7 +61,7 @@ GDifferenceExample.args = {
     gSubtrahend: {
       type: 'GValue',
       mValue: "2",
-      numbericValue: 1,
+      numericValue: 1,
       xEdge: "bottom",
       yEdge: "left",
 

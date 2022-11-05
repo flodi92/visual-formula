@@ -23,7 +23,7 @@ export const TestGValue = ({ x, y, scaleX, scaleY, ...props }: TestGValueProps) 
   const root = getExpressionFromJSON({
     type: 'GValue',
     mValue: '1',
-    numbericValue: 2,
+    numericValue: 2,
     ...props,
   }) as GAbstractRoot;
 
