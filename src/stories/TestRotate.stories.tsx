@@ -55,7 +55,7 @@ GDifferenceExample.args = {
       xEdge: "top",
       yEdge: "right",
 
-      unscaledWidth: 4,
+      unscaledWidth: 6,
       unscaledHeight: 2,
     },
     gSubtrahend: {
@@ -65,7 +65,7 @@ GDifferenceExample.args = {
       xEdge: "bottom",
       yEdge: "left",
 
-      unscaledWidth: 6,
+      unscaledWidth: 4,
       unscaledHeight: 2,
     }
   },
