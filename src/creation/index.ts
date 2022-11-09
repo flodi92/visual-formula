@@ -202,30 +202,32 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 2) => {
 }
 
 export const getJSONFromExpression = (expression?: Expression): object | undefined | string => {
-
-    if (!expression) return undefined;
+    let buffer: any;
+    if (!expression) {
+        buffer = undefined;
+    }
     else if (expression instanceof GEquation) {
-        return {
+        buffer = {
             type: 'GEquation',
             gTerm1: getJSONFromExpression(expression.gTerm1),
             gTerm2: getJSONFromExpression(expression.gTerm2),
         }
     }
     else if (expression instanceof GTerm) {
-        return {
+        buffer = {
             type: 'GTerm',
             gTerm: getJSONFromExpression(expression.gTerm),
         }
     }
     else if (expression instanceof GSum) {
-        return {
+        buffer = {
             type: 'GSum',
             gSummands: expression.gSummands?.map(gSummand => getJSONFromExpression(gSummand)),
             startDirection: expression.startDirection,
         }
     }
     else if (expression instanceof GDifference) {
-        return {
+        buffer = {
             type: 'GDifference',
             gMinuend: getJSONFromExpression(expression.gMinuend),
             gSubtrahend: getJSONFromExpression(expression.gSubtrahend),
@@ -233,7 +235,7 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
         }
     }
     else if (expression instanceof GProduct1D) {
-        return {
+        buffer = {
             type: 'GProduct1D',
             gSimpleFactor: getJSONFromExpression(expression.gSimpleFactor),
             gComplexFactor: getJSONFromExpression(expression.gComplexFactor),
@@ -241,7 +243,7 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
         }
     }
     else if (expression instanceof GProduct2D) {
-        return {
+        buffer = {
             type: 'GProduct2D',
             gFactorX: getJSONFromExpression(expression.gFactorX),
             gFactorY: getJSONFromExpression(expression.gFactorY),
@@ -250,7 +252,7 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
         }
     }
     else if (expression instanceof GQuotient1D) {
-        return {
+        buffer = {
             type: 'GQuotient1D',
             gSimpleDivisor: getJSONFromExpression(expression.gSimpleDivisor),
             gComplexDivident: getJSONFromExpression(expression.gComplexDivident),
@@ -258,7 +260,7 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
         }
     }
     else if (expression instanceof GQuotient2D) {
-        return {
+        buffer = {
             type: 'GQuotient2D',
             gDivident: getJSONFromExpression(expression.gDivident),
             gDivisor: getJSONFromExpression(expression.gDivisor),
@@ -267,7 +269,7 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
         }
     }
     else if (expression instanceof GValue) {
-        return {
+        buffer = {
             type: 'GValue',
             mValue: getJSONFromExpression(expression.mValue),
             xEdge: expression.xEdge,
@@ -278,7 +280,7 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
         }
     }
     else if (expression instanceof GSimpleValue) {
-        return {
+        buffer = {
             type: 'GSimpleValue',
             mSimpleValue: getJSONFromExpression(expression.mSimpleValue),
             edge: expression.edge,
@@ -288,17 +290,22 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
         }
     }
     else if (expression instanceof MSum) {
-        return `(${expression.mSummands?.map(mSummand => getJSONFromExpression(mSummand)).join('+')})`;
+        buffer = `(${expression.mSummands?.map(mSummand => getJSONFromExpression(mSummand)).join('+')})`;
     }
     else if (expression instanceof MDifference) {
-        return `(${expression.mMinuend}-${expression.mSubtrahend})`
+        buffer = `(${expression.mMinuend}-${expression.mSubtrahend})`
     }
     else if (expression instanceof MProduct) {
-        return expression.mFactors?.map(mFactor => getJSONFromExpression(mFactor)).join('*');
+        buffer = expression.mFactors?.map(mFactor => getJSONFromExpression(mFactor)).join('*');
     }
     else if (expression instanceof MQuotient) {
-        return `${expression.mDivident}/${expression.mDivisor}`
+        buffer = `${expression.mDivident}/${expression.mDivisor}`
     }
+
+    if (!!buffer && expression instanceof GExpression) {
+        buffer.id = expression.id;
+    }
+    return buffer;
 }
 
 
