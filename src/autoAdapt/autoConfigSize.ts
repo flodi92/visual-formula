@@ -68,12 +68,14 @@ export const autoConfigSize = (gExpression: GExpression) => {
                     } else if (parent instanceof GQuotient1D) {
                         if (directionToXY(parent.startDirection) === "X"
                             && parent.gComplexDivident?.unscaledWidth !== undefined) {
-                            gSimpleValue.unscaledWidth = parent.gComplexDivident.unscaledWidth / numericValue;
+                            gSimpleValue.unscaledWidth = parent.gComplexDivident.unscaledWidth
+                                - parent.gComplexDivident.unscaledWidth / numericValue;
                             gSimpleValue.unscaledHeight = parent.gComplexDivident.unscaledHeight;
                             return false;
                         } else if (directionToXY(parent.startDirection) === "Y"
                             && parent.gComplexDivident?.unscaledHeight !== undefined) {
-                            gSimpleValue.unscaledHeight = parent.gComplexDivident.unscaledHeight / numericValue;
+                            gSimpleValue.unscaledHeight = parent.gComplexDivident.unscaledHeight
+                                - parent.gComplexDivident.unscaledHeight / numericValue;
                             gSimpleValue.unscaledWidth = parent.gComplexDivident.unscaledWidth;
                             return false;
                         }
