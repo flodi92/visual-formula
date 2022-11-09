@@ -1,7 +1,7 @@
 import GExpression from "../../expression/gExpression/GExpression";
 import GAbstractValue from "../../expression/gExpression/GAbstractValue";
-import GSimpleValue from "../../expression/gExpression/GSimpleValue";
 import GValue from "../../expression/gExpression/GValue";
+import { GSimpleValue } from "../../expression/gExpression";
 
 import { ID, } from "../../types";
 
@@ -10,6 +10,7 @@ import getHeights from "./getHeights";
 import getNeighbours from "./getNeighbours";
 import getCommonEdgeValues from "./getCommonEdgeValues";
 import isEdgePossible from "./isEdgePossible";
+import { getXNormedValues, getYNormedValues } from "./getNormedValues";
 
 const getFixedWidthOfNeighbour = (gValue: GValue) => {
     const neighbours = getNeighbours(gValue, 'Y');
@@ -24,22 +25,29 @@ const getFixedHeightOfNeighbour = (gValue: GValue) => {
 }
 
 const getGValues = (expression: GExpression): GValue[] => {
-    if (expression instanceof GValue) return [expression];
-    else if (expression instanceof GSimpleValue) {
-        return []
-    }
+    if (!expression) return [];
+    else if (expression instanceof GValue) return [expression];
     else {
-        return (expression.children as any[]).reduce((prev, child: GExpression) => [...prev, ...getGValues(child)], []);
+        return (expression.children as any[])
+            .reduce((prev, child: GExpression) => [...prev, ...getGValues(child)], []);
+    }
+}
+
+const getGSimpleValues = (expression: GExpression): GSimpleValue[] => {
+    if (!expression) return [];
+    else if (expression instanceof GSimpleValue) return [expression];
+    else {
+        return (expression.children as any[])
+            .reduce((prev, child: GExpression) => [...prev, ...getGSimpleValues(child)], []);
     }
 }
 
 const getGAbstractValues = (expression: GExpression): GAbstractValue[] => {
-    if (expression instanceof GAbstractValue) {
-        return !!expression ? [expression] : [];
-    } else {
-        return expression.children
-            .map((child) => child ? getGAbstractValues(child as GExpression) : [])
-            .reduce((prev, curr) => [...prev, ...curr]);
+    if (!expression) return [];
+    else if (expression instanceof GAbstractValue) return [expression];
+    else {
+        return (expression.children as any[])
+            .reduce((prev, child: GExpression) => [...prev, ...getGAbstractValues(child)], []);
     }
 }
 
@@ -53,9 +61,12 @@ export {
     getFixedWidthOfNeighbour,
     getFixedHeightOfNeighbour,
     getGValues,
+    getGSimpleValues,
     getGAbstractValues,
     getGAbstractValueIds,
     getNeighbours,
     getCommonEdgeValues,
-    isEdgePossible
+    isEdgePossible,
+    getXNormedValues,
+    getYNormedValues,
 };

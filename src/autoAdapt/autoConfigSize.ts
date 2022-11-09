@@ -1,18 +1,12 @@
 import { isNumber } from "lodash";
 import {
-    GAbstractDirectedExpression,
-    GAbstractValue,
-    GEquation,
     GExpression,
-    GProduct2D,
-    GQuotient2D,
-    GTerm,
-    GValue,
+    GProduct1D,
+    GQuotient1D,
 } from "../expression/gExpression"
-import { ID, XY } from "../types";
-import { directionToXY, getOtherXY } from "../utils/general";
+import { directionToXY } from "../utils/general";
 
-import { getFixedHeightOfNeighbour, getFixedWidthOfNeighbour, getGValues } from "../utils/gExpression";
+import { getFixedHeightOfNeighbour, getFixedWidthOfNeighbour, getGSimpleValues, getGValues, getXNormedValues, getYNormedValues } from "../utils/gExpression";
 
 export const autoConfigSize = (gExpression: GExpression) => {
     const xNormedValue = getXNormedValues(gExpression);
@@ -24,12 +18,16 @@ export const autoConfigSize = (gExpression: GExpression) => {
     yNormedValue.forEach(gValue => isNumber(gValue.numericValue)
         && ([gValue.unscaledWidth, gValue.unscaledHeight] = [gValue.numericValue, 1]));
 
-    let gValues = getGValues(gExpression) as GValue[];
+    let gValues = getGValues(gExpression);
+    let gSimpleValues = getGSimpleValues(gExpression);
 
-    while (!!gValues?.length) {
-        let startLength: number, endLength: number;
-        do {
-            startLength = gValues.length;
+    let startLength = Number.POSITIVE_INFINITY, endLength = Number.NEGATIVE_INFINITY;
+    while (startLength > endLength) {
+        startLength = gValues.length + gSimpleValues.length;
+
+        let _startLength = Number.POSITIVE_INFINITY, _endLength = Number.NEGATIVE_INFINITY;
+        while (_startLength > _endLength) {
+            _startLength = gValues.length + gSimpleValues.length;
 
             gValues = gValues.filter(gValue => {
                 if (([gValue.unscaledWidth, gValue.unscaledHeight].some(size => size !== undefined))) return false;
@@ -49,8 +47,43 @@ export const autoConfigSize = (gExpression: GExpression) => {
                 }
                 return true;
             })
-            endLength = gValues.length;
-        } while (startLength > endLength);
+
+            gSimpleValues = gSimpleValues.filter(
+                gSimpleValue => {
+                    const { parent, numericValue } = gSimpleValue;
+                    if (!parent || numericValue === undefined) return true;
+
+                    if (parent instanceof GProduct1D) {
+                        if (directionToXY(parent.startDirection) === "X"
+                            && parent.gComplexFactor?.unscaledWidth !== undefined) {
+                            gSimpleValue.unscaledWidth = parent.gComplexFactor.unscaledWidth * (numericValue - 1);
+                            gSimpleValue.unscaledHeight = parent.gComplexFactor.unscaledHeight;
+                            return false;
+                        } else if (directionToXY(parent.startDirection) === "Y"
+                            && parent.gComplexFactor?.unscaledHeight !== undefined) {
+                            gSimpleValue.unscaledHeight = parent.gComplexFactor.unscaledHeight * (numericValue - 1);
+                            gSimpleValue.unscaledWidth = parent.gComplexFactor.unscaledWidth;
+                            return false;
+                        }
+                    } else if (parent instanceof GQuotient1D) {
+                        if (directionToXY(parent.startDirection) === "X"
+                            && parent.gComplexDivident?.unscaledWidth !== undefined) {
+                            gSimpleValue.unscaledWidth = parent.gComplexDivident.unscaledWidth / numericValue;
+                            gSimpleValue.unscaledHeight = parent.gComplexDivident.unscaledHeight;
+                            return false;
+                        } else if (directionToXY(parent.startDirection) === "Y"
+                            && parent.gComplexDivident?.unscaledHeight !== undefined) {
+                            gSimpleValue.unscaledHeight = parent.gComplexDivident.unscaledHeight / numericValue;
+                            gSimpleValue.unscaledWidth = parent.gComplexDivident.unscaledWidth;
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            )
+
+            _endLength = gValues.length + gSimpleValues.length;
+        }
 
         gValues = gValues.filter(gValue => {
             if (([gValue.unscaledWidth, gValue.unscaledHeight].some(size => size !== undefined))) return true;
@@ -58,66 +91,15 @@ export const autoConfigSize = (gExpression: GExpression) => {
             const width = getFixedWidthOfNeighbour(gValue);
             const height = getFixedHeightOfNeighbour(gValue);
 
-
-            if (width === undefined && height === undefined) {
-                gValue.unscaledWidth = gValue.numericValue && Math.sqrt(gValue.numericValue);
-                gValue.unscaledHeight = gValue.numericValue && Math.sqrt(gValue.numericValue);
+            if (width === undefined && height === undefined && gValue.numericValue) {
+                gValue.unscaledWidth = Math.sqrt(gValue.numericValue);
+                gValue.unscaledHeight = Math.sqrt(gValue.numericValue);
                 return false;
             }
             return true;
         })
+
+        endLength = gValues.length + gSimpleValues.length;
     }
 }
 
-const getNormedValues = (gExpression: GExpression | undefined, xy: XY): GAbstractValue[] => {
-    let visitedIDs: ID[] = [];
-
-    const _down = (gExpression: GExpression | undefined, isNormed = false): GAbstractValue[] => {
-        if (!gExpression?.id || visitedIDs.includes(gExpression.id)) return [];
-        visitedIDs.push(gExpression.id);
-
-        if (gExpression instanceof GAbstractValue) {
-            return isNormed ? [gExpression] : [];
-        } else if (gExpression instanceof GProduct2D) {
-            if (xy === "X") {
-                return !!gExpression?.gFactorY ? _down(gExpression.gFactorY, true) : [];
-            } else { // xy === "Y"
-                return !!gExpression?.gFactorX ? _down(gExpression.gFactorX, true) : [];
-            }
-        } else if (gExpression instanceof GQuotient2D) {
-            return (
-                directionToXY(gExpression.divisorEdge) === getOtherXY(xy) ?
-                    _down(gExpression.gDivisor, true) :
-                    directionToXY(gExpression.resultEdge) === getOtherXY(xy)
-                        ? _up(gExpression.parent as GExpression | undefined) :
-                        []);
-        } else if (gExpression instanceof GAbstractDirectedExpression) {
-            const areChildrenNormed = directionToXY(gExpression.startDirection) === getOtherXY(xy) && isNormed;
-            return areChildrenNormed || !isNormed ?
-                (gExpression.children as (GExpression | undefined)[])
-                    .map((child) => _down(child, areChildrenNormed))
-                    .reduce((prev, current) => [...prev, ...current], [])
-                : []
-        } else if (gExpression instanceof GEquation) {
-            return [..._down(gExpression.gTerm1, isNormed), ..._down(gExpression.gTerm2, isNormed)]
-        } else if (gExpression instanceof GTerm) {
-            return _down(gExpression.gTerm);
-        }
-        return [];
-    }
-
-    const _up = (gExpression: GExpression | undefined): GAbstractValue[] => {
-        if (!gExpression?.id) return [];
-        return [..._down(gExpression, true), ..._up(gExpression)];
-    }
-
-    return _down(gExpression)
-}
-
-const getXNormedValues = (gExpression: GExpression): GAbstractValue[] => {
-    return getNormedValues(gExpression, 'X');
-}
-
-const getYNormedValues = (gExpression: GExpression): GAbstractValue[] => {
-    return getNormedValues(gExpression, 'Y');
-}
