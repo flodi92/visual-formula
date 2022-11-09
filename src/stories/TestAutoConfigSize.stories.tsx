@@ -126,19 +126,19 @@ GQuotient1DExample.args = {
 
     gComplexDivident: {
       type: "GValue",
-      mValue: "6",
-      numericValue: 6,
+      mValue: "12",
+      numericValue: 12,
       xEdge: "top",
       yEdge: "right",
     },
     gSimpleDivisor: {
       type: "GSimpleValue",
-      mSimpleValue: "2",
-      numericValue: 2,
+      mSimpleValue: "3",
+      numericValue: 3,
       edge: "bottom",
     }
   },
-  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+  layerTransformation: { x: 90, y: 90, scaleX: 20, scaleY: 20 }
 };
 
 export const GQuotient2DExample = Template.bind({});

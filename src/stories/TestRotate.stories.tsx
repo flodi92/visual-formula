@@ -140,6 +140,38 @@ GProduct2DExample.args = {
   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
 };
 
+export const GQuotient1DExample = Template.bind({});
+
+GQuotient1DExample.args = {
+  rotations: 0,
+  json: {
+    type: "GQuotient1D",
+
+    startDirection: "left",
+
+    gComplexDivident: {
+      type: "GValue",
+      mValue: "12",
+      numericValue: 12,
+      xEdge: "top",
+      yEdge: "right",
+
+      unscaledWidth: 6,
+      unscaledHeight: 2,
+    },
+    gSimpleDivisor: {
+      type: "GSimpleValue",
+      mSimpleValue: "3",
+      numericValue: 3,
+      edge: "bottom",
+
+      unscaledWidth: 4,
+      unscaledHeight: 2
+    }
+  },
+  layerTransformation: { x: 100, y: 100, scaleX: 20, scaleY: 20 }
+};
+
 export const GQuotient2DExample = Template.bind({});
 
 GQuotient2DExample.args = {
