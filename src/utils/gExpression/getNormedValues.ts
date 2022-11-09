@@ -1,6 +1,6 @@
 import Expression from "../../expression/Expression";
 import { GAbstractDirectedExpression, GAbstractValue, GEquation, GExpression, GProduct2D, GQuotient2D, GTerm } from "../../expression/gExpression";
-import { ID } from "../../types";
+import { ID, XY } from "../../types";
 import { directionToXY, getOtherXY } from "../general";
 
 const getNormedValues = (gExpression: GExpression | undefined, xy: XY): GAbstractValue[] => {
