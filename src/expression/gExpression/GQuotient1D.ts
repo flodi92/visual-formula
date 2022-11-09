@@ -39,17 +39,16 @@ export default class GQuotient extends GAbstractDirectedExpression {
             this.startDirection === "left"
                 ? -(this.gSimpleDivisor?.unscaledWidth || 0)
                 : 0;
-        return this.unscaledWidth + dx;
+        return this.unscaledX + dx;
     }
     public get gComplexDividentY(): number {
         const dy =
             this.startDirection === "top"
                 ? -(this.gSimpleDivisor?.unscaledHeight || 0)
                 : 0;
-        return this.unscaledWidth + dy;
+        return this.unscaledY + dy;
     }
     public get gSimpleDivisorX(): number {
-
         const dx =
             this.startDirection ?
                 {
@@ -58,7 +57,7 @@ export default class GQuotient extends GAbstractDirectedExpression {
                     top: 0,
                     bottom: 0,
                 }[this.startDirection] : 0;
-        return this.unscaledWidth + dx;
+        return this.unscaledX + dx;
     }
     public get gSimpleDivisorY(): number {
         const dy =
@@ -69,17 +68,17 @@ export default class GQuotient extends GAbstractDirectedExpression {
                     left: 0,
                     right: 0
                 }[this.startDirection] : 0;
-        return this.unscaledHeight + dy;
+        return this.unscaledY + dy;
     }
-    
+
     protected getOfParentX(askingType: TypeInParent): number | undefined {
         return askingType === "gComplexDivident" ? this.gComplexDividentX
-            : askingType === "gSimpleDivisor" ? this.gSimpleDivisorX 
-            : undefined;
+            : askingType === "gSimpleDivisor" ? this.gSimpleDivisorX
+                : undefined;
     }
     protected getOfParentY(askingType: TypeInParent): number | undefined {
         return askingType === "gComplexDivident" ? this.gComplexDividentY
-            : askingType === "gSimpleDivisor" ? this.gSimpleDivisorY 
-            : undefined;
+            : askingType === "gSimpleDivisor" ? this.gSimpleDivisorY
+                : undefined;
     }
 }
