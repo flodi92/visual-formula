@@ -74,14 +74,14 @@ GProduct1DExample.args = {
     gComplexFactor: {
       type: "GValue",
       mValue: "2",
-      numericValue: 1,
+      numericValue: 2,
       xEdge: "top",
       yEdge: "right",
     },
     gSimpleFactor: {
       type: "GSimpleValue",
-      mSimpleValue: "2",
-      numericValue: 1,
+      mSimpleValue: "3",
+      numericValue: 3,
       edge: "top",
     }
   },
@@ -151,19 +151,19 @@ GQuotient2DExample.args = {
     resultEdge: 'bottom',
     gDivident: {
       type: 'GValue',
-      mValue: "2",
-      numericValue: 1,
+      mValue: "10",
+      numericValue: 10,
       xEdge: "bottom",
       yEdge: "right",
     },
     gDivisor: {
       type: 'GValue',
-      mValue: "2",
-      numericValue: 1,
+      mValue: "5",
+      numericValue: 5,
       xEdge: "top",
       yEdge: "right",
     }
   },
-  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+  layerTransformation: { x: 30, y:110, scaleX: 20, scaleY: 20 }
 };
 
