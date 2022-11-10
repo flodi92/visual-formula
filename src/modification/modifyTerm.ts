@@ -1,7 +1,9 @@
+import { autoConfigSize } from "../autoAdapt/autoConfigSize";
 import { GExpression, GProduct1D, GProduct2D, GSimpleValue, GSum, GValue } from "../expression/gExpression";
 import { ID } from "../types";
 import { find } from "../utils/expression";
-import { reverse } from "./reconfigTerm";
+import { directionToXY, isClockwise } from "../utils/general";
+import { reverse, rotate } from "./reconfigTerm";
 
 // commutative operations //////////////////////////////////
 
@@ -34,45 +36,51 @@ export const swapFactors1D = ({ expression, id }:
       !(gSimpleFactor instanceof GSimpleValue)
     )
       return false;
-    const [a, b] = [gComplexFactor.mValue, gSimpleFactor.mSimpleValue];
-    gComplexFactor.mValue = b;
-    gSimpleFactor.mSimpleValue = a;
+
+    [gSimpleFactor.mSimpleValue, gComplexFactor.mValue]
+      = [gComplexFactor.mValue, gSimpleFactor.mSimpleValue];
+
+    [gSimpleFactor.numericValue, gComplexFactor.numericValue]
+      = [gComplexFactor.numericValue, gSimpleFactor.numericValue];
+
+    if (directionToXY(term.startDirection) === 'X') {
+      gComplexFactor.unscaledWidth = undefined;
+      gSimpleFactor.unscaledWidth = undefined;
+    }
+    else { //if(directionToXY(term.startDirection) === 'X')
+      gComplexFactor.unscaledHeight = undefined;
+      gSimpleFactor.unscaledHeight = undefined;
+    }
+
+    autoConfigSize(expression);
   } //Would be mathmatically incorrect for GQuotient1D
   else return false;
   return true;
 };
 
-export const swapFactors2D = ({ expression, id }:
-  { expression: GExpression, id: ID }) => {
+export const swapFactors2D = ({ expression, id }
+  : { expression: GExpression, id: ID }) => {
   const term = find(id, expression);
-
   if (!(term instanceof GProduct2D)) return false;
 
-  let [gFactorX, gFactorY] = [term.gFactorX, term.gFactorY];
-  const [xEdge, yEdge] = [term.xEdge, term.yEdge];
+  let { gFactorX, gFactorY, xEdge, yEdge } = term;
+  if (!gFactorX || !gFactorY) return false;
 
-  let success = false;
+  let success = true;
 
-  success = reverse({ expression: gFactorX, xy: "Y" });
-  success = success && reverse({ expression: gFactorY, xy: "X" });
+  success = success && reverse({ expression: gFactorX, xy: "X" });
+  success = success && reverse({ expression: gFactorY, xy: "Y" });
 
-  // success = success && rotate({
-  //   expression: gFactorX,
-  //   isClockwise: isClockwise(yEdge, xEdge),
-  // });
+  success = success && rotate({
+    expression: gFactorX, isClockwise: isClockwise(yEdge, xEdge),
+  });
+  success = success && rotate({
+    expression: gFactorY, isClockwise: isClockwise(xEdge, yEdge),
+  });
 
-  // success = success && rotate({
-  //   expression: gFactorY,
-  //   isClockwise: isClockwise(xEdge, yEdge),
-  // });
+  if (!success) return false;
 
-  if (!success || !term.gFactorX || !term.gFactorY) return false;
-
-  // (term.gFactorX as GExpression).parent = undefined;
-  // (term.gFactorY as GExpression).parent = undefined;
-
-  term.gFactorX = gFactorY;
-  term.gFactorY = gFactorX;
+  [term.gFactorX, term.gFactorY] = [gFactorY, gFactorX]
 
   return true;
 };

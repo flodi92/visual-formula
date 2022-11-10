@@ -105,24 +105,24 @@ export const reverse = ({ expression, id, xy }:
       [expression.divisorEdge, expression.resultEdge] = [
         oppositeDirection(expression.divisorEdge, xy),
         oppositeDirection(expression.resultEdge, xy)];
-    } else if (expression instanceof GValue) {
-      [expression.xEdge, expression.yEdge] = [
-        oppositeDirection(expression.xEdge, xy) as YDirection | undefined,
-        oppositeDirection(expression.yEdge, xy) as XDirection | undefined,
-      ];
-    } else if (expression instanceof GSimpleValue) {
-      expression.edge = oppositeDirection(expression.edge, xy) as Direction | undefined;
-    }
-
-    return (expression.children)?.reduce((prev, child) => {
-      if (!!child && child instanceof GExpression)
+      } else if (expression instanceof GValue) {
+        [expression.xEdge, expression.yEdge] = [
+          oppositeDirection(expression.xEdge, xy) as YDirection | undefined,
+          oppositeDirection(expression.yEdge, xy) as XDirection | undefined,
+        ];
+      } else if (expression instanceof GSimpleValue) {
+        expression.edge = oppositeDirection(expression.edge, xy) as Direction | undefined;
+      }
+      
+      return (expression.children)?.reduce((prev, child) => {
+        if (!!child && child instanceof GExpression)
         return prev && _reverse(child)
-      else return true;
+        else return true;
     }, true)
   };
-
+  
   const _expression = !!id && !!expression ? find(id, expression) : expression;
-  if (!_expression || _expression instanceof GAbstractValue)
+  if (!_expression)
     return false;
 
   return _reverse(_expression);
