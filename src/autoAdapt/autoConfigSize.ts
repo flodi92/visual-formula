@@ -30,19 +30,17 @@ export const autoConfigSize = (gExpression: GExpression) => {
             _startLength = gValues.length + gSimpleValues.length;
 
             gValues = gValues.filter(gValue => {
-                if (([gValue.unscaledWidth, gValue.unscaledHeight].some(size => size !== undefined))) return false;
+                const unscaledWidth = getFixedWidthOfNeighbour(gValue) || gValue.unscaledWidth;
+                const unscaledHeight = getFixedHeightOfNeighbour(gValue) || gValue.unscaledHeight;
 
-                const width = getFixedWidthOfNeighbour(gValue);
-                const height = getFixedHeightOfNeighbour(gValue);
-
-                if (width !== undefined && height === undefined) {
-                    gValue.unscaledWidth = width;
-                    gValue.unscaledHeight = (gValue.numericValue || 0) / width;
+                if (unscaledWidth !== undefined && unscaledHeight === undefined) {
+                    gValue.unscaledWidth = unscaledWidth;
+                    gValue.unscaledHeight = (gValue.numericValue || 0) / unscaledWidth;
                     return false;
                 }
-                else if (width === undefined && height !== undefined) {
-                    gValue.unscaledWidth = (gValue.numericValue || 0) / height;
-                    gValue.unscaledHeight = height;
+                else if (unscaledWidth === undefined && unscaledHeight !== undefined) {
+                    gValue.unscaledWidth = (gValue.numericValue || 0) / unscaledHeight;
+                    gValue.unscaledHeight = unscaledHeight;
                     return false;
                 }
                 return true;
