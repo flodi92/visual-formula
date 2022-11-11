@@ -136,7 +136,7 @@ GProduct2DExample.args = {
       unscaledHeight: 2,
     },
   },
-  
+
   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
 };
 
@@ -204,3 +204,199 @@ GQuotient2DExample.args = {
   layerTransformation: { x: 120, y: 80, scaleX: 10, scaleY: 10 }
 };
 
+
+export const GTerm1Example = Template.bind({});
+
+GTerm1Example.args = {
+  rotations: 0,
+  json: {
+    type: "GQuotient2D",
+    gDivident: {
+      type: "GSum",
+      startDirection: "left",
+      gSummands: [
+        {
+          type: "GProduct1D",
+          startDirection: "left",
+          gComplexFactor: {
+            type: "GValue",
+            mValue: "5",
+            numericValue: 5,
+            xEdge: "top",
+            yEdge: "left",
+            unscaledWidth: 5 / 4,
+            unscaledHeight: 4,
+          },
+          gSimpleFactor: {
+            type: "GSimpleValue",
+            mValue: "x",
+            numericValue: 2,
+            edge: "top",
+            unscaledWidth: (5 / 4) * 1,
+            unscaledHeight: 4,
+          },
+        },
+        {
+          type: "GValue",
+          mValue: "6",
+          numericValue: 6,
+          xEdge: "top",
+          yEdge: "left",
+          unscaledWidth: 6 / 4,
+          unscaledHeight: 4,
+        },
+      ],
+    },
+    gDivisor: {
+      type: "GValue",
+      mValue: "4",
+      numericValue: 4,
+      xEdge: "top",
+      yEdge: "left",
+      unscaledWidth: 1,
+      unscaledHeight: 4,
+    },
+    divisorEdge: "right",
+    resultEdge: "bottom",
+  },
+  layerTransformation: { x: 100, y: 100, scaleX: 20, scaleY: 20 }
+};
+
+
+
+
+export const GTerm2Example = Template.bind({});
+
+GTerm2Example.args = {
+  rotations: 0,
+  json: {
+    type: "GDifference",
+    startDirection: "left",
+    gMinuend: {
+      type: "GProduct1D",
+      startDirection: "left",
+      gComplexFactor: {
+        type: "GValue",
+        mValue: "5",
+        numericValue: 5,
+        xEdge: "bottom",
+        yEdge: "right",
+        unscaledWidth: 5,
+        unscaledHeight: 1,
+      },
+      gSimpleFactor: {
+        type: "GSimpleValue",
+        mValue: "x",
+        numericValue: 2,
+        edge: "bottom",
+        unscaledWidth: 5,
+        unscaledHeight: 1,
+      },
+    },
+    gSubtrahend: {
+      type: "GValue",
+      mValue: "6",
+      numericValue: 6,
+      xEdge: "top",
+      yEdge: "left",
+      unscaledWidth: 6,
+      unscaledHeight: 1,
+    },
+  },
+  layerTransformation: { x: 100, y: 100, scaleX: 20, scaleY: 20 }
+};
+
+
+export const GEQuationExample = Template.bind({});
+
+GEQuationExample.args = {
+  rotations: 0,
+  json: {
+    type: "GEquation",
+    gTerm1: {
+    type: "GQuotient2D",
+    gDivident: {
+      type: "GSum",
+      startDirection: "left",
+      gSummands: [
+        {
+          type: "GProduct1D",
+          startDirection: "left",
+          gComplexFactor: {
+            type: "GValue",
+            mValue: "5",
+            numericValue: 5,
+            xEdge: "top",
+            yEdge: "left",
+            unscaledWidth: 5 / 4,
+            unscaledHeight: 4,
+          },
+          gSimpleFactor: {
+            type: "GSimpleValue",
+            mSimpleValue: "x",
+            numericValue: 2,
+            edge: "top",
+            unscaledWidth: (5 / 4) * 1,
+            unscaledHeight: 4,
+          },
+        },
+        {
+          type: "GValue",
+          mValue: "6",
+          numericValue: 6,
+          xEdge: "top",
+          yEdge: "left",
+          unscaledWidth: 6 / 4,
+          unscaledHeight: 4,
+        },
+      ],
+    },
+    gDivisor: {
+      type: "GValue",
+      mValue: "4",
+      numericValue: 4,
+      xEdge: "top",
+      yEdge: "left",
+      unscaledWidth: 1,
+      unscaledHeight: 4,
+    },
+    divisorEdge: "right",
+    resultEdge: "bottom",
+  },
+    gTerm2: {
+    type: "GDifference",
+    startDirection: "left",
+    gMinuend: {
+      type: "GProduct1D",
+      startDirection: "left",
+      gComplexFactor: {
+        type: "GValue",
+        mValue: "7",
+        numericValue: 7,
+        xEdge: "bottom",
+        yEdge: "right",
+        unscaledWidth: 7,
+        unscaledHeight: 1,
+      },
+      gSimpleFactor: {
+        type: "GSimpleValue",
+        mSimpleValue: "x",
+        numericValue: 2,
+        edge: "bottom",
+        unscaledWidth: 7,
+        unscaledHeight: 1,
+      },
+    },
+    gSubtrahend: {
+      type: "GValue",
+      mValue: "10",
+      numericValue: 10,
+      xEdge: "top",
+      yEdge: "left",
+      unscaledWidth: 10,
+      unscaledHeight: 1,
+    },
+  },
+  },
+  layerTransformation: { x: 100, y: 100, scaleX: 20, scaleY: 20 }
+};
