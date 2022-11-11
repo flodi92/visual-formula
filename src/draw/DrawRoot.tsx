@@ -249,6 +249,7 @@ class DrawValue {
         <div
           style={{
             position: "absolute",
+            color: gValue.isTerm1 ? "black" : "red",
             fontSize: `${FONT_SIZE}px`,
             ...positioning,
           }}
