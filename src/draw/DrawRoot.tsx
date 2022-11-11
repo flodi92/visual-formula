@@ -170,7 +170,7 @@ class DrawValue {
         );
       } else if (mExpression instanceof MProduct) {
         buffer = mExpression?.mFactors?.map((mFactor, idx, { length }) => {
-          const isBracket = mFactor instanceof MValue;
+          const isBracket = !(mFactor instanceof MValue);
           return (
             <>
               {/* @ts-ignore */}

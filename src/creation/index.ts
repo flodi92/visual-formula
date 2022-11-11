@@ -291,16 +291,24 @@ export const getJSONFromExpression = (expression?: Expression): object | undefin
         }
     }
     else if (expression instanceof MSum) {
-        buffer = `(${expression.mSummands?.map(mSummand => getJSONFromExpression(mSummand)).join('+')})`;
+        buffer = expression.mSummands?.map(mSummand => getJSONFromExpression(mSummand)).join('+');
     }
     else if (expression instanceof MDifference) {
-        buffer = `(${expression.mMinuend}-${expression.mSubtrahend})`
+        buffer = `${getJSONFromExpression(expression.mMinuend)}-${getJSONFromExpression(expression.mSubtrahend)}`
     }
     else if (expression instanceof MProduct) {
-        buffer = expression.mFactors?.map(mFactor => getJSONFromExpression(mFactor)).join('*');
+        buffer = expression.mFactors
+            ?.map(mFactor => [getJSONFromExpression(mFactor), !(mFactor instanceof MValue)])
+            .map(([valueStr, isBracket]) => isBracket ? `(${valueStr})` : valueStr).join('*');
     }
     else if (expression instanceof MQuotient) {
-        buffer = `${expression.mDivident}/${expression.mDivisor}`
+        const [mDividentStr, mDivisorStr] = [expression.mDivident, expression.mDivisor]
+            ?.map(mChild => [getJSONFromExpression(mChild), !(mChild instanceof MValue)])
+            .map(([valueStr, isBracket]) => isBracket ? `(${valueStr})` : valueStr);
+        buffer = `${mDividentStr}/${mDivisorStr}`
+    }
+    else if (expression instanceof MValue) {
+        buffer = expression.mValue;
     }
 
     if (!!buffer && expression instanceof GExpression) {
