@@ -30,6 +30,8 @@ import Expression from "../expression/Expression";
 export const getExpressionFromJSON = (value: any, idCount: ID = 2) => {
     if (typeof value === 'string' && value.includes('{')) value = JSON.parse(value);
 
+    let _id: ID = 1;
+
     const _getOperatorPositions = (str: string, operator: Operator): number[] => {
         let bracketCount = 0;
         let buffer: number[] = [];
@@ -55,7 +57,7 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 2) => {
         return str;
     };
 
-    const _getMExpressionFromString = (str = "", id: ID): MExpression | undefined => {
+    const _getMExpressionFromString = (str = ""): MExpression | undefined => {
         str = _removeBracketTrim(str);
 
         let [positions, type] = [_getOperatorPositions(str, "="), "MEquation"];
@@ -68,6 +70,9 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 2) => {
         if (!positions.length)
             [positions, type] = [_getOperatorPositions(str, "/"), "MQuotient"];
 
+
+        let expression: any = undefined;
+
         if (!!positions.length) {
             const fragments = [-1, ...positions]
                 .map((pos, idx, arr) => [
@@ -76,91 +81,87 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 2) => {
                 ])
                 .map(([start, end]) => str.substring(start, end).trim());
 
-            const children = fragments.map((fragment, idx) => _getMExpressionFromString(fragment, id + idx + 1)).filter(child => !!child) as GExpression[];
+            const children = fragments.map((fragment) => _getMExpressionFromString(fragment)).filter(child => !!child) as GExpression[];
             if (type === "MSum") {
-                const expression = new MSum();
+                expression = new MSum();
                 expression.mSummands = children;
-                return expression;
             } else if (type === "MDifference") {
-                const expression = new MDifference();
+                expression = new MDifference();
                 expression.mMinuend = children[0];
                 expression.mSubtrahend = children[1];
-                return expression;
             } else if (type === "MProduct") {
-                const expression = new MProduct();
+                expression = new MProduct();
                 expression.mFactors = children;
-                return expression;
             } else if (type === "MQuotient") {
-                const expression = new MQuotient();
+                expression = new MQuotient();
                 expression.mDivident = children[0];
                 expression.mDivisor = children[1];
-                return expression;
             } else if ((type = "MEquation")) {
-                const expression = new MEquation();
+                expression = new MEquation();
                 expression.mTerm1 = children[0];
                 expression.mTerm2 = children[1];
-                return expression;
             }
         } else {
-            const expression = new MValue();
+            expression = new MValue();
             (expression as MValue).mValue = str;
-            return expression;
         }
 
-        return undefined;
+        expression && (expression.id = _id++);
+
+        return expression;
     };
 
-    const _getExpressionFromJSON = (json: any, idCount: ID = 2) => {
+    const _getExpressionFromJSON = (json: any) => {
         if (!json) return undefined;
         let expression: any;
         switch (json.type) {
             case 'GEquation':
                 expression = new GEquation();
-                expression.gTerm1 = _getExpressionFromJSON(json.gTerm1, idCount + 1);
-                expression.gTerm2 = _getExpressionFromJSON(json.gTerm2, idCount + 2);
+                expression.gTerm1 = _getExpressionFromJSON(json.gTerm1);
+                expression.gTerm2 = _getExpressionFromJSON(json.gTerm2);
                 break;
             case 'GTerm':
                 expression = new GTerm();
-                expression.gTerm = _getExpressionFromJSON(json.gTerm, idCount + 1);
+                expression.gTerm = _getExpressionFromJSON(json.gTerm);
                 break;
             case 'GSum':
                 expression = new GSum();
                 expression.gSummands = json.gSummands?.map(
-                    (gSummand: any, idx: number) => _getExpressionFromJSON(gSummand, idCount + idx + 1)
+                    (gSummand: any, idx: number) => _getExpressionFromJSON(gSummand)
                 )
                 break;
             case 'GDifference':
                 expression = new GDifference();
-                expression.gMinuend = _getExpressionFromJSON(json.gMinuend, idCount + 1);
-                expression.gSubtrahend = _getExpressionFromJSON(json.gSubtrahend, idCount + 2);
+                expression.gMinuend = _getExpressionFromJSON(json.gMinuend);
+                expression.gSubtrahend = _getExpressionFromJSON(json.gSubtrahend);
                 break;
             case 'GProduct1D':
                 expression = new GProduct1D();
-                expression.gSimpleFactor = _getExpressionFromJSON(json.gSimpleFactor, idCount + 1);
-                expression.gComplexFactor = _getExpressionFromJSON(json.gComplexFactor, idCount + 2);
+                expression.gSimpleFactor = _getExpressionFromJSON(json.gSimpleFactor);
+                expression.gComplexFactor = _getExpressionFromJSON(json.gComplexFactor);
                 break;
             case 'GProduct2D':
                 expression = new GProduct2D();
                 expression.xEdge = json.xEdge;
                 expression.yEdge = json.yEdge;
-                expression.gFactorX = _getExpressionFromJSON(json.gFactorX, idCount + 1);
-                expression.gFactorY = _getExpressionFromJSON(json.gFactorY, idCount + 2);
+                expression.gFactorX = _getExpressionFromJSON(json.gFactorX);
+                expression.gFactorY = _getExpressionFromJSON(json.gFactorY);
                 break;
             case 'GQuotient1D':
                 expression = new GQuotient1D();
-                expression.gSimpleDivisor = _getExpressionFromJSON(json.gSimpleDivisor, idCount + 1);
-                expression.gComplexDivident = _getExpressionFromJSON(json.gComplexDivident, idCount + 2);
+                expression.gSimpleDivisor = _getExpressionFromJSON(json.gSimpleDivisor);
+                expression.gComplexDivident = _getExpressionFromJSON(json.gComplexDivident);
                 break;
             case 'GQuotient2D':
                 expression = new GQuotient2D();
                 expression.divisorEdge = json.divisorEdge;
                 expression.resultEdge = json.resultEdge;
-                expression.gDivident = _getExpressionFromJSON(json.gDivident, idCount + 1);
-                expression.gDivisor = _getExpressionFromJSON(json.gDivisor, idCount + 2);
+                expression.gDivident = _getExpressionFromJSON(json.gDivident);
+                expression.gDivisor = _getExpressionFromJSON(json.gDivisor);
                 break;
             case 'GValue':
                 expression = new GValue();
-                expression.mValue = _getMExpressionFromString(json.mValue, idCount + 1);
+                expression.mValue = _getMExpressionFromString(json.mValue);
                 expression.xEdge = json.xEdge;
                 expression.yEdge = json.yEdge;
                 expression.unscaledWidth = json.unscaledWidth;
@@ -169,14 +170,14 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 2) => {
                 break;
             case 'GSimpleValue':
                 expression = new GSimpleValue();
-                expression.mSimpleValue = _getMExpressionFromString(json.mSimpleValue, idCount + 1);
+                expression.mSimpleValue = _getMExpressionFromString(json.mSimpleValue);
                 expression.edge = json.edge;
                 expression.unscaledWidth = json.unscaledWidth;
                 expression.unscaledHeight = json.unscaledHeight;
                 expression.numericValue = json.numericValue;
                 break;
         }
-        expression.id = idCount;
+        expression && (expression.id = _id++);
 
         if (expression instanceof GAbstractDirectedExpression) {
             expression.startDirection = json.startDirection;
@@ -189,8 +190,8 @@ export const getExpressionFromJSON = (value: any, idCount: ID = 2) => {
     }
 
     let expression = (typeof value === 'string') ?
-        _getMExpressionFromString(value, idCount)
-        : _getExpressionFromJSON(value, idCount);
+        _getMExpressionFromString(value)
+        : _getExpressionFromJSON(value);
 
     if (expression instanceof GExpression && !(expression instanceof GAbstractRoot)) {
         const gTerm = new GTerm()
