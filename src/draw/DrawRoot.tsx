@@ -10,7 +10,7 @@ import { zip } from 'lodash';
 import { ID } from '../types';
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
 import { getGAbstractValueIds, getGAbstractValues } from '../utils/gExpression';
-import {MExpression, MDifference, MEquation, MProduct, MQuotient, MSum, MValue } from '../expression/mExpression';
+import { MExpression, MDifference, MEquation, MProduct, MQuotient, MSum, MValue } from '../expression/mExpression';
 
 const STANDARD_STROKE_WIDHT = 1;
 const NORM_STROKE_WIDHT = 3;
@@ -83,7 +83,7 @@ class DrawValue {
           id={`path-${this.gaValue.id}`}
           key={`path-${this.gaValue.id}`}
           d={d} strokeWidth={STANDARD_STROKE_WIDHT}
-          stroke="red"
+          stroke={gValue.isTerm1 ? "black" : "red"}
           fill="none" />
       );
     } else {
@@ -98,13 +98,13 @@ class DrawValue {
             id={`path1-${this.gaValue.id}`}
             key={`path1-${this.gaValue.id}`}
             d={d1} strokeWidth={isNorm1 ? NORM_STROKE_WIDHT : STANDARD_STROKE_WIDHT}
-            stroke="red"
+            stroke={gValue.isTerm1 ? "black" : "red"}
             fill="none" />
           <path
             id={`path2-${this.gaValue.id}`}
             key={`path2-${this.gaValue.id}`}
             d={d2} strokeWidth={isNorm2 ? NORM_STROKE_WIDHT : STANDARD_STROKE_WIDHT}
-            stroke="red"
+            stroke={gValue.isTerm1 ? "black" : "red"}
             fill="none" />
         </>
       )
@@ -130,7 +130,7 @@ class DrawValue {
         id={`path-${this.gaValue.id}`}
         key={`path-${this.gaValue.id}`}
         d={d} strokeWidth={STANDARD_STROKE_WIDHT}
-        stroke="red"
+        stroke={gValue.isTerm1 ? "black" : "red"}
         strokeDasharray={"5,5"}
         fill="none" />
     );
