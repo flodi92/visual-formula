@@ -20,9 +20,9 @@ const getNormedValues = (gExpression: GExpression | undefined, xy: XY): GAbstrac
             }
         } else if (gExpression instanceof GQuotient2D) {
             return (
-                directionToXY(gExpression.divisorEdge) === (xy) ?
+                directionToXY(gExpression.divisorEdge) === xy ?
                     _down(gExpression.gDivisor, true) :
-                    directionToXY(gExpression.resultEdge) === getOtherXY(xy)
+                    directionToXY(gExpression.resultEdge) === xy
                         ? _up(gExpression.parent) :
                         []);
         } else if (gExpression instanceof GAbstractDirectedExpression) {
@@ -42,6 +42,7 @@ const getNormedValues = (gExpression: GExpression | undefined, xy: XY): GAbstrac
 
     const _up = (gExpression: Expression | undefined): GAbstractValue[] => {
         if (!gExpression?.id || !(gExpression instanceof GExpression)) return [];
+        visitedIDs = visitedIDs.filter(id => id !== gExpression.id);
         return [..._down(gExpression, true), ..._up(gExpression.parent)]; // TODO debug won't work for nested GQuotient2D
     }
 
