@@ -15,9 +15,10 @@ Primary.args = {
   modification: "swapSummands",
   doModification: true,
   modificationProps: { indexA: 0, indexB: 1 },
-  id: 2,
+  id: 42,
   json: {
     type: "GSum",
+    id: 42,
     startDirection: "left",
     gSummands: [
       {
@@ -61,9 +62,10 @@ export const TestSwapFactors1D = Template.bind({});
 TestSwapFactors1D.args = {
   modification: "swapFactors1D",
   doModification: true,
-  id: 2,
+  id: 42,
   json: {
     type: "GProduct1D",
+    id: 42,
     startDirection: "left",
 
     gComplexFactor: {
@@ -96,9 +98,10 @@ export const TestSwapFactors2D = Template.bind({});
 TestSwapFactors2D.args = {
   modification: "swapFactors2D",
   doModification: true,
-  id: 2,
+  id: 42,
   json: {
     type: "GProduct2D",
+    id: 42,
     xEdge: 'bottom',
     yEdge: 'left',
     gFactorX: {
