@@ -20,7 +20,7 @@ import {
 } from "../expression/mExpression"
 import Expression from "../expression/Expression";
 
-const getJSONFromExpression = (expression?: Expression): object | undefined | string => {
+const getJSONFromExpression = (expression?: Expression): object | string | undefined => {
     let buffer: any;
     if (!expression) {
         buffer = undefined;

@@ -3,7 +3,7 @@ import './button.css';
 
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
 import DrawRoot from '../draw/DrawRoot';
-import { getExpressionFromJSON, getJSONFromExpression } from '../conversion';
+import { getExpressionFromJSON } from '../conversion';
 import { swapSummands, swapFactors1D, swapFactors2D } from '../modification/modifyTerm';
 import { ID } from '../types';
 import { rotate } from '../modification/reconfigTerm';
@@ -44,6 +44,6 @@ export const TestModifyTerm = ({
 
   return <>
     <DrawRoot root={expression} style={{ width: '100%', height: '200px' }} />
-    <div style={{ whiteSpace: "pre", fontSize: "10px" }}>{`${JSON.stringify(getJSONFromExpression(expression), null, 2)}`}</div>
+    <div style={{ whiteSpace: "pre", fontSize: "10px" }}>{`${JSON.stringify(expression.json, null, 2)}`}</div>
   </>
 };
