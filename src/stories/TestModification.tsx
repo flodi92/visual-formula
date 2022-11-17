@@ -3,7 +3,7 @@ import './button.css';
 
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
 import DrawRoot from '../draw/DrawRoot';
-import { getExpressionFromJSON } from '../creation';
+import { getExpressionFromJSON } from '../conversion';
 import { reverse } from '../modification/reconfigTerm';
 import { XY } from '../types';
 

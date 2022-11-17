@@ -3,7 +3,7 @@ import React from 'react';
 import './App.css';
 import GAbstractRoot from './expression/gExpression/GAbstractRoot';
 import DrawRoot from './draw/DrawRoot';
-import { getExpressionFromJSON } from './creation';
+import { getExpressionFromJSON } from './conversion';
 
 
 const Test = () => {

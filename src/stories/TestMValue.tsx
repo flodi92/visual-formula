@@ -3,7 +3,7 @@ import './button.css';
 
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
 import DrawRoot from '../draw/DrawRoot';
-import { getExpressionFromJSON, getJSONFromExpression } from '../creation';
+import { getExpressionFromJSON, getJSONFromExpression } from '../conversion';
 
 interface TestMValueProps {
   json: object,
