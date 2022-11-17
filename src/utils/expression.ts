@@ -52,6 +52,23 @@ export function replace<TExpression extends Expression>(id: ID, expression: TExp
     } else if (replacedTerm.typeInParent === "gTerm") {
         (parent as GTerm).gTerm = replacementTerm;
     }
-    
+
     return expression;
 };
+
+export const expressionToArray = (expression: Expression): Expression[] => [expression,
+    ...expression.children
+        .filter(child => !!child)
+        .reduce(
+            (prev, child) => ([...prev, ...expressionToArray(child as Expression)]),
+            [] as Expression[])];
+
+export const getMaxID = (expression: Expression) => Math.max(
+    0, ...expressionToArray(expression).map(({ id }) => id).filter(id => !!id) as number[]
+);
+
+export const setUnsetIDs = (expression?: Expression) => {
+    if(!expression) return;
+    let idCounter = getMaxID(expression) + 1;
+    expressionToArray(expression).forEach(expression => !expression.id && (expression.id = idCounter++))
+}

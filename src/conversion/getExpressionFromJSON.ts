@@ -23,12 +23,11 @@ import {
     MValue,
 } from "../expression/mExpression"
 
-import { ID, Operator } from "../types";
+import { Operator } from "../types";
+import { setUnsetIDs } from "../utils/expression";
 
-const getExpressionFromJSON = (value: any, idCount: ID = 2) => {
+const getExpressionFromJSON = (value: any) => {
     if (typeof value === 'string' && value.includes('{')) value = JSON.parse(value);
-
-    let _id: ID = 1;
 
     const _getOperatorPositions = (str: string, operator: Operator): number[] => {
         let bracketCount = 0;
@@ -104,8 +103,6 @@ const getExpressionFromJSON = (value: any, idCount: ID = 2) => {
             (expression as MValue).mValue = str;
         }
 
-        expression && (expression.id = _id++);
-
         return expression;
     };
 
@@ -174,15 +171,13 @@ const getExpressionFromJSON = (value: any, idCount: ID = 2) => {
                 expression.unscaledHeight = json.unscaledHeight;
                 expression.numericValue = json.numericValue;
                 break;
+            default: return undefined;
         }
-        expression && (expression.id = _id++);
-
         if (expression instanceof GAbstractDirectedExpression) {
             expression.startDirection = json.startDirection;
         }
-        // else if (expression instanceof GAbstractValue) {
-        //     expression.numericValue = json.numericValue;
-        // }
+       
+        expression.id = json.id;
 
         return expression as GExpression;
     }
@@ -194,9 +189,10 @@ const getExpressionFromJSON = (value: any, idCount: ID = 2) => {
     if (expression instanceof GExpression && !(expression instanceof GAbstractRoot)) {
         const gTerm = new GTerm()
         gTerm.gTerm = expression;
-        gTerm.id = 1;
         expression = gTerm;
     }
+
+    setUnsetIDs(expression);    
     return expression;
 }
 
