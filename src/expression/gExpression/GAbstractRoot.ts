@@ -1,6 +1,6 @@
 import GExpression from "./GExpression";
 import { DEFAULT_TRANSFORMATION, Transformation } from "../../types";
-import { getJSONFromExpression, getMExpressionFromExpression } from "../../conversion";
+import { getFormulaStringFromExpression, getJSONFromExpression, getMExpressionFromExpression } from "../../conversion";
 
 export default abstract class GAbstractRoot extends GExpression {
     private _layerTransformation: Transformation = DEFAULT_TRANSFORMATION;
@@ -20,5 +20,9 @@ export default abstract class GAbstractRoot extends GExpression {
 
     public get json() {
         return getJSONFromExpression(this);
+    }
+
+    public get formulaString() {
+        return getFormulaStringFromExpression(this);
     }
 }
