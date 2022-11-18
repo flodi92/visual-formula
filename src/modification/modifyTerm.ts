@@ -1,14 +1,18 @@
 import { autoConfigSize } from "../autoAdapt/autoConfigSize";
 import { GExpression, GProduct1D, GProduct2D, GSimpleValue, GSum, GValue } from "../expression/gExpression";
-import { ID } from "../types";
 import { find } from "../utils/expression";
 import { directionToXY, isClockwise } from "../utils/general";
 import { reverse, rotate } from "./reconfigTerm";
+import Modification from "./Modification";
 
 // commutative operations //////////////////////////////////
 
-export const swapSummands = ({ expression, id, indexA, indexB, }:
-  { expression: GExpression, id: ID, indexA: number, indexB: number }) => {
+export interface SwapSummands extends Modification {
+  indexA: number,
+  indexB: number,
+}
+
+export const swapSummands = (expression: GExpression, { id, indexA, indexB, }: SwapSummands) => {
   const sum = find(id, expression);
 
   if (!sum || !(sum instanceof GSum)) return false;
@@ -24,8 +28,9 @@ export const swapSummands = ({ expression, id, indexA, indexB, }:
   return true;
 };
 
-export const swapFactors1D = ({ expression, id }:
-  { expression: GExpression, id: ID }) => {
+export interface SwapFactors1D extends Modification { }
+
+export const swapFactors1D = (expression: GExpression, { id }: SwapFactors1D = {}) => {
   const term = find(id, expression);
 
   if (term instanceof GProduct1D) {
@@ -58,8 +63,9 @@ export const swapFactors1D = ({ expression, id }:
   return true;
 };
 
-export const swapFactors2D = ({ expression, id }
-  : { expression: GExpression, id: ID }) => {
+export interface SwapFactors2D extends Modification { }
+
+export const swapFactors2D = (expression: GExpression, { id }: SwapFactors2D = {}) => {
   const term = find(id, expression);
   if (!(term instanceof GProduct2D)) return false;
 
@@ -68,14 +74,14 @@ export const swapFactors2D = ({ expression, id }
 
   let success = true;
 
-  success = success && reverse({ expression: gFactorX, xy: "X" });
-  success = success && reverse({ expression: gFactorY, xy: "Y" });
+  success = success && reverse(gFactorX, { xy: "X" });
+  success = success && reverse(gFactorY, { xy: "Y" });
 
-  success = success && rotate({
-    expression: gFactorX, isClockwise: isClockwise(yEdge, xEdge),
+  success = success && rotate(gFactorX, {
+    isClockwise: isClockwise(yEdge, xEdge),
   });
-  success = success && rotate({
-    expression: gFactorY, isClockwise: isClockwise(xEdge, yEdge),
+  success = success && rotate(gFactorY, {
+    isClockwise: isClockwise(xEdge, yEdge),
   });
 
   if (!success) return false;

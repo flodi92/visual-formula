@@ -29,14 +29,14 @@ export const TestModifyTerm = ({
   const expression = getExpressionFromJSON(json) as GAbstractRoot;
 
   for (let index = 0; index < rotations; index++)
-    rotate({ expression });
+    rotate(expression);
   if (doModification) {
     switch (modification) {
-      case 'swapSummands': swapSummands({ expression, id, ...modificationProps }); break;
-      case 'swapFactors1D': swapFactors1D({ expression, id }); break;
-      case 'swapFactors2D': swapFactors2D({ expression, id }); break;
-      // case 'distribute': distribute({ expression, id, xy }); break;
-      // case 'reverseDistribute': reverseDistribute({ expression, id, xy }); break;
+      case 'swapSummands': swapSummands(expression, { id, ...modificationProps }); break;
+      case 'swapFactors1D': swapFactors1D(expression, { id }); break;
+      case 'swapFactors2D': swapFactors2D(expression, { id }); break;
+      // case 'distribute': distribute(expression, { id, xy }); break;
+      // case 'reverseDistribute': reverseDistribute(expression, { id, xy }); break;
     }
   }
 

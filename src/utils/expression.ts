@@ -2,7 +2,10 @@ import { ID, } from "../types";
 import Expression from "../expression/Expression";
 import { GDifference, GEquation, GExpression, GProduct1D, GProduct2D, GQuotient1D, GQuotient2D, GSimpleValue, GSum, GTerm } from "../expression/gExpression";
 
-export function find<TExpression extends Expression>(id: ID, expression: TExpression): TExpression {
+export function find<TExpression extends Expression>(id: ID | undefined, expression: TExpression): TExpression {
+    if (id === undefined) {
+        return expression;
+    }
     if (expression.id === id) {
         return expression as TExpression;
     } else {
@@ -68,7 +71,7 @@ export const getMaxID = (expression: Expression) => Math.max(
 );
 
 export const setUnsetIDs = (expression?: Expression) => {
-    if(!expression) return;
+    if (!expression) return;
     let idCounter = getMaxID(expression) + 1;
     expressionToArray(expression).forEach(expression => !expression.id && (expression.id = idCounter++))
 }

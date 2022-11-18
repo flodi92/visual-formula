@@ -16,7 +16,7 @@ interface TestModificationProps {
 export const TestModification = ({ xy, json, layerTransformation }: TestModificationProps) => {
   const expression = getExpressionFromJSON(json) as GAbstractRoot;
 
-  reverse({ expression, xy });
+  reverse(expression, { xy });
 
   expression.layerTransformation = layerTransformation;
 

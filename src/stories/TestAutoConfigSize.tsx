@@ -17,7 +17,7 @@ export const TestAutoConfigSize = ({ rotations, json, layerTransformation }: Tes
   const expression = getExpressionFromJSON(json) as GAbstractRoot;
 
   for (let index = 0; index < rotations; index++)
-    rotate({ expression });
+    rotate(expression);
 
   autoConfigSize(expression);
 

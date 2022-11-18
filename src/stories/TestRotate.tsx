@@ -16,12 +16,12 @@ export const TestRotate = ({ rotations, json, layerTransformation }: TestRotateP
   const expression = getExpressionFromJSON(json) as GAbstractRoot;
 
   for (let index = 0; index < rotations; index++)
-    rotate({ expression });
+    rotate(expression);
 
   expression.layerTransformation = layerTransformation;
 
   return <>
     <DrawRoot root={expression} style={{ width: '100%', height: '200px' }} />
-    <div style={{whiteSpace: "pre", fontSize: "10px"}}>{`${JSON.stringify(expression.json, null, 2)}`}</div>
+    <div style={{ whiteSpace: "pre", fontSize: "10px" }}>{`${JSON.stringify(expression.json, null, 2)}`}</div>
   </>
 };

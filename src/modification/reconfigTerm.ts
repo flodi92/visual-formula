@@ -10,9 +10,11 @@ import {
 import { Direction, XDirection, YDirection, ID, XY } from "../types";
 import { find } from "../utils/expression";
 import { oppositeDirection, getRotatedDirection, getSwappedDirection } from "../utils/general";
+import Modification from "./Modification";
 
-export const swapXToY = ({ expression, id }:
-  { expression: GExpression, id: ID }) => {
+export interface SwapXToY extends Modification { }
+
+export const swapXToY = (expression: GExpression, { id }: SwapXToY = {}) => {
   const _swapXToY = (expression: GExpression): boolean => {
     if (!expression) return false;
     else if (expression instanceof GAbstractDirectedExpression) {
@@ -47,8 +49,9 @@ export const swapXToY = ({ expression, id }:
   return _swapXToY(_expression);
 };
 
-export const rotate = ({ expression, id, isClockwise = false }:
-  { expression: GExpression, id?: ID, isClockwise?: boolean }) => {
+export interface Rotate extends Modification { isClockwise?: boolean }
+
+export const rotate = (expression: GExpression, { id, isClockwise = false }: Rotate = {}) => {
   const _rotate = (expression: GExpression): boolean => {
     if (!expression) return false;
     else if (expression instanceof GAbstractDirectedExpression) {
@@ -89,8 +92,9 @@ export const rotate = ({ expression, id, isClockwise = false }:
   return _rotate(_expression);
 };
 
-export const reverse = ({ expression, id, xy }:
-  { expression?: GExpression, id?: ID, xy?: XY }) => {
+export interface Reverse extends Modification { xy?: XY }
+
+export const reverse = (expression: GExpression, { id, xy }: Reverse = {}) => {
   if (!xy) return false;
   const _reverse = (expression: GExpression): boolean => {
     if (!expression) return false;
@@ -105,22 +109,22 @@ export const reverse = ({ expression, id, xy }:
       [expression.divisorEdge, expression.resultEdge] = [
         oppositeDirection(expression.divisorEdge, xy),
         oppositeDirection(expression.resultEdge, xy)];
-      } else if (expression instanceof GValue) {
-        [expression.xEdge, expression.yEdge] = [
-          oppositeDirection(expression.xEdge, xy) as YDirection | undefined,
-          oppositeDirection(expression.yEdge, xy) as XDirection | undefined,
-        ];
-      } else if (expression instanceof GSimpleValue) {
-        expression.edge = oppositeDirection(expression.edge, xy) as Direction | undefined;
-      }
-      
-      return (expression.children)?.reduce((prev, child) => {
-        if (!!child && child instanceof GExpression)
+    } else if (expression instanceof GValue) {
+      [expression.xEdge, expression.yEdge] = [
+        oppositeDirection(expression.xEdge, xy) as YDirection | undefined,
+        oppositeDirection(expression.yEdge, xy) as XDirection | undefined,
+      ];
+    } else if (expression instanceof GSimpleValue) {
+      expression.edge = oppositeDirection(expression.edge, xy) as Direction | undefined;
+    }
+
+    return (expression.children)?.reduce((prev, child) => {
+      if (!!child && child instanceof GExpression)
         return prev && _reverse(child)
-        else return true;
+      else return true;
     }, true)
   };
-  
+
   const _expression = !!id && !!expression ? find(id, expression) : expression;
   if (!_expression)
     return false;
