@@ -16,12 +16,12 @@ export default abstract class Expression {
     }
 
     protected setChild(typeInParent: TypeInParent, child?: Expression,) {
-        child && child.setParent(this, typeInParent);
+        child && child._setParent(this, typeInParent);
         this._childrenMap.set(typeInParent, child);
     }
 
     protected setChildren(children: Expression[] = [], typeInParent: TypeInParent) {
-        children.forEach((child) => child.setParent(this, typeInParent));
+        children.forEach((child) => child._setParent(this, typeInParent));
         this._childrenArray = children;
     }
 
@@ -41,7 +41,8 @@ export default abstract class Expression {
             : this._childrenArray.map(() => this.childrenTypesInParentDefinition() as TypeInParent)
     }
 
-    private setParent(parent?: Expression, typeInParent?: TypeInParent) {
+    // normaly invoked internaly, but needed for clone
+    public _setParent(parent?: Expression, typeInParent?: TypeInParent) {
         [this._parent, this._typeInParent] = [parent, typeInParent];
     }
 
@@ -51,10 +52,5 @@ export default abstract class Expression {
 
     public get typeInParent() {
         return this._typeInParent;
-    }
-
-    public removeParents() {
-        this.setParent(undefined, undefined);
-        this.children?.forEach((child) => child?.removeParents());
     }
 }
