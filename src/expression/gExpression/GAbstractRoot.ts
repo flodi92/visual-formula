@@ -27,6 +27,6 @@ export default abstract class GAbstractRoot extends GExpression {
     }
 
     public clone() {
-        return cloneExpression(this);
+        return cloneExpression(this) as GAbstractRoot;
     }
 }
