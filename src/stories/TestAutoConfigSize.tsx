@@ -4,7 +4,7 @@ import './button.css';
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
 import DrawRoot from '../draw/DrawRoot';
 import { getExpressionFromJSON } from '../conversion';
-import { autoConfigSize } from '../autoAdapt/autoConfigSize';
+import { autoConfigSize } from '../autoAdapt';
 import { rotate } from '../modification/reconfigTerm';
 
 interface TestAutoConfigSizeProps {

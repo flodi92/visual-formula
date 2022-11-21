@@ -6,7 +6,6 @@ import autoAdapt, { Configuration, AutoAdaption } from "./autoAdapt";
 import GExpression from "../expression/gExpression/GExpression";
 import { find } from "../utils/expression";
 import { getGAbstractValueIds, isEdgePossible } from "../utils/gExpression";
-import { oppositeDirection } from "../utils/general";
 
 abstract class EdgesConfiguration extends Configuration { }
 

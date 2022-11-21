@@ -8,7 +8,7 @@ import { directionToXY } from "../utils/general";
 
 import { getFixedHeightOfNeighbour, getFixedWidthOfNeighbour, getGSimpleValues, getGValues, getXNormedValues, getYNormedValues } from "../utils/gExpression";
 
-export const autoConfigSize = (gExpression: GExpression) => {
+const autoConfigSize = (gExpression: GExpression) => {
     const xNormedValue = getXNormedValues(gExpression);
     const yNormedValue = getYNormedValues(gExpression);
 
@@ -103,3 +103,4 @@ export const autoConfigSize = (gExpression: GExpression) => {
     }
 }
 
+export default autoConfigSize;

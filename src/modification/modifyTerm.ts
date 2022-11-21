@@ -1,4 +1,4 @@
-import { autoConfigSize } from "../autoAdapt/autoConfigSize";
+import { autoConfigSize } from "../autoAdapt";
 import { GExpression, GProduct1D, GProduct2D, GSimpleValue, GSum, GValue } from "../expression/gExpression";
 import { find } from "../utils/expression";
 import { directionToXY, isClockwise } from "../utils/general";
