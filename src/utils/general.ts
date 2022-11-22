@@ -1,10 +1,10 @@
-import { Direction, XY } from "../types";
+import { Direction, XDirection, XY, YDirection } from "../types";
 
 export const oppositeDirection = (direction: Direction | undefined, xy?: XY) => direction && ({
-    left: xy === 'Y' ? 'right' : 'left',
-    right: xy === 'Y' ? 'left' : 'right',
-    top: xy === 'X' ? 'bottom' : 'top',
-    bottom: xy === 'X' ? 'top' : 'bottom'
+    left: xy === 'Y' ? 'left' : 'right',
+    right: xy === 'Y' ? 'right' : 'left',
+    top: xy === 'X' ? 'top' : 'bottom',
+    bottom: xy === 'X' ? 'bottom' : 'top'
 }[direction]) as Direction | undefined
 
 export const directionToXY = (direction?: Direction) => (direction && {
@@ -26,6 +26,10 @@ export const directionToNumber = (val?: Direction) =>
     bottom: 2,
     left: 3,
 }[val]);
+
+export const directionsToNumber = (xDirection?: XDirection, YDirection?: YDirection) =>
+    xDirection && YDirection
+    && Math.max(... <number[]>[xDirection, YDirection].map(edge => directionToNumber(edge)))
 
 export const getSwappedDirection = (direction?: Direction) =>
     (direction && {
