@@ -7,7 +7,7 @@ import GExpression from "../expression/gExpression/GExpression";
 import { find } from "../utils/expression";
 import { getGAbstractValueIds, isEdgePossible } from "../utils/gExpression";
 import { GAbstractDirectedExpression, GProduct1D, GProduct2D, GSum } from "../expression/gExpression";
-import { directionsToNumber, directionToNumber, oppositeDirection } from "../utils/general";
+import { directionsToNumber, directionToNumber, directionToXY, oppositeDirection } from "../utils/general";
 
 abstract class EdgesConfiguration extends Configuration { }
 
@@ -63,8 +63,13 @@ class AutoEdgeAdaption implements AutoAdaption<EdgesConfiguration> {
                 )
             )
 
-        } else if (expression instanceof GSimpleValue) {
-            [...possibleXdirections, ...possibleYdirections].forEach(edge => {
+        } else if (expression instanceof GSimpleValue
+            && expression.parent instanceof GAbstractDirectedExpression) {
+
+            const possibleDirections = directionToXY(expression.parent.startDirection) === "X" ?
+                possibleYdirections : possibleXdirections;
+
+            possibleDirections.forEach(edge => {
                 const badPreference = 1; // TODO
                 const config = new OneEdgeConfiguration(id, badPreference, edge);
                 buffer.push(config)
