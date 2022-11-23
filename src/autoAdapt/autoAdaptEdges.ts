@@ -127,9 +127,9 @@ class AutoEdgeAdaption implements AutoAdaption<EdgesConfiguration> {
             const startDirectionNumber = <number>directionToNumber(parent.startDirection);
             const edgesNumber = <number>directionsToNumber(yEdge, xEdge);
 
-            return Math.abs(startDirectionNumber - edgesNumber) + Math.sign(startDirectionNumber - edgesNumber) * 0.25;
+            return (edgesNumber - startDirectionNumber + 4) % 4;
         } else if (parent instanceof GProduct2D
-            && !!parent.gFactorX && !!parent.gFactorY) {
+            && !!parent.yEdge && !!parent.xEdge) {
 
             const isEdgeToInside =
                 (expression.typeInParent === "gFactorX" && yEdge === oppositeDirection(parent.yEdge))
@@ -140,7 +140,7 @@ class AutoEdgeAdaption implements AutoAdaption<EdgesConfiguration> {
             const productEdgesNumber = <number>directionsToNumber(parent.yEdge, parent.xEdge);
             const edgesNumber = <number>directionsToNumber(yEdge, xEdge);
 
-            const discriminationValue = Math.abs(productEdgesNumber - edgesNumber) + Math.sign(productEdgesNumber - edgesNumber) * 0.25;
+            const discriminationValue = (productEdgesNumber - edgesNumber + 4) % 4;
 
             return discriminationValue + (isEdgeToInside ? 0 : 5);
         }

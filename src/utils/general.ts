@@ -27,9 +27,9 @@ export const directionToNumber = (val?: Direction) =>
     left: 3,
 }[val]);
 
-export const directionsToNumber = (xDirection?: XDirection, YDirection?: YDirection) =>
-    xDirection && YDirection
-    && Math.max(... <number[]>[xDirection, YDirection].map(edge => directionToNumber(edge)))
+export const directionsToNumber = (direction1?: Direction, direction2?: Direction) =>
+    isClockwise(direction1, direction2) ? directionToNumber(direction1) : directionToNumber(direction2)
+
 
 export const getSwappedDirection = (direction?: Direction) =>
     (direction && {
