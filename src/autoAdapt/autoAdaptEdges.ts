@@ -1,12 +1,10 @@
-import GAbstractRoot from "../expression/gExpression/GAbstractRoot";
-import GSimpleValue from "../expression/gExpression/GSimpleValue";
-import GValue from "../expression/gExpression/GValue";
-import { ALL_XDIRECTIONS, ALL_YDIRECTIONS, Direction, ID, XDirection, YDirection } from "../types";
 import autoAdapt, { Configuration, AutoAdaption } from "./autoAdapt";
-import GExpression from "../expression/gExpression/GExpression";
+import { ALL_XDIRECTIONS, ALL_YDIRECTIONS, Direction, ID, XDirection, YDirection } from "../types";
+import {
+    GAbstractDirectedExpression,GProduct2D, GAbstractRoot, GSimpleValue, GValue, GExpression,
+} from "../expression/gExpression";
 import { find } from "../utils/expression";
 import { getGAbstractValueIds, isEdgePossible } from "../utils/gExpression";
-import { GAbstractDirectedExpression, GProduct1D, GProduct2D, GSum } from "../expression/gExpression";
 import { directionsToNumber, directionToNumber, directionToXY, oppositeDirection } from "../utils/general";
 
 abstract class EdgesConfiguration extends Configuration { }
