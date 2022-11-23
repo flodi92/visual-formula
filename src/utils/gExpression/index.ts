@@ -25,7 +25,7 @@ const getFixedHeightOfNeighbour = (gValue: GValue) => {
     return normedNeighbour?.unscaledHeight || undefined
 }
 
-const getGValues = (expression: GExpression): GValue[] => {
+const getGValues = (expression: GExpression): GValue[] => { // TODO simplify by expressionToArray
     if (!expression) return [];
     else if (expression instanceof GValue) return [expression];
     else {
