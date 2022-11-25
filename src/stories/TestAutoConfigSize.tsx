@@ -4,7 +4,7 @@ import './button.css';
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
 import DrawRoot from '../draw/DrawRoot';
 import { getExpressionFromJSON } from '../conversion';
-import { autoConfigSize } from '../autoAdapt';
+import { autoAdaptTransformation, autoConfigSize } from '../autoAdapt';
 import { rotate } from '../modification/reconfigTerm';
 
 interface TestAutoConfigSizeProps {
@@ -19,9 +19,13 @@ export const TestAutoConfigSize = ({ rotations, json, layerTransformation }: Tes
   for (let index = 0; index < rotations; index++)
     rotate(expression);
 
+  expression.layerTransformation = layerTransformation;
+
   autoConfigSize(expression);
 
-  expression.layerTransformation = layerTransformation;
+  autoAdaptTransformation(
+    { gRoot: expression, width: 500, height: 200, padding: 5 }
+  );
 
   return <>
     <DrawRoot root={expression} style={{ width: '100%', height: '200px' }} />
