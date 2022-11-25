@@ -4,8 +4,9 @@ import { find } from "../utils/expression";
 import { getMinMaxCoordinates } from "../utils/gExpression";
 
 const autoAdaptTransformation = (
-    { gRoot, modifiedID, width, height, padding }: { gRoot: GAbstractRoot, modifiedID: ID, width: number, height: number, padding: number },
-    transformation: () => {}
+    { gRoot, modifiedID, width, height, padding }
+        : { gRoot: GAbstractRoot, modifiedID?: ID, width: number, height: number, padding: number },
+    transformation: () => boolean = () => false
 ) => {
     const viewBox = { minX: padding, minY: padding, maxX: width - padding, maxY: height - padding };
 

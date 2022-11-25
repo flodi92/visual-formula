@@ -59,8 +59,15 @@ const getGAbstractValueIds = (expression: GExpression): ID[] => {
 const getMinMaxCoordinates = (gRoot: GExpression) => {
     const gValues = expressionToArray(gRoot).filter(expression => expression instanceof GAbstractValue) as GAbstractValue[];
 
-    let [minX, minY] = [gValues.map(({ x }) => x), gValues.map(({ y }) => y)].map(vals => Math.min(...vals));
-    let [maxX, maxY] = [gValues.map(({ x }) => x), gValues.map(({ y }) => y)].map(vals => Math.max(...vals));
+    let [minX, minY] = [
+        gValues.map(({ x }) => x),
+        gValues.map(({ y }) => y)
+    ].map(vals => Math.min(...vals));
+
+    let [maxX, maxY] = [
+        gValues.map(({ x, width }) => x + width),
+        gValues.map(({ y, height }) => y + height)
+    ].map(vals => Math.max(...vals));
 
     return { minX, minY, maxX, maxY };
 }
