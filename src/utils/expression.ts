@@ -2,16 +2,16 @@ import { ID, } from "../types";
 import Expression from "../expression/Expression";
 import { GDifference, GEquation, GExpression, GProduct1D, GProduct2D, GQuotient1D, GQuotient2D, GSimpleValue, GSum, GTerm } from "../expression/gExpression";
 
-export function find<TExpression extends Expression>(id: ID | undefined, expression: TExpression): TExpression {
+export function find<TExpression extends Expression>(id: ID | undefined, expression: TExpression): Expression {
     if (id === undefined) {
         return expression;
     }
     if (expression.id === id) {
-        return expression as TExpression;
+        return expression;
     } else {
         return (expression.children
             .map(child => child && find(id, child))
-            .find(expression => !!expression)) as TExpression
+            .find(expression => !!expression)) as Expression
     }
 }
 

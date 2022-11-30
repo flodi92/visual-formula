@@ -4,6 +4,7 @@ import GValue from "../../expression/gExpression/GValue";
 import { GSimpleValue } from "../../expression/gExpression";
 
 import { ID, } from "../../types";
+import { expressionToArray } from "../expression";
 
 import getWidths from "./getWidths";
 import getHeights from "./getHeights";
@@ -11,7 +12,10 @@ import getNeighbours from "./getNeighbours";
 import getCommonEdgeValues from "./getCommonEdgeValues";
 import isEdgePossible from "./isEdgePossible";
 import { getXNormedValues, getYNormedValues } from "./getNormedValues";
-import { expressionToArray } from "../expression";
+
+import {
+ getSummands, setSummands, getSubtrahends, setSubtrahends, sumStartDirection, differenceStartDirection,
+} from "./summandsSubtrahends"
 
 const getFixedWidthOfNeighbour = (gValue: GValue) => {
     const neighbours = getNeighbours(gValue, 'Y');
@@ -87,4 +91,10 @@ export {
     isEdgePossible,
     getXNormedValues,
     getYNormedValues,
+    getSummands,
+    setSummands,
+    getSubtrahends,
+    setSubtrahends,
+    sumStartDirection,
+    differenceStartDirection,
 };

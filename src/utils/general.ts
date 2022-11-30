@@ -1,4 +1,4 @@
-import { Direction, XDirection, XY, YDirection } from "../types";
+import { Direction, XY } from "../types";
 
 export const oppositeDirection = (direction: Direction | undefined, xy?: XY) => direction && ({
     left: xy === 'Y' ? 'left' : 'right',
@@ -56,6 +56,9 @@ export const getRotatedDirection = (direction: Direction | undefined, isClockwis
 
 export const isOrthogonal = (a?: Direction, b?: Direction) =>
     a && b && (directionToNumber(a) as number) % 2 !== (directionToNumber(b) as number) % 2;
+
+export const isParallel = (a?: Direction, b?: Direction) =>
+    a && b && (directionToNumber(a) as number) % 2 === (directionToNumber(b) as number) % 2;
 
 export const isClockwise = (fromDirection?: Direction, toDirection?: Direction) => {
     if (!fromDirection || !toDirection) return;
