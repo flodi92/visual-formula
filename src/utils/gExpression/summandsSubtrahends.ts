@@ -1,6 +1,6 @@
 import { GDifference, GExpression, GSum } from "../../expression/gExpression";
 import { Direction } from "../../types";
-import { isParallel } from "../general";
+import { isParallel, oppositeDirection } from "../general";
 
 export const getSummands = (gExpression?: GExpression, expectedDirection?: Direction): GExpression[] =>
   !gExpression
@@ -57,7 +57,7 @@ export const setSubtrahends = (
     if (!!gMinuend || !!gSubtrahend) {
       const gDifference = new GDifference();
       [gDifference.gMinuend, gDifference.gSubtrahend, gDifference.startDirection]
-        = [gMinuend, gSubtrahend, startDirection];
+        = [gMinuend, gSubtrahend, oppositeDirection(startDirection)];
       return gDifference
     } else return undefined;
 
@@ -82,7 +82,7 @@ export const sumStartDirection = (gExpression?: GExpression): Direction | undefi
 
 export const differenceStartDirection = (gExpression?: GExpression) =>
   !gExpression
-    ? null
+    ? undefined
     : gExpression instanceof GDifference
       ? gExpression.startDirection
-      : null;
+      : undefined;

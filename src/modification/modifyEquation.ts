@@ -22,17 +22,20 @@ const moveSummandOrSubtrahend = (
     const firstFrom = fromChildren[0];
     const lastFrom = fromChildren[fromChildren.length - 1];
 
-    const fromDirection = isSummand
+    let fromDirection = (isSummand
       ? sumStartDirection(fromTerm)
-      : differenceStartDirection(fromTerm) || "left";
+      : differenceStartDirection(fromTerm));
 
-    const toDirection = isSummand
-      ? differenceStartDirection(toTerm) || "left"
-      : sumStartDirection(toTerm);
+    let toDirection = (isSummand
+      ? differenceStartDirection(toTerm)
+      : sumStartDirection(toTerm));
+
+    if (!fromDirection) fromDirection = toDirection;
+    if (!toDirection) toDirection = fromDirection;
+    if (!fromDirection && !toDirection) fromDirection = toDirection = "left";
 
     if (
-      firstFrom.id === id &&
-      (!fromDirection || !toDirection || oppositeDirection(fromDirection) === toDirection)
+      firstFrom.id === id && (fromDirection === toDirection)
     )
       return {
         moved: firstFrom,
@@ -43,8 +46,7 @@ const moveSummandOrSubtrahend = (
         movedEnd: "first",
       };
     else if (
-      lastFrom.id === id &&
-      (!fromDirection || !toDirection || fromDirection === toDirection)
+      lastFrom.id === id && (oppositeDirection(fromDirection) === toDirection)
     )
       return {
         moved: lastFrom,
