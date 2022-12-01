@@ -1,4 +1,4 @@
-import { GAbstractRoot } from "../expression/gExpression";
+import { GAbstractRoot, GExpression } from "../expression/gExpression";
 import { ID } from "../types";
 import { find } from "../utils/expression";
 import { getMinMaxCoordinates } from "../utils/gExpression";
@@ -13,6 +13,7 @@ const autoAdaptTransformation = (
     // store coordinates before transformation ////////////////////////////////////////////////////
 
     const modifiedChild = find(modifiedID, gRoot);
+    if (!(modifiedChild instanceof GExpression)) return;
     const [oldX, oldY] = [modifiedChild.x, modifiedChild.y];
 
     // transformation ///////////////////////////////////////////////////////////////////////////////

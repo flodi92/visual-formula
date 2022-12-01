@@ -43,7 +43,9 @@ export const swapXToY = (expression: GExpression, { id }: SwapXToY = {}) => {
   };
 
   const _expression = find(id, expression);
-  if (!_expression || _expression instanceof GAbstractValue)
+  if (!_expression
+    || !(_expression instanceof GExpression)
+    || _expression instanceof GAbstractValue)
     return false;
 
   return _swapXToY(_expression);
@@ -88,6 +90,8 @@ export const rotate = (expression: GExpression, { id, isClockwise = false }: Rot
   };
 
   const _expression = !!id && !!expression ? find(id, expression) : expression;
+  if (!_expression || !(_expression instanceof GExpression))
+    return false;
 
   return _rotate(_expression);
 };
@@ -127,6 +131,9 @@ export const reverse = (expression: GExpression, { id, xy }: Reverse = {}) => {
 
   const _expression = !!id && !!expression ? find(id, expression) : expression;
   if (!_expression)
+    return false;
+
+  if (!_expression || !(_expression instanceof GExpression))
     return false;
 
   return _reverse(_expression);
