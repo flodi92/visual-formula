@@ -40,7 +40,7 @@ class AutoEdgeAdaption implements AutoAdaption<EdgesConfiguration> {
         if (!this._root) return []
 
         const expression = find(id, this._root);
-        if (!expression) return [];
+        if (!expression || !(expression instanceof GExpression)) return [];
 
         const possibleXdirections = ALL_XDIRECTIONS.filter((direction) =>
             isEdgePossible(expression, direction)
