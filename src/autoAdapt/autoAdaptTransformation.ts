@@ -3,34 +3,39 @@ import { ID } from "../types";
 import { find } from "../utils/expression";
 import { getMinMaxCoordinates } from "../utils/gExpression";
 
+interface PositionForTransformation { oldX: number, oldY: number }
+
+const keepPositionForTransformation = (
+    { gRoot, modifiedID, }: { gRoot: GAbstractRoot, modifiedID?: ID, },
+): PositionForTransformation | undefined => {
+    const modifiedChild = find(modifiedID, gRoot);
+    if (!(modifiedChild instanceof GExpression)) return undefined;
+
+    return { oldX: modifiedChild.x, oldY: modifiedChild.y };
+}
+
 const autoAdaptTransformation = (
     { gRoot, modifiedID, width, height, padding }
         : { gRoot: GAbstractRoot, modifiedID?: ID, width: number, height: number, padding: number },
-    transformation: () => boolean = () => false
+    positionBefore?: PositionForTransformation
 ) => {
     const viewBox = { minX: padding, minY: padding, maxX: width - padding, maxY: height - padding };
 
-    // store coordinates before transformation ////////////////////////////////////////////////////
-
-    const modifiedChild = find(modifiedID, gRoot);
-    if (!(modifiedChild instanceof GExpression)) return;
-    const [oldX, oldY] = [modifiedChild.x, modifiedChild.y];
-
-    // transformation ///////////////////////////////////////////////////////////////////////////////
-
-    transformation();
-
     // adoption 1: try to keep position of modifiedChild ////////////////////////////////////////////
 
-    const [newX, newY] = [modifiedChild.x, modifiedChild.y];
+    const modifiedChild = find(modifiedID, gRoot);
+    if ((modifiedChild instanceof GExpression) && !!positionBefore) {
+        const { oldX, oldY } = positionBefore;
+        const [newX, newY] = [modifiedChild.x, modifiedChild.y];
 
-    const { x: resultX1, y: resultY1, ...scales1 } = gRoot.layerTransformation;
+        const { x: resultX1, y: resultY1, ...scales1 } = gRoot.layerTransformation;
 
-    gRoot.layerTransformation = {
-        x: resultX1 + (newX - oldX),
-        y: resultY1 + (newY - oldY),
-        ...scales1,
-    };
+        gRoot.layerTransformation = {
+            x: resultX1 - (newX - oldX),
+            y: resultY1 - (newY - oldY),
+            ...scales1,
+        };
+    }
 
     // adoption 2: size down if necessary /////////////////////////////////////////////////////////
 
@@ -69,4 +74,4 @@ const autoAdaptTransformation = (
 
 
 
-export default autoAdaptTransformation;
+export { keepPositionForTransformation, autoAdaptTransformation }

@@ -7,7 +7,7 @@ import { getExpressionFromJSON } from '../conversion';
 import { ID } from '../types';
 import { rotate } from '../modification/reconfigTerm';
 import { moveSummand } from '../modification/modifyEquation';
-import { autoAdaptTransformation } from '../autoAdapt';
+import { autoAdaptTransformation, keepPositionForTransformation } from '../autoAdapt';
 
 interface TestMoveInEquationProps {
   doModification: boolean,
@@ -31,12 +31,16 @@ export const TestMoveInEquation = ({
   gEquation.layerTransformation = layerTransformation;
 
   if (doModification) {
-    moveSummand({ gEquation, id })
-  }
+    const positionForTransformation
+      = keepPositionForTransformation({ gRoot: gEquation, modifiedID: id })
 
-  autoAdaptTransformation(
-    { gRoot: gEquation, width: 500, height: 200, padding: 5 },
-  );
+    moveSummand({ gEquation, id })
+
+    autoAdaptTransformation(
+      { gRoot: gEquation, modifiedID: id, width: 500, height: 200, padding: 5 },
+      positionForTransformation
+    );
+  }
 
   return <>
     <DrawRoot root={gEquation} style={{ width: '100%', height: '200px' }} />
