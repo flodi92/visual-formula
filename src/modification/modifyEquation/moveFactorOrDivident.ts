@@ -5,24 +5,24 @@ import { directionToXY, oppositeDirection } from "../../utils/general";
 // // moveFactor, moveDivisor //////////////////////////////////////////////////////////////////////////////
 
 export const moveFactor = ({ gEquation, id }: { gEquation: GExpression, id: ID }) => {
-  if (!(gEquation instanceof GEquation)) return false; // Must be Equation
+  if (!(gEquation instanceof GEquation)) return false; // Must be GEquation
 
   const testFromTerm = (from: 1 | 2) => {
     let fromTerm = gEquation[`gTerm${from}`];
-    if (!fromTerm) return null;
-
+    if (!fromTerm) return undefined;
+    
     if (fromTerm instanceof GProduct1D) {
       return fromTerm.gSimpleFactor?.id === id
-        ? {
-          moved: fromTerm.gSimpleFactor,
-          remaining: fromTerm.gComplexFactor,
-          startDirection: oppositeDirection(fromTerm.startDirection),
-          is1D: true,
-          from,
+      ? {
+        moved: fromTerm.gSimpleFactor,
+        remaining: fromTerm.gComplexFactor,
+        startDirection: oppositeDirection(fromTerm.startDirection),
+        is1D: true,
+        from,
         }
-        : null;
-    } else if (fromTerm instanceof GProduct2D) {
-      return fromTerm.gFactorX?.id === id
+        : undefined;
+      } else if (fromTerm instanceof GProduct2D) {
+        return fromTerm.gFactorX?.id === id
         ? {
           moved: fromTerm.gFactorX,
           remaining: fromTerm.gFactorY,
@@ -42,9 +42,9 @@ export const moveFactor = ({ gEquation, id }: { gEquation: GExpression, id: ID }
             from,
             fromTerm,
           }
-          : null;
+          : undefined;
     }
-    return null;
+    return undefined;
   };
 
   const {
@@ -98,7 +98,7 @@ export const moveDivisor = ({ gEquation, id }: { gEquation: GExpression, id: ID 
 
   const testFromTerm = (from: 1 | 2) => {
     const fromTerm = gEquation[`gTerm${from}`];
-    if (!fromTerm) return null;
+    if (!fromTerm) return undefined;
 
     if (fromTerm instanceof GQuotient1D) {
       return fromTerm.gSimpleDivisor?.id === id
@@ -128,7 +128,7 @@ export const moveDivisor = ({ gEquation, id }: { gEquation: GExpression, id: ID 
           from,
         }
         : {};
-    } else return null;
+    } else return undefined;
   };
 
   const {
@@ -142,7 +142,7 @@ export const moveDivisor = ({ gEquation, id }: { gEquation: GExpression, id: ID 
     from,
   } = testFromTerm(1) || testFromTerm(2) || {};
 
-  if (!moved) return null;
+  if (!moved) return undefined;
 
   const to = { [1]: 2, [2]: 1 }[from] as 1 | 2;
   const toTerm = gEquation[`gTerm${to}`];
