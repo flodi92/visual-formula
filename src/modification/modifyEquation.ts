@@ -83,7 +83,7 @@ const moveSummandOrSubtrahend = (
   let newToChildren;
   if (isParallel(fromDirection, toDirection)) {
     newToChildren =
-      (fromDirection === toDirection) !== (movedEnd === "last")
+      (fromDirection === toDirection) !== (movedEnd === "first")
         ? [...toChildren, moved]
         : [moved, ...toChildren];
   } else {
