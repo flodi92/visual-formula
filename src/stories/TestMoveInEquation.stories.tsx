@@ -13,7 +13,7 @@ export const Primary = Template.bind({});
 
 Primary.args = {
   doModification: true,
-  modification:'moveSummand',
+  modification: 'moveSummand',
   id: 42,
   json: {
     type: "GEquation",
@@ -99,7 +99,7 @@ export const Difference = Template.bind({});
 
 Difference.args = {
   doModification: true,
-  modification:'moveSubtrahend',
+  modification: 'moveSubtrahend',
   id: 42,
 
   json: {
@@ -183,6 +183,55 @@ Difference.args = {
       id: 51
     },
     id: 43
+  },
+
+  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+};
+
+export const Product = Template.bind({});
+
+Product.args = {
+  doModification: true,
+  modification: 'moveFactor',
+  id: 42,
+
+  json: {
+    type: "GEquation",
+    gTerm1: {
+      type: "GProduct2D",
+      xEdge: 'bottom',
+      yEdge: 'left',
+      gFactorX: {
+        type: 'GValue',
+        mValue: "6",
+        numericValue: 6,
+        xEdge: "top",
+        yEdge: "left",
+
+        unscaledWidth: 3,
+        unscaledHeight: 1,
+        id: 42,
+      },
+      gFactorY: {
+        type: 'GValue',
+        mValue: "4",
+        numericValue: 4,
+        xEdge: "bottom",
+        yEdge: "right",
+
+        unscaledWidth: 1,
+        unscaledHeight: 2,
+      }
+    },
+    gTerm2: {
+      type: "GValue",
+      mValue: "6",
+      xEdge: "top",
+      yEdge: "right",
+      unscaledWidth: 3,
+      unscaledHeight: 2,
+      numericValue: 6,
+    },
   },
 
   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }

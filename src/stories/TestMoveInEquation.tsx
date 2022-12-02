@@ -6,12 +6,12 @@ import DrawRoot from '../draw/DrawRoot';
 import { getExpressionFromJSON } from '../conversion';
 import { ID } from '../types';
 import { rotate } from '../modification/reconfigTerm';
-import { moveSummand, moveSubtrahend } from '../modification/modifyEquation';
+import { moveSummand, moveSubtrahend, moveFactor, moveDivisor } from '../modification/modifyEquation';
 import { autoAdaptTransformation, keepPositionForTransformation } from '../autoAdapt';
 
 interface TestMoveInEquationProps {
   doModification: boolean,
-  modification: 'moveSummand' | 'moveSubtrahend',
+  modification: 'moveSummand' | 'moveSubtrahend' | 'moveFactor' | 'moveDivisor',
   id: ID,
   rotations: 0 | 1 | 2 | 3,
   json: object,
@@ -36,10 +36,17 @@ export const TestMoveInEquation = ({
     = keepPositionForTransformation({ gRoot: gEquation, modifiedID: id });
   if (doModification) {
 
-    (modification === "moveSummand") ?
-      moveSummand({ gEquation, id }) :
-      moveSubtrahend({ gEquation, id });
-
+    switch (modification) {
+      case "moveSummand":
+        moveSummand({ gEquation, id }); break;
+      case "moveSubtrahend":
+        moveSubtrahend({ gEquation, id }); break;
+      case "moveFactor":
+        console.log(id);
+        moveFactor({ gEquation, id }); break;
+      case "moveDivisor":
+        moveDivisor({ gEquation, id }); break;
+    }
   }
   autoAdaptTransformation(
     { gRoot: gEquation, modifiedID: id, width: 500, height: 200, padding: 5 },
