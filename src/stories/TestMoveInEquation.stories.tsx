@@ -236,3 +236,49 @@ Product.args = {
 
   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
 };
+
+export const Quotient = Template.bind({});
+
+Quotient.args = {
+  doModification: true,
+  modification: 'moveDivisor',
+  id: 42,
+  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 },
+
+  json: {
+    type: "GEquation",
+    gTerm1: {
+      type: "GValue",
+      mValue: "4",
+      xEdge: "bottom",
+      yEdge: "right",
+      unscaledWidth: 1,
+      unscaledHeight: 2,
+      numericValue: 4,
+    },
+    gTerm2: {
+      type: "GQuotient2D",
+      gDivident: {
+        type: "GValue",
+        mValue: "6",
+        xEdge: "top",
+        yEdge: "right",
+        unscaledWidth: 3,
+        unscaledHeight: 2,
+        numericValue: 6,
+      },
+      gDivisor: {
+        type: "GValue",
+        mValue: "6",
+        xEdge: "top",
+        yEdge: "left",
+        unscaledWidth: 3,
+        unscaledHeight: 1,
+        numericValue: 6,
+        id: 42
+      },
+      divisorEdge: "bottom",
+      resultEdge: "left"
+    },
+  }
+}
