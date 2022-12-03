@@ -306,7 +306,9 @@ class DrawZeros {
     if (!gTerm || !(gTerm instanceof GExpression)) return <></>;
 
 
-    const [x, y] = [gTerm.x, gTerm.y + gTerm.height / 2];
+    const [x, y] = gTerm.width === 0 ?
+      [gTerm.x, gTerm.y + gTerm.height / 2]
+      : [gTerm.x + gTerm.width / 2, gTerm.y];
 
     return <circle
       cx={x} cy={y} r={ZERO_RADIUS}
