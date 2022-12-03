@@ -11,6 +11,7 @@ import { ID } from '../types';
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
 import { getCommonEdgeValues, getGAbstractValueIds, getGAbstractValues } from '../utils/gExpression';
 import { MExpression, MDifference, MEquation, MProduct, MQuotient, MSum, MValue } from '../expression/mExpression';
+import { GEquation } from '../expression/gExpression';
 
 const STANDARD_STROKE_WIDHT = 1;
 const NORM_STROKE_WIDHT = 3;
@@ -20,6 +21,7 @@ const ROUND_PADDING = 7;
 const CORNER_PADDING = 3;
 const EDGE_END_GAP = 3;
 const FONT_SIZE = 11;
+const ZERO_RADIUS = 5;
 
 class DrawValue {
   private _gaValue?: GAbstractValue | undefined;
@@ -286,10 +288,51 @@ class DrawValue {
   }
 }
 
+class DrawZeros {
+  private _gRoot?: GAbstractRoot | undefined;
+
+  constructor(gRoot: GAbstractRoot) { this._gRoot = gRoot; }
+
+  public render(): ReactNode {
+    if (!this.gEquation) return <></>;
+
+
+    const { gTerm1, gTerm2 } = this.gEquation || {};
+    
+    const [gTerm, _12] = (!gTerm1 && !!gTerm2) ? [gTerm2, 1]
+    : (!gTerm2 && !!gTerm1) ? [gTerm1, 2]
+    : []
+
+    if (!gTerm) return <></>;
+
+    const [x, y] = [gTerm.x, gTerm.y + gTerm.height / 2];
+
+    console.log(x, y)
+
+    return <circle
+      x={x} y={y} r={ZERO_RADIUS}
+      stroke={_12 === 1 ? "black" : "red"}
+      fill="none"
+    />
+  }
+
+  public get gEquation(): GEquation | undefined {
+    return this._gRoot && this._gRoot instanceof GEquation ? this._gRoot : undefined;
+  }
+
+  public get gRoot(): GAbstractRoot | undefined {
+    return this._gRoot;
+  }
+  public set gRoot(value: GAbstractRoot | undefined) {
+    this._gRoot = value;
+  }
+}
+
 
 const DrawRoot = ({ root, style }: { root: GAbstractRoot, style: any }) => {
 
   const [drawValues, setDrawValues] = useState<DrawValue[]>([]);
+  const drawZero = new DrawZeros(root);
 
   useLayoutEffect(() => {
     const gAValues = getGAbstractValues(root);
@@ -322,6 +365,7 @@ const DrawRoot = ({ root, style }: { root: GAbstractRoot, style: any }) => {
       }}
     />
     {drawValues.map(drawValue => drawValue.render())}
+    {drawZero.render()}
   </svg>
 
 }
