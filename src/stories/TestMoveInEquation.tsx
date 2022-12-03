@@ -44,7 +44,6 @@ export const TestMoveInEquation = ({
       case "moveSubtrahend":
         moveSubtrahend({ gEquation, id }); break;
       case "moveFactor":
-        console.log(id);
         moveFactor({ gEquation, id }); break;
       case "moveDivisor":
         moveDivisor({ gEquation, id }); break;
