@@ -9,7 +9,7 @@ import GValue from '../expression/gExpression/GValue';
 import { zip } from 'lodash';
 import { ID } from '../types';
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
-import { getGAbstractValueIds, getGAbstractValues } from '../utils/gExpression';
+import { getCommonEdgeValues, getGAbstractValueIds, getGAbstractValues } from '../utils/gExpression';
 import { MExpression, MDifference, MEquation, MProduct, MQuotient, MSum, MValue } from '../expression/mExpression';
 
 const STANDARD_STROKE_WIDHT = 1;
@@ -18,6 +18,7 @@ const GVALUE_RADIUS = 15;
 // const HIDDEN_STROKE_WIDTH = 1;
 const ROUND_PADDING = 7;
 const CORNER_PADDING = 3;
+const EDGE_END_GAP = 3;
 const FONT_SIZE = 11;
 
 class DrawValue {
@@ -41,31 +42,36 @@ class DrawValue {
     const xNorm = gValue.isNormX;
     const yNorm = gValue.isNormY;
 
+    const gapTop = !!getCommonEdgeValues(gValue, "top")?.length ? EDGE_END_GAP : 0; // TODO other method
+    const gapBottom = !!getCommonEdgeValues(gValue, "bottom")?.length ? EDGE_END_GAP : 0;
+    const gapLeft = !!getCommonEdgeValues(gValue, "left")?.length ? EDGE_END_GAP : 0;
+    const gapRight = !!getCommonEdgeValues(gValue, "right")?.length ? EDGE_END_GAP : 0;
+
     const [a, b, c] =
       (
         (xEdge === "top" && yEdge === "left")
           ? [
-            [x, y + height],
+            [x, y + height - gapBottom],
             [x, y],
-            [x + width, y],
+            [x + width - gapLeft, y],
           ] :
           (xEdge === "bottom" && yEdge === "left")
             ? [
-              [x, y],
+              [x, y + gapTop],
               [x, y + height],
-              [x + width, y + height],
+              [x + width - gapLeft, y + height],
             ] :
             (xEdge === "bottom" && yEdge === "right")
               ? [
-                [x + width, y],
+                [x + width, y + gapTop],
                 [x + width, y + height],
-                [x, y + height],
+                [x + gapRight, y + height],
               ] :
               (xEdge === "top" && yEdge === "right")
                 ? [
-                  [x, y],
+                  [x + gapRight, y],
                   [x + width, y],
-                  [x + width, y + height],
+                  [x + width, y + height - gapBottom],
                 ] :
                 [])
 
