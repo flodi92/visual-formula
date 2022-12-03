@@ -11,7 +11,7 @@ import { ID } from '../types';
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
 import { getCommonEdgeValues, getGAbstractValueIds, getGAbstractValues } from '../utils/gExpression';
 import { MExpression, MDifference, MEquation, MProduct, MQuotient, MSum, MValue } from '../expression/mExpression';
-import { GEquation } from '../expression/gExpression';
+import { GEquation, GExpression } from '../expression/gExpression';
 
 const STANDARD_STROKE_WIDHT = 1;
 const NORM_STROKE_WIDHT = 3;
@@ -298,19 +298,18 @@ class DrawZeros {
 
 
     const { gTerm1, gTerm2 } = this.gEquation || {};
-    
-    const [gTerm, _12] = (!gTerm1 && !!gTerm2) ? [gTerm2, 1]
-    : (!gTerm2 && !!gTerm1) ? [gTerm1, 2]
-    : []
 
-    if (!gTerm) return <></>;
+    const [gTerm, _12] = (!gTerm1 && !!gTerm2) ? [gTerm2, 1]
+      : (!gTerm2 && !!gTerm1) ? [gTerm1, 2]
+        : []
+
+    if (!gTerm || !(gTerm instanceof GExpression)) return <></>;
+
 
     const [x, y] = [gTerm.x, gTerm.y + gTerm.height / 2];
 
-    console.log(x, y)
-
     return <circle
-      x={x} y={y} r={ZERO_RADIUS}
+      cx={x} cy={y} r={ZERO_RADIUS}
       stroke={_12 === 1 ? "black" : "red"}
       fill="none"
     />
