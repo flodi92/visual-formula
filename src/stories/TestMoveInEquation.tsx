@@ -10,18 +10,18 @@ import { moveSummand, moveSubtrahend, moveFactor, moveDivisor } from '../modific
 import { autoAdaptTransformation, keepPositionForTransformation } from '../autoAdapt';
 
 interface TestMoveInEquationProps {
-  doModification: boolean,
-  modification: 'moveSummand' | 'moveSubtrahend' | 'moveFactor' | 'moveDivisor',
-  id: ID,
+  steps: 0 | 1 | 2 | 3
   rotations: 0 | 1 | 2 | 3,
-  json: object,
   layerTransformation: { x: number, y: number, scaleX: number, scaleY: number }
+  modification: 'moveSummand' | 'moveSubtrahend' | 'moveFactor' | 'moveDivisor',
+  ids: ID[],
+  json: object,
 }
 
 export const TestMoveInEquation = ({
-  doModification,
+  steps,
   modification,
-  id,
+  ids,
   rotations,
   json,
   layerTransformation }: TestMoveInEquationProps) => {
@@ -33,8 +33,10 @@ export const TestMoveInEquation = ({
   gEquation.layerTransformation = layerTransformation;
 
   const positionForTransformation
-    = keepPositionForTransformation({ gRoot: gEquation, modifiedID: id });
-  if (doModification) {
+    = keepPositionForTransformation({ gRoot: gEquation, modifiedID: ids[0] });
+
+  for (let i = 0; i < steps; i++) {
+    const id = ids[i];
 
     switch (modification) {
       case "moveSummand":
@@ -49,7 +51,7 @@ export const TestMoveInEquation = ({
     }
   }
   autoAdaptTransformation(
-    { gRoot: gEquation, modifiedID: id, width: 500, height: 200, padding: 5 },
+    { gRoot: gEquation, modifiedID: ids[0], width: 500, height: 200, padding: 5 },
     positionForTransformation
   );
 

@@ -12,9 +12,9 @@ const Template: ComponentStory<typeof TestMoveInEquation> = (args) => <TestMoveI
 export const Primary = Template.bind({});
 
 Primary.args = {
-  doModification: true,
+  steps: 1,
   modification: 'moveSummand',
-  id: 42,
+  ids: [42, 43, 44],
   json: {
     type: "GEquation",
     gTerm1: {
@@ -69,6 +69,7 @@ Primary.args = {
           unscaledHeight: 2,
         },
         {
+          id: 44,
           type: 'GValue',
           mValue: "5",
           numericValue: 5,
@@ -79,6 +80,7 @@ Primary.args = {
           unscaledHeight: 2,
         },
         {
+          id: 43,
           type: 'GValue',
           mValue: "7",
           numericValue: 7,
@@ -98,10 +100,9 @@ Primary.args = {
 export const Difference = Template.bind({});
 
 Difference.args = {
-  doModification: true,
+  steps: 1,
   modification: 'moveSubtrahend',
-  id: 42,
-
+  ids: [42],
   json: {
     type: "GEquation",
     gTerm1: {
@@ -191,10 +192,9 @@ Difference.args = {
 export const Product = Template.bind({});
 
 Product.args = {
-  doModification: true,
+  steps: 1,
   modification: 'moveFactor',
-  id: 42,
-
+  ids: [42],
   json: {
     type: "GEquation",
     gTerm1: {
@@ -240,9 +240,9 @@ Product.args = {
 export const Quotient = Template.bind({});
 
 Quotient.args = {
-  doModification: true,
+  steps: 1,
   modification: 'moveDivisor',
-  id: 42,
+  ids: [42],
   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 },
 
   json: {
