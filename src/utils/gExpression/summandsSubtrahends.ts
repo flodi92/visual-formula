@@ -15,7 +15,7 @@ export const getSummands = (gExpression?: GExpression, expectedDirection?: Direc
 
 export const setSummands =
   (gExpression?: GExpression, gSummands: GExpression[] = [], startDirection?: Direction) => {
-    if (!gSummands?.length && gExpression instanceof GDifference) {
+    if (!gSummands?.length) {
       return undefined;
     } else if (!gExpression || !(gExpression instanceof GSum || gExpression instanceof GDifference)) {
 
