@@ -105,7 +105,7 @@ export const moveDivisor = ({ gEquation, id }: { gEquation: GExpression, id: ID 
         ? {
           moved: fromTerm.gSimpleDivisor,
           remaining: fromTerm.gComplexDivident,
-          startDirection: fromTerm.startDirection,
+          startDirection: oppositeDirection(fromTerm.startDirection),
           is1D: true,
           from,
         }
