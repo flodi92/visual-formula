@@ -27,6 +27,8 @@ export const TestMoveInEquation = ({
   layerTransformation }: TestMoveInEquationProps) => {
   const gEquation = getExpressionFromJSON(json) as GAbstractRoot;
 
+  if(!gEquation) return <>gEquation is undefined</>
+
   for (let index = 0; index < rotations; index++)
     rotate(gEquation);
 

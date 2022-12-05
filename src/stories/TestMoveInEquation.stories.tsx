@@ -189,9 +189,9 @@ Difference.args = {
   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
 };
 
-export const Product = Template.bind({});
+export const Product2D = Template.bind({});
 
-Product.args = {
+Product2D.args = {
   steps: 1,
   modification: 'moveFactor',
   ids: [42],
@@ -237,9 +237,9 @@ Product.args = {
   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
 };
 
-export const Quotient = Template.bind({});
+export const Quotient2D = Template.bind({});
 
-Quotient.args = {
+Quotient2D.args = {
   steps: 1,
   modification: 'moveDivisor',
   ids: [42],
@@ -279,6 +279,114 @@ Quotient.args = {
       },
       divisorEdge: "bottom",
       resultEdge: "left"
+    },
+  }
+}
+
+export const Product1DMoveComplex = Template.bind({});
+
+const product1dJSON = {
+  type: "GEquation",
+  gTerm1: {
+    type: "GProduct1D",
+
+    startDirection: "left",
+
+    gComplexFactor: {
+      type: "GValue",
+      mValue: "4",
+      numericValue: 4,
+      xEdge: "top",
+      yEdge: "right",
+
+      unscaledWidth: 2,
+      unscaledHeight: 2,
+      id: 42,
+    },
+    gSimpleFactor: {
+      type: "GSimpleValue",
+      mSimpleValue: "4",
+      numericValue: 4,
+      edge: "top",
+
+      unscaledWidth: 6,
+      unscaledHeight: 2,
+      id: 43,
+    }
+  },
+  gTerm2: {
+    type: "GValue",
+    mValue: "16",
+    numericValue: 16,
+    xEdge: "bottom",
+    yEdge: "right",
+
+    unscaledWidth: 8,
+    unscaledHeight: 2,
+    id: 44,
+  },
+};
+
+Product1DMoveComplex.args = {
+  steps: 1,
+  modification: 'moveFactor',
+  ids: [42],
+  json: product1dJSON,
+
+  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+};
+
+export const Product1DMoveSimple = Template.bind({});
+
+Product1DMoveSimple.args = {
+  steps: 1,
+  modification: 'moveFactor',
+  ids: [43],
+  json: product1dJSON,
+
+  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+};
+
+export const Quotient1D = Template.bind({});
+
+Quotient1D.args = {
+  steps: 1,
+  modification: 'moveDivisor',
+  ids: [42],
+  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 },
+
+  json: {
+    type: "GEquation",
+    gTerm1: {
+      type: "GValue",
+      mValue: "4",
+      xEdge: "top",
+      yEdge: "right",
+      unscaledWidth: 2,
+      unscaledHeight: 2,
+      numericValue: 4,
+    },
+    gTerm2: {
+      type: "GQuotient1D",
+      gSimpleDivisor: {
+        type: "GSimpleValue",
+        mSimpleValue: "4",
+        edge: "top",
+        unscaledWidth: 6,
+        unscaledHeight: 2,
+        numericValue: 4,
+        id: 42
+      },
+      gComplexDivident: {
+        type: "GValue",
+        mValue: "16",
+        xEdge: "bottom",
+        yEdge: "right",
+        unscaledWidth: 8,
+        unscaledHeight: 2,
+        numericValue: 16,
+      },
+      startDirection: "right"
     },
   }
 }
