@@ -6,11 +6,20 @@ import {
   GAbstractValue,
   GValue,
   GSimpleValue,
+  GProduct1D,
+  GQuotient1D,
 } from "../expression/gExpression";
 import { Direction, XDirection, YDirection, ID, XY } from "../types";
-import { find } from "../utils/expression";
-import { oppositeDirection, getRotatedDirection, getSwappedDirection } from "../utils/general";
+import { find, replace, } from "../utils/expression";
+import {
+  oppositeDirection,
+  getRotatedDirection,
+  getSwappedDirection,
+  directionToXY,
+  getOtherXY,
+} from "../utils/general";
 import Modification from "./Modification";
+import { isNormableToXY, getXNeighbours, getYNeighbours } from "../utils/gExpression";
 
 export interface SwapXToY extends Modification { }
 
@@ -139,124 +148,124 @@ export const reverse = (expression: GExpression, { id, xy }: Reverse = {}) => {
   return _reverse(_expression);
 };
 
-// export const swap1DAnd2D = ({ expression, id }:
-//   { expression: GExpression, id: ID }) => {
-//   if ([expression, id].some((val) => val == null)) return false;
+export const swap1DAnd2D = ({ expression, id }:
+  { expression: GExpression, id: ID }) => {
+  if ([expression, id].some((val) => val == null)) return false;
 
-//   const term = find(id, expression);
+  const term = find(id, expression);
 
-//   if(!(term.parent instanceof GExpression)) return false;
+  if (!(term.parent instanceof GExpression)) return false;
 
-//   const parent = term.parent 
-//   const isParentNormed = term.parent?.isNormX || term.parent?.isNormY;
+  const isParentNormed = term.parent?.isNormX || term.parent?.isNormY;
 
-//   let newTerm;
-//   if (term instanceof GProduct1D && !isParentNormed) {
-//     const canComplexXNorm = isNormableToXY(term.complexFactor(), "X");
-//     const canComplexYNorm = isNormableToXY(term.complexFactor(), "Y");
+  let newTerm;
+  if (term instanceof GProduct1D && !isParentNormed) {
+    const canComplexXNorm = isNormableToXY(term.gComplexFactor, "X");
+    const canComplexYNorm = isNormableToXY(term.gComplexFactor, "Y");
 
-//     const [factorFromComplex, factorFromSimple] =
-//       canComplexXNorm && canComplexYNorm
-//         ? [
-//           `factor${directionToXY(term.startDirection)}`,
-//           `factor${getOtherXY(directionToXY(term.startDirection))}`,
-//         ]
-//         : canComplexXNorm && !canComplexYNorm
-//           ? ["factorY", "factorX"]
-//           : !canComplexYNorm && canComplexXNorm
-//             ? ["factorX", "factory"]
-//             : [];
+    const [factorFromComplex, factorFromSimple] =
+      (canComplexXNorm && canComplexYNorm
+        ? [
+          `factor${directionToXY(term.startDirection)}`,
+          `factor${getOtherXY(directionToXY(term.startDirection))}`,
+        ]
+        : canComplexXNorm && !canComplexYNorm
+          ? ["gFactorY", "gFactorX"]
+          : !canComplexYNorm && canComplexXNorm
+            ? ["gFactorX", "gFactorY"]
+            : []) as ['gFactorX' | 'gFactorY', 'gFactorX' | 'gFactorY'];
 
-//     if (!factorFromComplex && !factorFromSimple) return false; // complexFactor can neither be normed to x nor to y
+    if (!factorFromComplex && !factorFromSimple) return false; // gComplexFactor can neither be normed to x nor to y
 
-//     if (
+    if (
+      getXNeighbours(term).some(value => value.isNormX) ||
+      getYNeighbours(term).some(value => value.isNormY)
+    )
+      return false;
 
-//       term.getXNeighbours().some((value) => value.isXNorm()) ||
-//       term.getYNeighbours().some((value) => value.isYNorm())
-//     )
-//       return false;
+    const _newTerm = new GProduct2D();
+    _newTerm.id = term.id;
+    _newTerm[factorFromComplex] = term.gComplexFactor;
 
-//     newTerm = new GProduct2D({
-//       id: term.id(),
-//       [factorFromComplex]: term.complexFactor(),
-//       [factorFromSimple]: new GValue({
-//         id: term.simpleFactor()?.id(),
-//         value: term.simpleFactor()?.value(),
-//         xEdge: "bottom",
-//         yEdge: "right",
-//       }),
-//       factorXEdge: term.startDirection === "top" ? "bottom" : "top",
-//       factorYEdge: term.startDirection === "left" ? "right" : "left",
-//     });
-//   } else if (term.type() === "GQuotient1D" && !isParentNormed) {
-//     const canComplexXNorm = () => isNormableToXY(term.complexDivident(), "X");
-//     const canComplexYNorm = () => isNormableToXY(term.complexDivident(), "Y");
+    _newTerm[factorFromSimple] = new GValue();
+    (_newTerm[factorFromSimple] as GValue).id = term.gSimpleFactor?.id;
+    (_newTerm[factorFromSimple] as GValue).numericValue = term.gSimpleFactor?.numericValue;
+    (_newTerm[factorFromSimple] as GValue).mValue = term.gSimpleFactor?.mSimpleValue;
+    (_newTerm[factorFromSimple] as GValue).xEdge = "bottom";
+    (_newTerm[factorFromSimple] as GValue).yEdge = "right";
 
-//     const [divisorEdge, resultEdge] = canComplexXNorm()
-//       ? ["left", "top"]
-//       : canComplexYNorm()
-//         ? ["top", "left"]
-//         : [];
+  } else if (term instanceof GQuotient1D && !isParentNormed) {
+    const canComplexXNorm = () => isNormableToXY(term.gComplexDivident, "X");
+    const canComplexYNorm = () => isNormableToXY(term.gComplexDivident, "Y");
 
-//     if (!divisorEdge && !resultEdge) return false; // complexDivident can neither be normed to x nor to y
+    const [divisorEdge, resultEdge] = (canComplexXNorm()
+      ? ["left", "top"]
+      : canComplexYNorm()
+        ? ["top", "left"]
+        : []) as [Direction, Direction];
 
-//     if (
-//       term.getXNeighbours().some((value) => value.isXNorm()) ||
-//       term.getYNeighbours().some((value) => value.isYNorm())
-//     )
-//       return false;
+    if (!divisorEdge && !resultEdge) return false; // gComplexDivident can neither be normed to x nor to y
 
-//     newTerm = new GQuotient2D({
-//       id: term.id(),
-//       divident: term.complexDivident(),
-//       divisor: new GValue({
-//         id: term.simpleDivisor()?.id(),
-//         value: term.simpleDivisor()?.value(),
-//         xEdge: "bottom",
-//         yEdge: "right",
-//       }),
-//       divisorEdge,
-//       resultEdge,
-//     });
-//   } else if (term.type() === "GProduct2D") {
-//     const [factorToSimple, factorToComplex, startDirection] =
-//       term.factorY()?.type() === "GValue"
-//         ? ["factorY", "factorX", getOpposite(term.factorYEdge())]
-//         : term.factorX()?.type() === "GValue"
-//           ? ["factorX", "factorY", getOpposite(term.factorXEdge())]
-//           : [];
+    if (
+      getXNeighbours(term).some(value => value.isNormX) ||
+      getYNeighbours(term).some(value => value.isNormY)
+    )
+      return false;
 
-//     if (!factorToSimple && !factorToComplex) return false; // none of the factors can be simplified
+    const _newTerm = new GQuotient2D();
+    _newTerm.id = term.id;
+    _newTerm.gDivident = term.gComplexDivident;
+    _newTerm.divisorEdge = divisorEdge;
+    _newTerm.resultEdge = resultEdge;
 
-//     newTerm = new GProduct1D({
-//       id: term.id(),
-//       complexFactor: term[factorToComplex](),
-//       simpleFactor: new GSimpleValue({
-//         id: term[factorToSimple]()?.id(),
-//         value: term[factorToSimple]()?.value(),
-//       }),
-//       startDirection,
-//     });
-//   } else if (term.type() === "GQuotient2D") {
-//     if (term.divisor()?.type() !== "GValue") return false; // divisor cannot be simplified
+    _newTerm.gDivisor = new GValue();
+    _newTerm.gDivisor.id = term.gSimpleDivisor?.id;
+    (_newTerm.gDivisor as GValue).mValue = term.gSimpleDivisor?.mSimpleValue;
+    (_newTerm.gDivisor as GValue).numericValue = term.gSimpleDivisor?.numericValue;
+    (_newTerm.gDivisor as GValue).xEdge = "bottom";
+    (_newTerm.gDivisor as GValue).yEdge = "right";
 
-//     const startDirection = term.divisorEdge();
+    newTerm = _newTerm;
+  } else if (term instanceof GProduct2D) {
+    const [factorToSimple, factorToComplex, startDirection] =
+      (term.gFactorY instanceof GValue
+        ? ["gFactorY", "gFactorX", oppositeDirection(term.yEdge)]
+        : term.gFactorX instanceof GValue
+          ? ["gFactorX", "gFactorY", oppositeDirection(term.xEdge)]
+          : []) as ["gFactorX" | "gFactorY", "gFactorX" | "gFactorY", Direction];
 
-//     newTerm = new GQuotient1D({
-//       id: term.id(),
-//       complexDivident: term.divident(),
-//       simpleDivisor: new GSimpleValue({
-//         id: term.divisor()?.id(),
-//         value: term.divisor()?.value(),
-//       }),
-//       startDirection,
-//     });
-//   } else return false;
+    if (!factorToSimple && !factorToComplex) return false; // none of the factors can be simplified
 
-//   replaceTerm(expression, id, newTerm);
+    const _newTerm = new GProduct1D();
+    _newTerm.id = term.id;
+    _newTerm.startDirection = startDirection;
+    _newTerm.gComplexFactor = term[factorToComplex];
 
-//   return true;
-// };
+    _newTerm.gSimpleFactor = new GSimpleValue();
+    _newTerm.gSimpleFactor.id = term[factorToSimple]?.id;
+    (_newTerm.gSimpleFactor as GSimpleValue).numericValue = (term[factorToSimple] as GValue).numericValue;
+    (_newTerm.gSimpleFactor as GSimpleValue).mSimpleValue = (term[factorToSimple] as GValue).mValue;
+
+    newTerm = _newTerm;
+  } else if (term instanceof GQuotient2D) {
+    if (!(term.gDivisor instanceof GValue)) return false; // gDivisor cannot be simplified
+    const _newTerm = new GQuotient1D();
+    _newTerm.id = term.id;
+    _newTerm.startDirection = term.divisorEdge;
+    _newTerm.gComplexDivident = term.gDivident;
+
+    _newTerm.gSimpleDivisor = new GSimpleValue();
+    _newTerm.gSimpleDivisor.id = term.gDivisor?.id;
+    _newTerm.gSimpleDivisor.numericValue = term.gDivisor?.numericValue;
+    _newTerm.gSimpleDivisor.mSimpleValue = term.gDivisor?.mValue;
+
+    newTerm = _newTerm;
+  } else return false;
+
+  newTerm && replace(id, expression, newTerm);
+
+  return true;
+};
 
 // export const substitute = ({ expression, id }:
 //   { expression: GExpression, id: ID }) => {
