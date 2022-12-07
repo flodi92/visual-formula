@@ -9,6 +9,7 @@ import {
   GProduct1D,
   GQuotient1D,
 } from "../expression/gExpression";
+import { MValue } from "../expression/mExpression";
 import { Direction, XDirection, YDirection, ID, XY } from "../types";
 import { find, replace, } from "../utils/expression";
 import {
@@ -267,21 +268,22 @@ export const swap1DAnd2D = ({ expression, id }:
   return true;
 };
 
-// export const substitute = ({ expression, id }:
-//   { expression: GExpression, id: ID }) => {
-//   const term = find(id, expression);
-//   if (term instanceof GAbstractValue) return false;
-//   const mValue = term.mExpression;
+export const substitute = ({ expression, id }:
+  { expression: GExpression, id: ID }) => {
+  const term = find(id, expression);
 
-//   if (!mValue) return false;
-//   const replacedTerm = new GValue();
-//   replacedTerm.mValue = mValue;
-//   replacedTerm.xEdge = "top";
-//   replacedTerm.yEdge = "left";
+  if (term instanceof GAbstractValue) return false;
+  const mValue = (!!term.children.length ? term.children[1] : undefined) as MValue;
 
-//   replace(id, expression, replacedTerm);
-//   return true;
-// };
+  if (!mValue) return false;
+  const replacedTerm = new GValue();
+  replacedTerm.mValue = mValue;
+  replacedTerm.xEdge = "top";
+  replacedTerm.yEdge = "left";
+
+  replace(id, expression, replacedTerm);
+  return true;
+};
 
 // const suggestStartDirection = (term) => {
 //   if (term.parent().startDirection) return term.parent().startDirection;
