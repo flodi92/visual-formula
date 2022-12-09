@@ -9,7 +9,6 @@ import {
   GProduct1D,
   GQuotient1D,
 } from "../expression/gExpression";
-import { MValue } from "../expression/mExpression";
 import { Direction, XDirection, YDirection, ID, XY } from "../types";
 import { find, replace, } from "../utils/expression";
 import {
@@ -21,6 +20,7 @@ import {
 } from "../utils/general";
 import Modification from "./Modification";
 import { isNormableToXY, getXNeighbours, getYNeighbours } from "../utils/gExpression";
+import { getMExpressionFromExpression } from "../conversion";
 
 export interface SwapXToY extends Modification { }
 
@@ -273,7 +273,8 @@ export const substitute = ({ expression, id }:
   const term = find(id, expression);
 
   if (term instanceof GAbstractValue) return false;
-  const mValue = (!!term.children.length ? term.children[1] : undefined) as MValue;
+
+  const mValue = getMExpressionFromExpression(term);
 
   if (!mValue) return false;
   const replacedTerm = new GValue();
@@ -284,105 +285,3 @@ export const substitute = ({ expression, id }:
   replace(id, expression, replacedTerm);
   return true;
 };
-
-// const suggestStartDirection = (term) => {
-//   if (term.parent().startDirection) return term.parent().startDirection;
-//   if (term.isXNorm()) return "top";
-//   return "left";
-// };
-
-// export const unsubstitute = ({ expression, id }:
-//   { expression: GExpression, id: ID }) => {
-//   const term = find(id, expression);
-//   if (term.type() !== "GValue") return false;
-
-//   const mTerm = term.value();
-
-//   const _getGTerm = (mTerm) => {
-//     switch (mTerm?.type()) {
-//       case "MSum":
-//         return new GSum({
-//           id: term.id(),
-//           summands: mTerm.mSummands().map((value) => new GValue({ value })),
-//           startDirection: suggestStartDirection(mTerm),
-//         });
-//       case "MDifference":
-//         return new GDifference({
-//           id: term.id(),
-//           minuend: mTerm.mMinuend(),
-//           subtrahend: mTerm.mSubtrahhend(),
-//           startDirection: suggestStartDirection(mTerm),
-//         });
-//       case "MProduct":
-//         const [mFactor1, mFactor2, ...rest] = mTerm.mFactors();
-//         if (rest.length) return null;
-
-//         if (
-//           term?.isXNorm() ||
-//           term.getYNeighbours()?.some((neighbour) => neighbour.isYNorm())
-//         ) {
-//           return new GProduct1D({
-//             id: term.id(),
-//             complexFactor: new GValue({ value: mFactor1 }),
-//             simpleFactor: new GSimpleValue({ value: mFactor2 }),
-//             startDirection: "top",
-//           });
-//         } else if (
-//           term?.isYNorm() ||
-//           term.getXNeighbours()?.some((neighbour) => neighbour.isXNorm())
-//         ) {
-//           return new GProduct1D({
-//             id: term.id(),
-//             complexFactor: new GValue({ value: mFactor1 }),
-//             simpleFactor: new GSimpleValue({ value: mFactor2 }),
-//             startDirection: "left",
-//           });
-//         } else {
-//           return new GProduct2D({
-//             id: term.id(),
-//             factorX: new GValue({ value: mFactor1 }),
-//             factorY: new GValue({ value: mFactor2 }),
-//           });
-//         }
-//       case "MQuotient":
-//         const [mDivident, mDivisor] = [mTerm.mDivident(), mTerm.mDivisor()];
-
-//         if (
-//           term?.isXNorm() ||
-//           term.getYNeighbours()?.some((neighbour) => neighbour.isYNorm())
-//         ) {
-//           return new GQuotient1D({
-//             id: term.id(),
-//             complexDivident: new GValue({ value: mDivident }),
-//             simpleDivisor: new GSimpleValue({ value: mDivisor }),
-//             startDirection: "top",
-//           });
-//         } else if (
-//           term?.isYNorm() ||
-//           term.getXNeighbours()?.some((neighbour) => neighbour.isXNorm())
-//         ) {
-//           return new GQuotient1D({
-//             id: term.id(),
-//             complexDivident: new GValue({ value: mDivident }),
-//             simpleFactor: new GSimpleValue({ value: mDivisor }),
-//             startDirection: "left",
-//           });
-//         } else {
-//           return new GProduct2D({
-//             id: term.id(),
-//             factorX: new GValue({ value: mDivident }),
-//             factorY: new GValue({ value: mDivisor }),
-//           });
-//         }
-//     }
-//     return null;
-//   };
-
-//   const gTerm = _getGTerm(mTerm);
-
-//   if (!gTerm) return false;
-
-//   replaceTerm(expression, id, gTerm);
-
-//   return true;
-// };
