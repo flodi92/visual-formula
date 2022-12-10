@@ -40,10 +40,18 @@ export const swapXToY = (expression: GExpression, { id }: SwapXToY = {}) => {
       [expression.divisorEdge, expression.resultEdge] = [
         getSwappedDirection(expression.divisorEdge),
         getSwappedDirection(expression.resultEdge)];
-    } else if (expression instanceof GAbstractValue) {
-      /* nothing */
-    } else {
-      return false;
+    } else if (expression instanceof GValue) {
+      [expression.xEdge, expression.yEdge] = [
+        getSwappedDirection(expression.yEdge) as YDirection | undefined,
+        getSwappedDirection(expression.xEdge) as XDirection | undefined,
+      ];
+      [expression.unscaledHeight, expression.unscaledWidth]
+        = [expression.unscaledWidth, expression.unscaledHeight]
+    }
+    else if (expression instanceof GSimpleValue) {
+      expression.edge = getSwappedDirection(expression.edge);
+      [expression.unscaledHeight, expression.unscaledWidth]
+        = [expression.unscaledWidth, expression.unscaledHeight];
     }
     return (expression.children)?.reduce((prev, child) => {
       if (!!child && child instanceof GExpression)
@@ -149,8 +157,8 @@ export const reverse = (expression: GExpression, { id, xy }: Reverse = {}) => {
   return _reverse(_expression);
 };
 
-export const swap1DAnd2D = ({ expression, id }:
-  { expression: GExpression, id: ID }) => {
+export const swap1DAnd2D = (expression: GExpression,
+  { id }: { id: ID }) => {
   if ([expression, id].some((val) => val == null)) return false;
 
   const term = find(id, expression);
@@ -268,20 +276,24 @@ export const swap1DAnd2D = ({ expression, id }:
   return true;
 };
 
-export const substitute = ({ expression, id }:
-  { expression: GExpression, id: ID }) => {
+export const substitute = (expression: GExpression,
+  { id }: { id: ID }) => {
   const term = find(id, expression);
 
-  if (term instanceof GAbstractValue) return false;
+  if (term instanceof GAbstractValue || !(term instanceof GExpression)) return false;
 
   const mValue = getMExpressionFromExpression(term);
 
   if (!mValue) return false;
   const replacedTerm = new GValue();
+  replacedTerm.unscaledWidth = term.unscaledWidth
+  replacedTerm.unscaledHeight = term.unscaledHeight
   replacedTerm.mValue = mValue;
-  replacedTerm.xEdge = "top";
-  replacedTerm.yEdge = "left";
 
   replace(id, expression, replacedTerm);
+  
+  replacedTerm.xEdge = "bottom";
+  replacedTerm.yEdge = "right";
+
   return true;
 };
