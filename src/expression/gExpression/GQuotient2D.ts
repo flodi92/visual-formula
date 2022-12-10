@@ -1,15 +1,21 @@
 import GExpression from "./GExpression";
 import { Direction, TypeInParent } from "../../types";
 import { directionToXY } from "../../utils/general";
+import { GQuotient2DI } from "./interfaces";
 
-export default class GQuotient2D extends GExpression {
+export default class GQuotient2D extends GExpression implements GQuotient2DI {
     protected childrenTypesInParentDefinition(): TypeInParent[] {
         return ['gDivident', 'gDivisor']
     }
 
     private _divisorEdge?: Direction | undefined;
     private _resultEdge?: Direction | undefined;
-
+    
+    constructor(vals?: GQuotient2DI) {
+        super();
+        super.init(vals, this);
+    }
+    
     public get gDivident() {
         return super.getChild('gDivident') as GExpression | undefined;
     }

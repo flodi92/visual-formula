@@ -1,13 +1,19 @@
 import GAbstractValue from "./GAbstractValue";
 import MExpression from "../mExpression/MExpression";
 import { Direction, TypeInParent } from "../../types";
+import { GSimpleValueI } from "./interfaces";
 
-export default class GSimpleValue extends GAbstractValue {
+export default class GSimpleValue extends GAbstractValue implements GSimpleValueI {
     protected childrenTypesInParentDefinition(): TypeInParent[] {
         return ['mSimpleValue']
     }
 
     private _edge?: Direction | undefined;
+    
+    constructor(vals?: GSimpleValueI) {
+        super();
+        super.init(vals, this);
+    }
 
     public get edge(): Direction | undefined {
         return this._edge;

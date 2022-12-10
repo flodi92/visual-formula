@@ -3,11 +3,18 @@ import GAbstractDirectedExpression from "./GAbstractDirectedExpression";
 import GSimpleValue from "./GSimpleValue";
 import { TypeInParent } from "../../types";
 import { directionToXY } from "../../utils/general";
+import { GQuotient1DI } from "./interfaces";
 
-export default class GQuotient extends GAbstractDirectedExpression {
+export default class GQuotient1D extends GAbstractDirectedExpression implements GQuotient1DI {
     protected childrenTypesInParentDefinition(): TypeInParent[] {
         return ['gSimpleDivisor', 'gComplexDivident']
     }
+
+    constructor(vals?: GQuotient1DI) {
+        super();
+        super.init(vals, this);
+    }
+    
     public get gSimpleDivisor() {
         return super.getChild('gSimpleDivisor') as GSimpleValue | undefined;
     }

@@ -1,11 +1,18 @@
 import GExpression from "./GExpression";
 import GAbstractRoot from "./GAbstractRoot";
 import { DEFAULT_TRANSFORMATION, Transformation, TypeInParent } from "../../types";
+import { GEquationI } from "./interfaces";
 
-export default class GEquation extends GAbstractRoot {
+export default class GEquation extends GAbstractRoot implements GEquationI {
     protected childrenTypesInParentDefinition(): TypeInParent[] {
         return ["gTerm1", "gTerm2"];
     }
+
+    constructor(vals?: GEquationI) {
+        super();
+        super.init(vals, this);
+    }
+    
     public get gTerm1() {
         return super.getChild('gTerm1') as GExpression | undefined;
     }

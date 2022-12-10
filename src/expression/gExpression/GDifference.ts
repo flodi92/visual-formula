@@ -1,11 +1,18 @@
 import GExpression from "./GExpression";
 import GAbstractDirectedExpression from "./GAbstractDirectedExpression";
 import { TypeInParent } from "../../types";
+import { GDifferenceI } from "./interfaces";
 
-export default class GDifference extends GAbstractDirectedExpression {
+export default class GDifference extends GAbstractDirectedExpression implements GDifferenceI {
     protected childrenTypesInParentDefinition(): TypeInParent[] {
         return ['gMinuend', 'gSubtrahend']
     }
+
+    constructor(vals?: GDifferenceI) {
+        super();
+        super.init(vals, this);
+    }
+    
     public get gMinuend() {
         return super.getChild('gMinuend') as GExpression | undefined;
     }
@@ -74,12 +81,12 @@ export default class GDifference extends GAbstractDirectedExpression {
 
     protected getOfParentX(askingType: TypeInParent): number | undefined {
         return askingType === "gMinuend" ? this.gMinuendX
-            : askingType === "gSubtrahend" ? this.gSubtrahendX 
-            : undefined;
+            : askingType === "gSubtrahend" ? this.gSubtrahendX
+                : undefined;
     }
     protected getOfParentY(askingType: TypeInParent): number | undefined {
         return askingType === "gMinuend" ? this.gMinuendY
-        : askingType === "gSubtrahend" ? this.gSubtrahendY 
-        : undefined;
+            : askingType === "gSubtrahend" ? this.gSubtrahendY
+                : undefined;
     }
 }

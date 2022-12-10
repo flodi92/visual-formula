@@ -3,11 +3,18 @@ import GSimpleValue from "./GSimpleValue";
 import GAbstractDirectedExpression from "./GAbstractDirectedExpression";
 import { TypeInParent } from "../../types";
 import { directionToXY } from "../../utils/general";
+import { GProduct1DI } from "./interfaces";
 
-export default class GProduct1D extends GAbstractDirectedExpression {
+export default class GProduct1D extends GAbstractDirectedExpression implements GProduct1DI {
     protected childrenTypesInParentDefinition(): TypeInParent[] {
         return ['gSimpleFactor', 'gComplexFactor']
     }
+
+    constructor(vals?: GProduct1DI) {
+        super();
+        super.init(vals, this);
+    }
+
     public get gSimpleFactor() {
         return super.getChild('gSimpleFactor') as GSimpleValue | undefined;
     }

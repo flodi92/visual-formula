@@ -1,14 +1,20 @@
 import GExpression from "./GExpression";
 import { TypeInParent, XDirection, YDirection } from "../../types";
+import { GProduct2DI } from "./interfaces";
 
-export default class GProduct2D extends GExpression {
+export default class GProduct2D extends GExpression implements GProduct2DI {
     protected childrenTypesInParentDefinition(): TypeInParent[] {
         return ['gFactorX', 'gFactorY']
     }
-
+    
     private _xEdge?: YDirection | undefined;
     private _yEdge?: XDirection | undefined;
     
+    constructor(vals?: GProduct2DI) {
+        super();
+        super.init(vals, this);
+    }
+
     public get gFactorX() {
         return super.getChild('gFactorX') as GExpression | undefined;
     }

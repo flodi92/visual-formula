@@ -11,6 +11,11 @@ export default abstract class Expression {
     public get id() { return this._id }
     public set id(val) { this._id = val }
 
+    protected init<interfaceType extends object>(vals: interfaceType | undefined, target: interfaceType) {
+        if (!vals) return;
+        (Object.keys(vals) as (keyof interfaceType)[]).forEach((key) => vals[key] !== undefined && (target[key] = vals[key]));
+    }
+
     protected getChild(typeInParent: TypeInParent) {
         return this._childrenMap.get(typeInParent);
     }

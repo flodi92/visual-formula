@@ -1,11 +1,18 @@
 import GExpression from "./GExpression";
 import GAbstractRoot from "./GAbstractRoot";
 import { TypeInParent } from "../../types";
+import { GTermI } from "./interfaces";
 
-export default class GTerm extends GAbstractRoot {
+export default class GTerm extends GAbstractRoot implements  GTermI {
     protected childrenTypesInParentDefinition(): TypeInParent[] {
         return ["gTerm"];
     }
+
+    constructor(vals?: GTermI) {
+        super();
+        super.init(vals, this);
+    }
+    
     public get gTerm() {
         return super.getChild('gTerm') as GExpression | undefined;
     }

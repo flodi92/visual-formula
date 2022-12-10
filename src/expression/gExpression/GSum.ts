@@ -4,11 +4,18 @@ import { TypeInParent } from "../../types";
 import { takeWhile, takeRightWhile } from 'lodash';
 import { directionToXY, } from "../../utils/general";
 import { getHeights, getWidths } from "../../utils/gExpression";
+import { GSumI } from "./interfaces";
 
-export default class GSum extends GAbstractDirectedExpression {
+export default class GSum extends GAbstractDirectedExpression implements GSumI {
     protected childrenTypesInParentDefinition(): TypeInParent {
         return "gSummand"
     }
+
+    constructor(vals?: GSumI) {
+        super();
+        super.init(vals, this);
+    }
+    
     public get gSummands() {
         return this.children as GExpression[] | undefined;
     }
