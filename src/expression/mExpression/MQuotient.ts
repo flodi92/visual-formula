@@ -1,9 +1,14 @@
 import { MTypeInParent } from "../../types";
+import { MQuotientI } from "./interfaces";
 import MExpression from "./MExpression";
 
-export default class MQuotient extends MExpression {
+export default class MQuotient extends MExpression implements MQuotientI {
     protected childrenTypesInParentDefinition(): MTypeInParent[] {
         return ['mDivident', 'mDivisor'];
+    }
+    constructor(vals?: MQuotientI) {
+        super();
+        super.init(vals, this);
     }
     public get mDivident() {
         return super.getChild('mDivident') as MExpression | undefined;

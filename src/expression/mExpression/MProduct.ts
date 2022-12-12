@@ -1,9 +1,14 @@
 import { MTypeInParent } from "../../types";
+import { MProductI } from "./interfaces";
 import MExpression from "./MExpression";
 
-export default class MProduct extends MExpression {
+export default class MProduct extends MExpression implements MProductI {
     protected childrenTypesInParentDefinition(): MTypeInParent {
         return 'mFactor';
+    }
+    constructor(vals?: MProductI) {
+        super();
+        super.init(vals, this);
     }
     public get mFactors() {
         return this.children as MExpression[] | undefined;

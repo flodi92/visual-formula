@@ -1,9 +1,14 @@
 import { MTypeInParent } from "../../types";
+import { MEquationI } from "./interfaces";
 import MExpression from "./MExpression";
 
-export default class MEquation extends MExpression {
+export default class MEquation extends MExpression implements MEquationI {
     protected childrenTypesInParentDefinition(): MTypeInParent[] {
         return ['mTerm1', 'mTerm2'];
+    }
+    constructor(vals?: MEquationI) {
+        super();
+        super.init(vals, this);
     }
     public get mTerm1() {
         return super.getChild('mTerm1') as MExpression | undefined;

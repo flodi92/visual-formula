@@ -1,10 +1,7 @@
 import { GExpression } from ".";
 import { MExpression } from "../mExpression";
-import { Direction, ID, XDirection, YDirection } from "../../types";
-
-export interface ExpressionI {
-    id?: ID;
-}
+import { ExpressionI } from "../Expression";
+import { Direction, XDirection, YDirection } from "../../types";
 
 export interface GAbstractDirectedExpressionI extends ExpressionI {
     startDirection?: Direction

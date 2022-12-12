@@ -1,9 +1,14 @@
 import { MTypeInParent } from "../../types";
+import { MDifferenceI } from "./interfaces";
 import MExpression from "./MExpression";
 
-export default class MDifference extends MExpression {
+export default class MDifference extends MExpression implements MDifferenceI {
     protected childrenTypesInParentDefinition(): MTypeInParent[] {
         return ['mMinuend', 'mSubtrahend'];
+    }
+    constructor(vals?: MDifference) {
+        super();
+        super.init(vals, this);
     }
     public get mMinuend() {
         return super.getChild('mMinuend') as MExpression | undefined;

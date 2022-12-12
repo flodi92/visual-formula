@@ -1,11 +1,15 @@
 import { MTypeInParent } from "../../types";
+import { MValueI } from "./interfaces";
 import MExpression from "./MExpression";
 
-export default class MValue extends MExpression {
+export default class MValue extends MExpression implements MValueI   {
     protected childrenTypesInParentDefinition(): MTypeInParent[] {
         return [];
     }
-
+    constructor(vals?: MValueI) {
+        super();
+        super.init(vals, this);
+    }
     private _mValue?: string | undefined;
     public get mValue(): string | undefined {
         return this._mValue;
@@ -14,6 +18,6 @@ export default class MValue extends MExpression {
         this._mValue = value;
     }
     public get isConstant(): boolean {
-        return !parseInt(`${this._mValue}`) || !parseFloat(`${this._mValue}`);
+        return !parseInt(`${this._mValue}`) && !parseFloat(`${this._mValue}`);
     }
 }

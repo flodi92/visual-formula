@@ -1,6 +1,11 @@
 import { ID, TypeInParent } from "../types";
 
-export default abstract class Expression {
+export interface ExpressionI {
+    // needed for setters
+    id?: ID;
+}
+
+export default abstract class Expression implements ExpressionI {
     private _id?: ID;
     private _parent?: Expression;
     private _typeInParent?: TypeInParent;

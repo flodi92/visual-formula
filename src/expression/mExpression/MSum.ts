@@ -1,9 +1,14 @@
 import { MTypeInParent } from "../../types";
-import MExpression from "../Expression";
+import { MSumI } from "./interfaces";
+import MExpression from "./MExpression";
 
-export default class MSum extends MExpression {
+export default class MSum extends MExpression implements MSumI {
     protected childrenTypesInParentDefinition(): MTypeInParent {
         return 'mSummand';
+    }
+    constructor(vals?: MSumI) {
+        super();
+        super.init(vals, this);
     }
     public get mSummands() {
         return this.children as MExpression[] | undefined;
