@@ -8,7 +8,7 @@ export default class MValue extends MExpression implements MValueI   {
     }
     constructor(vals?: MValueI) {
         super();
-        super.init(vals, this);
+        super.set(this, vals);
     }
     private _mValue?: string | undefined;
     public get mValue(): string | undefined {

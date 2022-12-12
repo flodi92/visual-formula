@@ -10,7 +10,7 @@ export default class GEquation extends GAbstractRoot implements GEquationI {
 
     constructor(vals?: GEquationI) {
         super();
-        super.init(vals, this);
+        super.set(this, vals);
     }
     
     public get gTerm1() {

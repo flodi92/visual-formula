@@ -8,7 +8,7 @@ export default class MProduct extends MExpression implements MProductI {
     }
     constructor(vals?: MProductI) {
         super();
-        super.init(vals, this);
+        super.set(this, vals);
     }
     public get mFactors() {
         return this.children as MExpression[] | undefined;

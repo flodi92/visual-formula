@@ -12,7 +12,7 @@ export default class GSimpleValue extends GAbstractValue implements GSimpleValue
     
     constructor(vals?: GSimpleValueI) {
         super();
-        super.init(vals, this);
+        super.set(this, vals);
     }
 
     public get edge(): Direction | undefined {

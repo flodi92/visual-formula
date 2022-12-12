@@ -8,7 +8,7 @@ export default class MDifference extends MExpression implements MDifferenceI {
     }
     constructor(vals?: MDifference) {
         super();
-        super.init(vals, this);
+        super.set(this, vals);
     }
     public get mMinuend() {
         return super.getChild('mMinuend') as MExpression | undefined;

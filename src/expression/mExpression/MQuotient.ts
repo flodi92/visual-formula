@@ -8,7 +8,7 @@ export default class MQuotient extends MExpression implements MQuotientI {
     }
     constructor(vals?: MQuotientI) {
         super();
-        super.init(vals, this);
+        super.set(this, vals);
     }
     public get mDivident() {
         return super.getChild('mDivident') as MExpression | undefined;

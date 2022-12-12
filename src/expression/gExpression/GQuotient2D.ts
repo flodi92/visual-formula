@@ -13,7 +13,7 @@ export default class GQuotient2D extends GExpression implements GQuotient2DI {
     
     constructor(vals?: GQuotient2DI) {
         super();
-        super.init(vals, this);
+        super.set(this, vals);
     }
     
     public get gDivident() {

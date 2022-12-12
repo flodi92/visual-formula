@@ -12,7 +12,7 @@ export default class GProduct2D extends GExpression implements GProduct2DI {
     
     constructor(vals?: GProduct2DI) {
         super();
-        super.init(vals, this);
+        super.set(this, vals);
     }
 
     public get gFactorX() {

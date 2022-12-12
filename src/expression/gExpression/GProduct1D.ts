@@ -12,7 +12,7 @@ export default class GProduct1D extends GAbstractDirectedExpression implements G
 
     constructor(vals?: GProduct1DI) {
         super();
-        super.init(vals, this);
+        super.set(this, vals);
     }
 
     public get gSimpleFactor() {

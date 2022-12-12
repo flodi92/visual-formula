@@ -13,7 +13,7 @@ export default class GSum extends GAbstractDirectedExpression implements GSumI {
 
     constructor(vals?: GSumI) {
         super();
-        super.init(vals, this);
+        super.set(this, vals);
     }
     
     public get gSummands() {

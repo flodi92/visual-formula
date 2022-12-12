@@ -8,7 +8,7 @@ export default class MEquation extends MExpression implements MEquationI {
     }
     constructor(vals?: MEquationI) {
         super();
-        super.init(vals, this);
+        super.set(this, vals);
     }
     public get mTerm1() {
         return super.getChild('mTerm1') as MExpression | undefined;

@@ -10,7 +10,7 @@ export default class GDifference extends GAbstractDirectedExpression implements 
 
     constructor(vals?: GDifferenceI) {
         super();
-        super.init(vals, this);
+        super.set(this, vals);
     }
     
     public get gMinuend() {

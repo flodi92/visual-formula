@@ -8,7 +8,7 @@ export default class MSum extends MExpression implements MSumI {
     }
     constructor(vals?: MSumI) {
         super();
-        super.init(vals, this);
+        super.set(this, vals);
     }
     public get mSummands() {
         return this.children as MExpression[] | undefined;

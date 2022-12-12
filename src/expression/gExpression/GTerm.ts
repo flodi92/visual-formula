@@ -10,7 +10,7 @@ export default class GTerm extends GAbstractRoot implements  GTermI {
 
     constructor(vals?: GTermI) {
         super();
-        super.init(vals, this);
+        super.set(this, vals);
     }
     
     public get gTerm() {

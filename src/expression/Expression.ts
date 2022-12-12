@@ -16,7 +16,7 @@ export default abstract class Expression implements ExpressionI {
     public get id() { return this._id }
     public set id(val) { this._id = val }
 
-    protected init<interfaceType extends object>(vals: interfaceType | undefined, target: interfaceType) {
+    protected set<interfaceType extends object>(target: interfaceType, vals: interfaceType | undefined) {
         if (!vals) return;
         (Object.keys(vals) as (keyof interfaceType)[]).forEach((key) => vals[key] !== undefined && (target[key] = vals[key]));
     }

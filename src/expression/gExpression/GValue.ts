@@ -12,7 +12,7 @@ export default class GValue extends GAbstractValue implements GValueI {
 
     constructor(vals?: GValueI) {
         super();
-        super.init(vals, this);
+        super.set(this, vals);
     }
 
     public get mValue() {
