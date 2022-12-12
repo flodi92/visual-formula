@@ -22,6 +22,8 @@ export interface GDifferenceI extends GAbstractDirectedExpressionI {
 export interface GProduct2DI extends ExpressionI {
     gFactorX?: GExpression;
     gFactorY?: GExpression;
+    xEdge?: Direction;
+    yEdge?: Direction;
 }
 
 export interface GProduct1DI extends GAbstractDirectedExpressionI {
@@ -32,6 +34,8 @@ export interface GProduct1DI extends GAbstractDirectedExpressionI {
 export interface GQuotient2DI extends ExpressionI {
     gDivident?: GExpression;
     gDivisor?: GExpression;
+    divisorEdge?: Direction;
+    resultEdge?: Direction;
 }
 
 export interface GQuotient1DI extends GAbstractDirectedExpressionI {

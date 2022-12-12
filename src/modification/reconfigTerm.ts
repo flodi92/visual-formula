@@ -192,17 +192,19 @@ export const swap1DAnd2D = (expression: GExpression,
     )
       return false;
 
-    const _newTerm = new GProduct2D();
-    _newTerm.id = term.id;
-    _newTerm[factorFromComplex] = term.gComplexFactor;
-
-    _newTerm[factorFromSimple] = new GValue();
-    (_newTerm[factorFromSimple] as GValue).id = term.gSimpleFactor?.id;
-    (_newTerm[factorFromSimple] as GValue).numericValue = term.gSimpleFactor?.numericValue;
-    (_newTerm[factorFromSimple] as GValue).mValue = term.gSimpleFactor?.mSimpleValue;
-    (_newTerm[factorFromSimple] as GValue).xEdge = "bottom";
-    (_newTerm[factorFromSimple] as GValue).yEdge = "right";
-
+    newTerm = new GProduct2D({
+      id: term.id,
+      [factorFromComplex]: term.gComplexFactor,
+      [factorFromSimple]: new GValue(
+        {
+          id: term.gSimpleFactor?.id,
+          numericValue: term.gSimpleFactor?.numericValue,
+          mValue: term.gSimpleFactor?.mSimpleValue,
+          xEdge: "bottom",
+          yEdge: "right",
+        }
+      )
+    });
   } else if (term instanceof GQuotient1D && !isParentNormed) {
     const canComplexXNorm = () => isNormableToXY(term.gComplexDivident, "X");
     const canComplexYNorm = () => isNormableToXY(term.gComplexDivident, "Y");
@@ -221,20 +223,19 @@ export const swap1DAnd2D = (expression: GExpression,
     )
       return false;
 
-    const _newTerm = new GQuotient2D();
-    _newTerm.id = term.id;
-    _newTerm.gDivident = term.gComplexDivident;
-    _newTerm.divisorEdge = divisorEdge;
-    _newTerm.resultEdge = resultEdge;
-
-    _newTerm.gDivisor = new GValue();
-    _newTerm.gDivisor.id = term.gSimpleDivisor?.id;
-    (_newTerm.gDivisor as GValue).mValue = term.gSimpleDivisor?.mSimpleValue;
-    (_newTerm.gDivisor as GValue).numericValue = term.gSimpleDivisor?.numericValue;
-    (_newTerm.gDivisor as GValue).xEdge = "bottom";
-    (_newTerm.gDivisor as GValue).yEdge = "right";
-
-    newTerm = _newTerm;
+    newTerm = new GQuotient2D({
+        id: term.id,
+        divisorEdge,
+        resultEdge,
+        gDivident: term.gComplexDivident,
+        gDivisor: new GValue({
+          id: term.gSimpleDivisor?.id,
+          mValue: term.gSimpleDivisor?.mSimpleValue,
+          numericValue: term.gSimpleDivisor?.numericValue,
+          xEdge: "bottom",
+          yEdge: "right",
+        }),
+      });
   } else if (term instanceof GProduct2D) {
     const [factorToSimple, factorToComplex, startDirection] =
       (term.gFactorY instanceof GValue
@@ -245,30 +246,30 @@ export const swap1DAnd2D = (expression: GExpression,
 
     if (!factorToSimple && !factorToComplex) return false; // none of the factors can be simplified
 
-    const _newTerm = new GProduct1D();
-    _newTerm.id = term.id;
-    _newTerm.startDirection = startDirection;
-    _newTerm.gComplexFactor = term[factorToComplex];
-
-    _newTerm.gSimpleFactor = new GSimpleValue();
-    _newTerm.gSimpleFactor.id = term[factorToSimple]?.id;
-    (_newTerm.gSimpleFactor as GSimpleValue).numericValue = (term[factorToSimple] as GValue).numericValue;
-    (_newTerm.gSimpleFactor as GSimpleValue).mSimpleValue = (term[factorToSimple] as GValue).mValue;
-
-    newTerm = _newTerm;
+    newTerm = new GProduct1D({
+        id: term.id,
+        startDirection,
+        gComplexFactor: term[factorToComplex],
+        gSimpleFactor: new GSimpleValue({
+          id: term[factorToSimple]?.id,
+          numericValue: (term[factorToSimple] as GValue).numericValue,
+          mSimpleValue: (term[factorToSimple] as GValue).mValue,
+        })
+      });
   } else if (term instanceof GQuotient2D) {
     if (!(term.gDivisor instanceof GValue)) return false; // gDivisor cannot be simplified
-    const _newTerm = new GQuotient1D();
-    _newTerm.id = term.id;
-    _newTerm.startDirection = term.divisorEdge;
-    _newTerm.gComplexDivident = term.gDivident;
 
-    _newTerm.gSimpleDivisor = new GSimpleValue();
-    _newTerm.gSimpleDivisor.id = term.gDivisor?.id;
-    _newTerm.gSimpleDivisor.numericValue = term.gDivisor?.numericValue;
-    _newTerm.gSimpleDivisor.mSimpleValue = term.gDivisor?.mValue;
+    newTerm = new GQuotient1D({
+      id: term.id,
+      startDirection: term.divisorEdge,
+      gComplexDivident: term.gDivident,
+      gSimpleDivisor: new GSimpleValue({
+        id: term.gDivisor?.id,
+        numericValue: term.gDivisor?.numericValue,
+        mSimpleValue: term.gDivisor?.mValue,
+      })
 
-    newTerm = _newTerm;
+    })
   } else return false;
 
   newTerm && replace(id, expression, newTerm);
@@ -285,15 +286,16 @@ export const substitute = (expression: GExpression,
   const mValue = getMExpressionFromExpression(term);
 
   if (!mValue) return false;
-  const replacedTerm = new GValue();
-  replacedTerm.unscaledWidth = term.unscaledWidth
-  replacedTerm.unscaledHeight = term.unscaledHeight
-  replacedTerm.mValue = mValue;
+  const replacedTerm = new GValue({
+    unscaledWidth: term.unscaledWidth,
+    unscaledHeight: term.unscaledHeight,
+    mValue: mValue,
+    xEdge: "bottom",
+    yEdge: "right",
+
+  });
 
   replace(id, expression, replacedTerm);
-  
-  replacedTerm.xEdge = "bottom";
-  replacedTerm.yEdge = "right";
 
   return true;
 };
