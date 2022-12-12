@@ -9,11 +9,13 @@ export default class GSimpleValue extends GAbstractValue implements GSimpleValue
     }
 
     private _edge?: Direction | undefined;
-    
+
     constructor(vals?: GSimpleValueI) {
         super();
         super.set(this, vals);
     }
+    
+    public set(vals?: GSimpleValueI) { super.set(this, vals); }
 
     public get edge(): Direction | undefined {
         return this._edge;

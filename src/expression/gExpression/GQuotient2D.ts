@@ -10,12 +10,14 @@ export default class GQuotient2D extends GExpression implements GQuotient2DI {
 
     private _divisorEdge?: Direction | undefined;
     private _resultEdge?: Direction | undefined;
-    
+
     constructor(vals?: GQuotient2DI) {
         super();
         super.set(this, vals);
     }
     
+    public set(vals?: GQuotient2DI) { super.set(this, vals); }
+
     public get gDivident() {
         return super.getChild('gDivident') as GExpression | undefined;
     }

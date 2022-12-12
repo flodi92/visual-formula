@@ -3,7 +3,7 @@ import GAbstractRoot from "./GAbstractRoot";
 import { TypeInParent } from "../../types";
 import { GTermI } from "./interfaces";
 
-export default class GTerm extends GAbstractRoot implements  GTermI {
+export default class GTerm extends GAbstractRoot implements GTermI {
     protected childrenTypesInParentDefinition(): TypeInParent[] {
         return ["gTerm"];
     }
@@ -12,7 +12,9 @@ export default class GTerm extends GAbstractRoot implements  GTermI {
         super();
         super.set(this, vals);
     }
-    
+
+    public set(vals?: GTermI) { super.set(this, vals); }
+
     public get gTerm() {
         return super.getChild('gTerm') as GExpression | undefined;
     }

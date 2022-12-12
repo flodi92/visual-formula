@@ -10,6 +10,7 @@ export default class MQuotient extends MExpression implements MQuotientI {
         super();
         super.set(this, vals);
     }
+    public set(vals?: MQuotientI) { super.set(this, vals); }
     public get mDivident() {
         return super.getChild('mDivident') as MExpression | undefined;
     }

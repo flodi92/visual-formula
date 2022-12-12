@@ -15,6 +15,8 @@ export default class GValue extends GAbstractValue implements GValueI {
         super.set(this, vals);
     }
 
+    public set(vals?: GValueI) { super.set(this, vals); }
+
     public get mValue() {
         return super.getChild('mValue') as MExpression | undefined;
     }

@@ -10,6 +10,7 @@ export default class MSum extends MExpression implements MSumI {
         super();
         super.set(this, vals);
     }
+    public set(vals?: MSumI) { super.set(this, vals); }
     public get mSummands() {
         return this.children as MExpression[] | undefined;
     }

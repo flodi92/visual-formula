@@ -6,14 +6,16 @@ export default class GProduct2D extends GExpression implements GProduct2DI {
     protected childrenTypesInParentDefinition(): TypeInParent[] {
         return ['gFactorX', 'gFactorY']
     }
-    
+
     private _xEdge?: YDirection | undefined;
     private _yEdge?: XDirection | undefined;
-    
+
     constructor(vals?: GProduct2DI) {
         super();
         super.set(this, vals);
     }
+    
+    public set(vals?: GProduct2DI) { super.set(this, vals); }
 
     public get gFactorX() {
         return super.getChild('gFactorX') as GExpression | undefined;
@@ -27,7 +29,7 @@ export default class GProduct2D extends GExpression implements GProduct2DI {
     public set gFactorY(child: GExpression | undefined) {
         super.setChild('gFactorY', child);
     }
-    
+
     public get xEdge(): YDirection | undefined {
         return this._xEdge;
     }
@@ -67,12 +69,12 @@ export default class GProduct2D extends GExpression implements GProduct2DI {
 
     protected getOfParentX(askingType: TypeInParent): number | undefined {
         return askingType === "gFactorX" ? this.gFactorXX
-            : askingType === "gFactorY" ? this.gFactorYX 
-            : undefined;
+            : askingType === "gFactorY" ? this.gFactorYX
+                : undefined;
     }
     protected getOfParentY(askingType: TypeInParent): number | undefined {
         return askingType === "gFactorX" ? this.gFactorXY
-            : askingType === "gFactorY" ? this.gFactorYY 
-            : undefined;
+            : askingType === "gFactorY" ? this.gFactorYY
+                : undefined;
     }
 }

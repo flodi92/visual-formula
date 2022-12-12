@@ -6,10 +6,11 @@ export default class MDifference extends MExpression implements MDifferenceI {
     protected childrenTypesInParentDefinition(): MTypeInParent[] {
         return ['mMinuend', 'mSubtrahend'];
     }
-    constructor(vals?: MDifference) {
+    constructor(vals?: MDifferenceI) {
         super();
         super.set(this, vals);
     }
+    public set(vals?: MDifferenceI) { super.set(this, vals); }
     public get mMinuend() {
         return super.getChild('mMinuend') as MExpression | undefined;
     }

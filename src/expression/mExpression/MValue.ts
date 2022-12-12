@@ -2,7 +2,7 @@ import { MTypeInParent } from "../../types";
 import { MValueI } from "./interfaces";
 import MExpression from "./MExpression";
 
-export default class MValue extends MExpression implements MValueI   {
+export default class MValue extends MExpression implements MValueI {
     protected childrenTypesInParentDefinition(): MTypeInParent[] {
         return [];
     }
@@ -10,6 +10,7 @@ export default class MValue extends MExpression implements MValueI   {
         super();
         super.set(this, vals);
     }
+    public set(vals?: MValueI) { super.set(this, vals); }
     private _mValue?: string | undefined;
     public get mValue(): string | undefined {
         return this._mValue;

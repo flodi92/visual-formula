@@ -12,7 +12,9 @@ export default class GDifference extends GAbstractDirectedExpression implements 
         super();
         super.set(this, vals);
     }
-    
+
+    public set(vals?: GDifferenceI) { super.set(this, vals); }
+
     public get gMinuend() {
         return super.getChild('gMinuend') as GExpression | undefined;
     }

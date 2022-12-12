@@ -15,7 +15,9 @@ export default class GSum extends GAbstractDirectedExpression implements GSumI {
         super();
         super.set(this, vals);
     }
-    
+
+    public set(vals?: GSumI) { super.set(this, vals); }
+
     public get gSummands() {
         return this.children as GExpression[] | undefined;
     }

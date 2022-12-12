@@ -12,7 +12,9 @@ export default class GEquation extends GAbstractRoot implements GEquationI {
         super();
         super.set(this, vals);
     }
-    
+
+    public set(vals?: GEquationI) { super.set(this, vals); }
+
     public get gTerm1() {
         return super.getChild('gTerm1') as GExpression | undefined;
     }

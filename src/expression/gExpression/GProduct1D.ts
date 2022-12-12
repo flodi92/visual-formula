@@ -12,8 +12,10 @@ export default class GProduct1D extends GAbstractDirectedExpression implements G
 
     constructor(vals?: GProduct1DI) {
         super();
-        super.set(this, vals);
+        super.set<GProduct1DI>(this, vals);
     }
+
+    public set(vals?: GProduct1DI) { super.set<GProduct1DI>(this, vals); }
 
     public get gSimpleFactor() {
         return super.getChild('gSimpleFactor') as GSimpleValue | undefined;
@@ -69,12 +71,12 @@ export default class GProduct1D extends GAbstractDirectedExpression implements G
 
     protected getOfParentX(askingType: TypeInParent): number | undefined {
         return askingType === "gComplexFactor" ? this.gComplexFactorX
-            : askingType === "gSimpleFactor" ? this.gSimpleFactorX 
-            : undefined;
+            : askingType === "gSimpleFactor" ? this.gSimpleFactorX
+                : undefined;
     }
     protected getOfParentY(askingType: TypeInParent): number | undefined {
         return askingType === "gComplexFactor" ? this.gComplexFactorY
-        : askingType === "gSimpleFactor" ? this.gSimpleFactorY
-        : undefined;
+            : askingType === "gSimpleFactor" ? this.gSimpleFactorY
+                : undefined;
     }
 }

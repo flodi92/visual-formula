@@ -10,6 +10,7 @@ export default class MProduct extends MExpression implements MProductI {
         super();
         super.set(this, vals);
     }
+    public set(vals?: MProductI) { super.set(this, vals); }
     public get mFactors() {
         return this.children as MExpression[] | undefined;
     }

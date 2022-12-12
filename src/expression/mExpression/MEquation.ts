@@ -10,6 +10,7 @@ export default class MEquation extends MExpression implements MEquationI {
         super();
         super.set(this, vals);
     }
+    public set(vals?: MEquationI) { super.set(this, vals); }
     public get mTerm1() {
         return super.getChild('mTerm1') as MExpression | undefined;
     }

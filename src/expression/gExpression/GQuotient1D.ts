@@ -12,9 +12,11 @@ export default class GQuotient1D extends GAbstractDirectedExpression implements 
 
     constructor(vals?: GQuotient1DI) {
         super();
-        super.set(this, vals);
+        super.set<GQuotient1DI>(this, vals);
     }
-    
+
+    public set(vals?: GQuotient1DI) { super.set<GQuotient1DI>(this, vals); }
+
     public get gSimpleDivisor() {
         return super.getChild('gSimpleDivisor') as GSimpleValue | undefined;
     }
