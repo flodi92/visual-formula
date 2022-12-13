@@ -2,7 +2,7 @@ import { cloneDeep, zip } from "lodash";
 import Expression from "../expression/Expression";
 import { expressionToArray } from "../utils/expression";
 
-const cloneExpression = (expression: Expression): Expression => {
+function cloneExpression<TExpression extends Expression>(expression: TExpression) {
     const _removeParents = (expression: Expression) => expressionToArray(expression)
         .forEach(expression => expression._setParent(undefined, undefined))
 
@@ -14,7 +14,7 @@ const cloneExpression = (expression: Expression): Expression => {
         )
 
     _removeParents(expression);
-    const buffer: Expression = cloneDeep(expression);
+    const buffer: TExpression = cloneDeep(expression);
     _addParents(expression);
     _addParents(buffer);
 

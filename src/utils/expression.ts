@@ -66,6 +66,18 @@ export function replace<TExpression extends Expression>(id: ID, expression: TExp
     };
 }
 
+export const compareExpressions = (a?: Expression, b?: Expression): boolean => {
+    const [_a, _b] = [!!a ? { ...a } : {}, !!b ? { ...b } : {}] as [any, any];
+
+    return Array.from((new Set(...Object.keys(_a), ...Object.keys(_b))))
+        .filter(key => key !== "id")
+        .every(
+            (key: string) => (_a[key] instanceof Expression) ?
+                compareExpressions(_a[key], _b[key]) :
+                _a[key] === _b[key]
+        );
+}
+
 export const expressionToArray = (expression: Expression): Expression[] => [expression,
     ...expression.children
         .filter(child => !!child)
