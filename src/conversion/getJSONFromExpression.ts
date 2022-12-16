@@ -20,7 +20,7 @@ import {
 } from "../expression/mExpression"
 import Expression from "../expression/Expression";
 
-const getJSONFromExpression = (expression?: Expression): object | string | undefined => {
+const getJSONFromExpression = (expression?: Expression, { isAllPositionData = false } = {}): object | string | undefined => {
     let buffer: any;
     if (!expression) {
         buffer = undefined;
@@ -131,6 +131,13 @@ const getJSONFromExpression = (expression?: Expression): object | string | undef
 
     if (!!buffer && expression instanceof GExpression) {
         buffer.id = expression.id;
+
+        if(isAllPositionData) {
+            buffer.unscaledX = expression.unscaledX;
+            buffer.unscaledY = expression.unscaledY;
+            buffer.unscaledWidth = expression.unscaledWidth;
+            buffer.unscaledHeight = expression.unscaledHeight;
+        }
     }
     return buffer;
 }
