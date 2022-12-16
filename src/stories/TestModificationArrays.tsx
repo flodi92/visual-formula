@@ -8,7 +8,8 @@ import { ID } from '../types';
 import { moveSummand, moveSubtrahend, moveFactor, moveDivisor } from '../modification/modifyEquation';
 import { swapSummands, swapFactors1D, swapFactors2D, distribute, reverseDistribute } from '../modification/modifyTerm';
 import { reverse, rotate, substitute, swap1DAnd2D, swapXToY } from '../modification/reconfigTerm';
-import { autoAdaptTransformation, keepPositionForTransformation } from '../autoAdapt';
+import { autoAdaptTransformation, autoConfigSize, keepPositionForTransformation } from '../autoAdapt';
+import { setUnsetIDs } from '../utils/expression';
 
 interface TestModificationArraysProps {
   steps: 0 | 1 | 2 | 3
@@ -45,6 +46,8 @@ export const TestModificationArrays = ({
   const positionForTransformation
     = keepPositionForTransformation({ gRoot: gEquation, modifiedID });
 
+  autoConfigSize(gEquation);
+
   for (let i = 0; i < steps; i++) {
     const [id, modification, parameters] = idModificationParameters[i];
 
@@ -78,6 +81,7 @@ export const TestModificationArrays = ({
       case "swapXToY":
         swapXToY(gEquation, { id }); break;
     }
+    setUnsetIDs(gEquation);
   }
 
   autoAdaptTransformation(

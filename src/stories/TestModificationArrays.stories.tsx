@@ -13,7 +13,7 @@ export const Primary = Template.bind({});
 
 Primary.args = {
   steps: 1,
-  idModificationParameters:[[42, 'moveSummand']],
+  idModificationParameters: [[48, 'moveDivisor'], [61, 'distribute', { xy: 'X' }]],
   json: {
     type: "GEquation",
     id: 41,
