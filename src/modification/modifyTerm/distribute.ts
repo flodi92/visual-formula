@@ -34,15 +34,13 @@ export const distribute = ({ expression, id, xy }
           })
       );
   } else if (parent instanceof GProduct2D) {
-    const factorXEdge = parent.xEdge;
-    const factorYEdge = parent.yEdge;
+    const { xEdge, yEdge } = parent;
     [associated, associateIn] =
       xy === "X"
         ? [parent.gFactorY, parent.gFactorX]
         : [parent.gFactorX, parent.gFactorY];
 
     if (
-      !associated || !(associated instanceof GAbstractDirectedExpression) ||
       !associateIn || !(associateIn instanceof GAbstractDirectedExpression) ||
       directionToXY(associateIn.startDirection) !== xy
     )
@@ -57,18 +55,18 @@ export const distribute = ({ expression, id, xy }
             ? {
               gFactorX: child,
               gFactorY: _associated,
-              // xEdge,
+              xEdge,
               yEdge: isOppositeEdge
-                ? oppositeDirection(factorYEdge)
-                : factorYEdge,
+                ? oppositeDirection(yEdge)
+                : yEdge,
             }
             : {
               gFactorX: _associated,
               gFactorY: child,
               xEdge: isOppositeEdge
-                ? oppositeDirection(factorXEdge)
-                : factorXEdge,
-              // yEdge,
+                ? oppositeDirection(xEdge)
+                : xEdge,
+              yEdge,
             }
           )
       )
