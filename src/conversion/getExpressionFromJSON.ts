@@ -26,7 +26,7 @@ import {
 import { Operator } from "../types";
 import { setUnsetIDs } from "../utils/expression";
 
-const getExpressionFromJSON = (value: any) => {
+const getExpressionFromJSON = (value: any, { isAddRoot = true, isAdoptIDs = true, isSetUnsetIDs = true } = {}) => {
     if (typeof value === 'string' && value.includes('{')) value = JSON.parse(value);
 
     const _getOperatorPositions = (str: string, operator: Operator): number[] => {
@@ -176,8 +176,8 @@ const getExpressionFromJSON = (value: any) => {
         if (expression instanceof GAbstractDirectedExpression) {
             expression.startDirection = json.startDirection;
         }
-       
-        expression.id = json.id;
+
+        isAdoptIDs && (expression.id = json.id);
 
         return expression as GExpression;
     }
@@ -186,13 +186,13 @@ const getExpressionFromJSON = (value: any) => {
         _getMExpressionFromString(value)
         : _getExpressionFromJSON(value);
 
-    if (expression instanceof GExpression && !(expression instanceof GAbstractRoot)) {
+    if (isAddRoot && expression instanceof GExpression && !(expression instanceof GAbstractRoot)) {
         const gTerm = new GTerm()
         gTerm.gTerm = expression;
         expression = gTerm;
     }
 
-    setUnsetIDs(expression);    
+    isSetUnsetIDs && setUnsetIDs(expression);
     return expression;
 }
 

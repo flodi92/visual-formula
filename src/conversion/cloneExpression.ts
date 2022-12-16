@@ -1,24 +1,14 @@
-import { cloneDeep, zip } from "lodash";
 import Expression from "../expression/Expression";
-import { expressionToArray } from "../utils/expression";
+import getExpressionFromJSON from "./getExpressionFromJSON";
+import getJSONFromExpression from "./getJSONFromExpression";
+
 
 function cloneExpression<TExpression extends Expression>(expression: TExpression) {
-    const _removeParents = (expression: Expression) => expressionToArray(expression)
-        .forEach(expression => expression._setParent(undefined, undefined))
+    const json = getJSONFromExpression(expression);
 
-    const _addParents = (expression: Expression) => expressionToArray(expression)
-        .forEach(expression =>
-            zip(expression.children, expression.childrenTypesInParent).forEach(
-                ([child, typeInParent]) => (child?._setParent(expression, typeInParent))
-            )
-        )
+    const copy = getExpressionFromJSON(json, { isAddRoot: false, isAdoptIDs: false, isSetUnsetIDs: true });
 
-    _removeParents(expression);
-    const buffer: TExpression = cloneDeep(expression);
-    _addParents(expression);
-    _addParents(buffer);
-
-    return buffer;
+    return copy as TExpression;
 }
 
 export default cloneExpression;
