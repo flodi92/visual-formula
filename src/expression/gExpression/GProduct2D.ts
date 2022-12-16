@@ -14,7 +14,7 @@ export default class GProduct2D extends GExpression implements GProduct2DI {
         super();
         super.set(this, vals);
     }
-    
+
     public set(vals?: GProduct2DI) { super.set(this, vals); }
 
     public get gFactorX() {
@@ -55,13 +55,13 @@ export default class GProduct2D extends GExpression implements GProduct2DI {
     }
     public get gFactorXY(): number {
         return this.xEdge === 'top' ?
-            this.unscaledX - 1
-            : this.unscaledX + this.unscaledHeight;
+            this.unscaledY  - 1
+            : this.unscaledY + this.unscaledHeight;
     }
     public get gFactorYX(): number {
         return this.yEdge === 'left' ?
-            this.unscaledY - 1
-            : this.unscaledY + this.unscaledWidth;
+            this.unscaledX - 1
+            : this.unscaledX + this.unscaledWidth;
     }
     public get gFactorYY(): number {
         return this.unscaledY;
