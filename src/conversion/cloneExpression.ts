@@ -6,7 +6,7 @@ import getJSONFromExpression from "./getJSONFromExpression";
 function cloneExpression<TExpression extends Expression>(expression: TExpression) {
     const json = getJSONFromExpression(expression);
 
-    const copy = getExpressionFromJSON(json, { isAddRoot: false, isAdoptIDs: false, isSetUnsetIDs: true });
+    const copy = getExpressionFromJSON(json, { isAddRoot: false, isAdoptIDs: false, isSetUnsetIDs: false });
 
     return copy as TExpression;
 }
