@@ -4,10 +4,11 @@ import Modification from "../Modification";
 import { find } from "../../utils/expression";
 import { oppositeDirection } from "../../utils/general";
 
-export interface Reverse extends Modification { xy?: XY }
+export interface Reverse extends Modification { xy?: XY, isRecursive?: boolean }
 
-export const reverse = (expression: GExpression, { id, xy }: Reverse = {}) => {
+export const reverse = (expression: GExpression, { id, xy, isRecursive = true }: Reverse = {}) => {
   if (!xy) return false;
+
   const _reverse = (expression: GExpression): boolean => {
     if (!expression) return false;
     else if (expression instanceof GAbstractDirectedExpression) {
@@ -32,7 +33,7 @@ export const reverse = (expression: GExpression, { id, xy }: Reverse = {}) => {
 
     return (expression.children)?.reduce((prev, child) => {
       if (!!child && child instanceof GExpression)
-        return prev && _reverse(child)
+        return prev && isRecursive && _reverse(child)
       else return true;
     }, true)
   };
