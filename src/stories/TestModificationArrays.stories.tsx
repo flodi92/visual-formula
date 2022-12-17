@@ -13,7 +13,12 @@ export const Primary = Template.bind({});
 
 Primary.args = {
   steps: 1,
-  idModificationParameters: [[48, 'moveDivisor'], [61, 'distribute', { xy: 'X' }], [44, 'moveSummand']],
+  idModificationParameters: [
+    [48, 'moveDivisor'],
+    [61, 'distribute', { xy: 'X' }],
+    // [43, 'reverse', { xy: 'X', isRecursive: false }], // TODO moveSummand does not work after reverse
+    [44, 'moveSummand']
+  ],
   json: {
     type: "GEquation",
     id: 41,

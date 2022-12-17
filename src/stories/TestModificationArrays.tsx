@@ -12,7 +12,7 @@ import { autoAdaptTransformation, autoConfigSize, keepPositionForTransformation 
 import { setUnsetIDs } from '../utils/expression';
 
 interface TestModificationArraysProps {
-  steps: 0 | 1 | 2 | 3
+  steps: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8,
   rotations: 0 | 1 | 2 | 3,
   layerTransformation: { x: number, y: number, scaleX: number, scaleY: number }
   idModificationParameters: 
@@ -71,7 +71,7 @@ export const TestModificationArrays = ({
       case "reverseDistribute":
         reverseDistribute({ id, expression: gEquation, ...parameters }); break;
       case "reverse":
-        reverse({ id, expression: gEquation, ...parameters }); break;
+        reverse(gEquation, { id, ...parameters }); break;
       case "rotate":
         rotate({ id, expression: gEquation, ...parameters }); break;
       case "substitute":
