@@ -1,4 +1,5 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { Direction } from '../types';
 import { TestMoveInEquation } from './TestMoveInEquation';
 
 export default {
@@ -9,90 +10,138 @@ export default {
 
 const Template: ComponentStory<typeof TestMoveInEquation> = (args) => <TestMoveInEquation {...args} />;
 
+const gExpression = (
+  { fromDirection, toDirection }:
+    { fromDirection: Direction, toDirection: Direction }) => ({
+      type: "GEquation",
+      gTerm1: {
+        type: "GSum",
+        startDirection: fromDirection,
+        gSummands: [
+          {
+            type: 'GValue',
+            mValue: "4",
+            numericValue: 4,
+            xEdge: "bottom",
+            yEdge: "left",
+
+            unscaledWidth: 2,
+            unscaledHeight: 2,
+          },
+          {
+            type: 'GValue',
+            mValue: "6",
+            numericValue: 6,
+            xEdge: "bottom",
+            yEdge: "left",
+
+            unscaledWidth: 3,
+            unscaledHeight: 2,
+          },
+          {
+            type: 'GValue',
+            mValue: "8",
+            numericValue: 8,
+            xEdge: "bottom",
+            yEdge: "left",
+
+            unscaledWidth: 4,
+            unscaledHeight: 2,
+          },
+        ],
+      },
+      gTerm2: {
+        type: "GSum",
+        startDirection: toDirection,
+        gSummands: [
+          {
+            id: 42,
+            type: 'GValue',
+            mValue: "6",
+            numericValue: 6,
+            xEdge: "top",
+            yEdge: "right",
+
+            unscaledWidth: 3,
+            unscaledHeight: 2,
+          },
+          {
+            id: 44,
+            type: 'GValue',
+            mValue: "5",
+            numericValue: 5,
+            xEdge: "top",
+            yEdge: "right",
+
+            unscaledWidth: 2.5,
+            unscaledHeight: 2,
+          },
+          {
+            id: 43,
+            type: 'GValue',
+            mValue: "7",
+            numericValue: 7,
+            xEdge: "top",
+            yEdge: "right",
+
+            unscaledWidth: 3.5,
+            unscaledHeight: 2,
+          },
+        ],
+      },
+    })
+
 export const Primary = Template.bind({});
 
 Primary.args = {
   steps: 1,
   modification: 'moveSummand',
   ids: [42, 43, 44],
-  json: {
-    type: "GEquation",
-    gTerm1: {
-      type: "GSum",
-      startDirection: "left",
-      gSummands: [
-        {
-          type: 'GValue',
-          mValue: "4",
-          numericValue: 4,
-          xEdge: "bottom",
-          yEdge: "left",
+  json: gExpression({ fromDirection: "left", toDirection: "left" }),
 
-          unscaledWidth: 2,
-          unscaledHeight: 2,
-        },
-        {
-          type: 'GValue',
-          mValue: "6",
-          numericValue: 6,
-          xEdge: "bottom",
-          yEdge: "left",
+  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+};
 
-          unscaledWidth: 3,
-          unscaledHeight: 2,
-        },
-        {
-          type: 'GValue',
-          mValue: "8",
-          numericValue: 8,
-          xEdge: "bottom",
-          yEdge: "left",
+export const Sum1 = Template.bind({});
 
-          unscaledWidth: 4,
-          unscaledHeight: 2,
-        },
-      ],
-    },
-    gTerm2: {
-      type: "GSum",
-      startDirection: "left",
-      gSummands: [
-        {
-          id: 42,
-          type: 'GValue',
-          mValue: "6",
-          numericValue: 6,
-          xEdge: "top",
-          yEdge: "right",
+Sum1.args = {
+  steps: 1,
+  modification: 'moveSummand',
+  ids: [42],
+  json: gExpression({ fromDirection: "left", toDirection: "right" }),
 
-          unscaledWidth: 3,
-          unscaledHeight: 2,
-        },
-        {
-          id: 44,
-          type: 'GValue',
-          mValue: "5",
-          numericValue: 5,
-          xEdge: "top",
-          yEdge: "right",
+  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+};
 
-          unscaledWidth: 2.5,
-          unscaledHeight: 2,
-        },
-        {
-          id: 43,
-          type: 'GValue',
-          mValue: "7",
-          numericValue: 7,
-          xEdge: "top",
-          yEdge: "right",
+export const Sum2 = Template.bind({});
 
-          unscaledWidth: 3.5,
-          unscaledHeight: 2,
-        },
-      ],
-    },
-  },
+Sum2.args = {
+  steps: 1,
+  modification: 'moveSummand',
+  ids: [43],
+  json: gExpression({ fromDirection: "left", toDirection: "right" }),
+
+  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+};
+
+export const Sum3 = Template.bind({});
+
+Sum3.args = {
+  steps: 1,
+  modification: 'moveSummand',
+  ids: [42],
+  json: gExpression({ fromDirection: "right", toDirection: "left" }),
+
+  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+};
+
+export const Sum4 = Template.bind({});
+
+Sum4.args = {
+  steps: 1,
+  modification: 'moveSummand',
+  ids: [43],
+  json: gExpression({ fromDirection: "right", toDirection: "left" }),
 
   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
 };
