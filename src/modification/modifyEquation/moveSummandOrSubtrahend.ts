@@ -32,10 +32,15 @@ const moveSummandOrSubtrahend = (
 
     fromDirection = fromDirection || toDirection || "left";
     toDirection = toDirection || fromDirection || "left";
+
+    const sameDirections = fromDirection === toDirection;
+    const oppositeDirections = oppositeDirection(fromDirection) === toDirection;
+
     if (!fromDirection && !toDirection) fromDirection = toDirection = "left";
 
     if (
-      firstFrom.id === id && (oppositeDirection(fromDirection) === toDirection)
+      firstFrom.id === id
+      && (isSummand ? oppositeDirections : sameDirections)
     )
       return {
         moved: firstFrom,
@@ -46,7 +51,8 @@ const moveSummandOrSubtrahend = (
         fromTerm,
       };
     else if (
-      lastFrom.id === id && (fromDirection === toDirection)
+      lastFrom.id === id
+      && (isSummand ? sameDirections : oppositeDirections)
     )
       return {
         moved: lastFrom,
@@ -76,7 +82,7 @@ const moveSummandOrSubtrahend = (
 
   let newToChildren;
   if (isParallel(fromDirection, toDirection)) {
-    newToChildren = [moved, ...toChildren];
+    newToChildren = isSummand ? [moved, ...toChildren] : [...toChildren, moved];
   } else {
     return false;
   }
