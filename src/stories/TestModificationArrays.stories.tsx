@@ -103,7 +103,8 @@ Primary.args = {
   idModificationParameters: [
     [48, 'moveDivisor'],
     [61, 'distribute', { xy: 'X' }],
-    [47, 'moveSummand']
+    [47, 'moveSummand'],
+    [47, 'moveSubtrahend'],
   ],
   json: json1,
   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
@@ -130,7 +131,8 @@ WithReverse.args = {
     [48, 'moveDivisor'],
     [61, 'distribute', { xy: 'X' }],
     [43, 'reverse', { xy: 'X', isRecursive: false }],
-    [44, 'moveSummand']
+    [44, 'moveSummand'],
+    [44, 'moveSubtrahend']
   ],
   json: json1,
   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
@@ -144,7 +146,7 @@ WithReverseTryWrong.args = {
     [48, 'moveDivisor'],
     [61, 'distribute', { xy: 'X' }],
     [43, 'reverse', { xy: 'X', isRecursive: false }],
-    [47, 'moveSummand']
+    [47, 'moveSummand'],
   ],
   json: json1,
   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
