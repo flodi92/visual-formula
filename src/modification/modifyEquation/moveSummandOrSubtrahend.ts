@@ -30,62 +30,53 @@ const moveSummandOrSubtrahend = (
       ? differenceStartDirection(toTerm)
       : sumStartDirection(toTerm));
 
-    if (!fromDirection) fromDirection = toDirection;
-    if (!toDirection) toDirection = fromDirection;
+    fromDirection = fromDirection || toDirection || "left";
+    toDirection = toDirection || fromDirection || "left";
     if (!fromDirection && !toDirection) fromDirection = toDirection = "left";
 
     if (
-      firstFrom.id === id && (fromDirection === toDirection)
+      firstFrom.id === id && (oppositeDirection(fromDirection) === toDirection)
     )
       return {
         moved: firstFrom,
         remaining: fromChildren.slice(1, fromChildren.length),
         fromDirection,
+        toDirection,
         from,
         fromTerm,
-        movedEnd: "first",
       };
     else if (
-      lastFrom.id === id && (oppositeDirection(fromDirection) === toDirection)
+      lastFrom.id === id && (fromDirection === toDirection)
     )
       return {
         moved: lastFrom,
         remaining: fromChildren.slice(0, fromChildren.length - 1),
         fromDirection,
+        toDirection,
         from,
         fromTerm,
-        movedEnd: "last",
       };
-    else return null;
+    else { return null; }
   };
 
   const {
     moved,
     remaining,
-    fromDirection: _fromDirection,
+    fromDirection,
+    toDirection,
     from,
     fromTerm,
-    movedEnd,
   } = testFromTerm(1, 2) || testFromTerm(2, 1) || {};
 
   if (!moved) return false;
 
   const to = from && { [1]: 2, [2]: 1 }[from] as 1 | 2 | undefined;
   const toTerm = !!to ? gEquation[`gTerm${to}`] : undefined;
-  const _toDirection = isSummand
-    ? differenceStartDirection(toTerm)
-    : sumStartDirection(toTerm);
   let toChildren = isSummand ? getSubtrahends(toTerm) : getSummands(toTerm);
-
-  const fromDirection = _fromDirection || _toDirection || "left";
-  const toDirection = _toDirection || fromDirection || "left";
 
   let newToChildren;
   if (isParallel(fromDirection, toDirection)) {
-    newToChildren =
-      (fromDirection === toDirection) !== (movedEnd === "first")
-        ? [...toChildren, moved]
-        : [moved, ...toChildren];
+    newToChildren = [moved, ...toChildren];
   } else {
     return false;
   }
@@ -93,11 +84,11 @@ const moveSummandOrSubtrahend = (
   const [newFromTerm, newToTerm] = isSummand ?
     [
       setSummands(fromTerm, remaining, fromDirection),
-      setSubtrahends(toTerm, newToChildren, toDirection)
+      setSubtrahends(toTerm, newToChildren, toDirection),
     ] :
     [
       setSubtrahends(fromTerm, remaining, fromDirection),
-      setSummands(toTerm, newToChildren, toDirection)
+      setSummands(toTerm, newToChildren, toDirection),
     ];
 
   from && (gEquation[`gTerm${from}`] = newFromTerm);
