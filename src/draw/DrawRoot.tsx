@@ -12,6 +12,7 @@ import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
 import { getCommonEdgeValues, getGAbstractValueIds, getGAbstractValues } from '../utils/gExpression';
 import { MExpression, MDifference, MEquation, MProduct, MQuotient, MSum, MValue } from '../expression/mExpression';
 import { GEquation, GExpression } from '../expression/gExpression';
+import { expressionToArray } from '../utils/expression';
 
 const STANDARD_STROKE_WIDHT = 1;
 const NORM_STROKE_WIDHT = 3;
@@ -329,10 +330,24 @@ class DrawZeros {
   }
 }
 
+class DrawId {
+  constructor(private readonly expression: GExpression) { }
+  render(): ReactNode {
+    const { id, width = 0, height = 0, x = 0, y = 0, isTerm1 } = (this.expression || {});
 
-const DrawRoot = ({ root, style }: { root: GAbstractRoot, style: any }) => {
+    return <text
+      x={x + 0.5 * width} y={y + 0.5 * height}
+      fill={isTerm1 ? "blue" : "orange"}
+      style={{ backgroundColor: "yellow", textDecoration: "underline", fontWeight: "bold" }}
+      fontSize={`${FONT_SIZE * 0.8}px`}>
+      {`${id}`}
+    </text>
+  }
+}
 
+const DrawRoot = ({ root, style, drawIds = false, }: { root: GAbstractRoot, style: any, drawIds?: boolean }) => {
   const [drawValues, setDrawValues] = useState<DrawValue[]>([]);
+  const [drawnIds, setDrawnIds] = useState<DrawId[]>([]);
   const drawZero = new DrawZeros(root);
 
   useLayoutEffect(() => {
@@ -352,6 +367,16 @@ const DrawRoot = ({ root, style }: { root: GAbstractRoot, style: any }) => {
     })
 
     setDrawValues(_drawValues);
+
+    if (drawIds) {
+      setDrawnIds(
+        (expressionToArray(root)
+          .map(expression => expression instanceof GExpression ? new DrawId(expression) : null)
+          .filter(val => val !== null)
+        ) as DrawId[]
+      );
+    }
+
     // eslint-disable-next-line
   }, [root]);
 
@@ -365,8 +390,9 @@ const DrawRoot = ({ root, style }: { root: GAbstractRoot, style: any }) => {
         height: root.height
       }}
     />
-    {drawValues.map(drawValue => drawValue.render())}
+    {drawValues.map((drawValue, idx) => <g key={idx}>{drawValue.render()}</g>)}
     {drawZero.render()}
+    {drawnIds.map((drawnId, idx) => <g key={idx}>{drawnId.render()}</g>)}
   </svg>
 
 }
