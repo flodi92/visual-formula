@@ -42,6 +42,8 @@ export const getCommonEdgeValues = (expression: GExpression, direction: Directio
                     oppositeDirection(direction) as Direction,
                     orthDirection
                 );
+            } else {
+                return _testUpward(parent, direction, orthDirection);
             }
         }
         else if (parent instanceof GDifference) {
@@ -57,6 +59,8 @@ export const getCommonEdgeValues = (expression: GExpression, direction: Directio
                 } else {
                     return _testUpward(parent.gMinuend, direction, orthDirection);
                 }
+            } else {
+                return _testUpward(parent, direction, orthDirection);
             }
         }
         else if (parent instanceof GProduct1D) {
@@ -87,8 +91,9 @@ export const getCommonEdgeValues = (expression: GExpression, direction: Directio
                     ..._testUpward(parent.gComplexFactor, direction, orthDirection),
                     ..._testDownward(parent, direction, orthDirection),
                 ];
+            } else {
+                return _testUpward(parent, direction, orthDirection)
             }
-            return _testDownward(parent, direction, orthDirection);
         }
         else if (parent instanceof GQuotient1D) {
             if (
@@ -112,6 +117,8 @@ export const getCommonEdgeValues = (expression: GExpression, direction: Directio
                 } else {
                     return _testUpward(parent.gComplexDivident, direction, orthDirection);
                 }
+            } else {
+                return _testUpward(parent, direction, orthDirection)
             }
         }
         else if (parent instanceof GProduct2D) {
@@ -163,61 +170,53 @@ export const getCommonEdgeValues = (expression: GExpression, direction: Directio
     }
     const _testUpward = (expression: GExpression | undefined, direction?: Direction, orthDirection?: Direction): CommonEdgeValue[] => {
         if (!expression || !direction) return [];
+        let childrenUpward: CommonEdgeValue[] = [];
+        let upward: CommonEdgeValue[] = [];
         if (expression instanceof GAbstractValue) { return [{ gValue: expression, direction }] }
         else if (expression instanceof GSum) {
-            if (expression.startDirection === direction) {
-                return _testUpward(first(expression.gSummands), direction, orthDirection);
-            } else if (expression.startDirection === oppositeDirection(direction)) {
-                return _testUpward(last(expression.gSummands), direction, orthDirection);
-            }
-            return flatten(
-                (expression.gSummands?.map((summand) => _testUpward(summand, direction, orthDirection)) || [])
-            );
+            childrenUpward = (expression.startDirection === direction) ?
+                _testUpward(first(expression.gSummands), direction, orthDirection)
+                : (expression.startDirection === oppositeDirection(direction)) ?
+                    _testUpward(last(expression.gSummands), direction, orthDirection)
+                    : flatten(
+                        (expression.gSummands?.map((summand) => _testUpward(summand, direction, orthDirection)) || [])
+                    )
         }
         else if (expression instanceof GDifference) {
-            if (expression.startDirection === oppositeDirection(direction)) {
-                return _testUpward(
-                    expression.gSubtrahend,
-                    oppositeDirection(direction) as Direction,
-                    orthDirection
-                );
-            } else return _testUpward(expression.gMinuend, direction, orthDirection);
+            childrenUpward = expression.startDirection === oppositeDirection(direction) ?
+                _testUpward(expression.gSubtrahend, oppositeDirection(direction) as Direction, orthDirection) :
+                _testUpward(expression.gMinuend, direction, orthDirection)
         }
         else if (expression instanceof GProduct1D) {
-            if (expression.startDirection === direction) {
-                return _testUpward(expression.gComplexFactor, direction, orthDirection);
-            } else if (expression.startDirection === oppositeDirection(direction)) {
-                return _testUpward(expression.gSimpleFactor, direction, orthDirection);
-            }
-            return [
-                ..._testUpward(expression.gComplexFactor, direction, orthDirection),
-                ..._testUpward(expression.gSimpleFactor, direction, orthDirection),
-            ];
+            childrenUpward = (expression.startDirection === direction) ?
+                _testUpward(expression.gComplexFactor, direction, orthDirection) :
+                (expression.startDirection === oppositeDirection(direction)) ?
+                    _testUpward(expression.gSimpleFactor, direction, orthDirection) : [
+                        ..._testUpward(expression.gComplexFactor, direction, orthDirection),
+                        ..._testUpward(expression.gSimpleFactor, direction, orthDirection),
+                    ]
         }
         else if (expression instanceof GQuotient1D) {
-            if (expression.startDirection === oppositeDirection(direction)) {
-                return _testUpward(
-                    expression.gSimpleDivisor,
-                    oppositeDirection(direction) as Direction,
-                    orthDirection
-                );
-            } else
-                return _testUpward(expression.gComplexDivident, direction, orthDirection);
+            childrenUpward = (expression.startDirection === oppositeDirection(direction)) ?
+                _testUpward(expression.gSimpleDivisor, oppositeDirection(direction) as Direction, orthDirection) :
+                _testUpward(expression.gComplexDivident, direction, orthDirection)
         }
         else if (expression instanceof GProduct2D) {
             if (expression.xEdge === direction) {
-                if (!!orthDirection)
-                    return _testUpward(expression.gFactorX, orthDirection);
-                return _testUpward(
+                if (!!orthDirection) {
+                    childrenUpward = _testUpward(expression.gFactorX, orthDirection);
+                }
+                childrenUpward = _testUpward(
                     expression.gFactorX,
                     oppositeDirection(direction) as Direction,
                     orthDirection
                 );
             }
             if (expression.yEdge === direction) {
-                if (!!orthDirection)
-                    return _testUpward(expression.gFactorY, orthDirection);
-                return _testUpward(
+                if (!!orthDirection) {
+                    childrenUpward = _testUpward(expression.gFactorY, orthDirection);
+                }
+                childrenUpward = _testUpward(
                     expression.gFactorY,
                     oppositeDirection(direction) as Direction,
                     orthDirection
@@ -225,22 +224,27 @@ export const getCommonEdgeValues = (expression: GExpression, direction: Directio
             }
         }
         else if (expression instanceof GQuotient2D) {
-            if (expression.divisorEdge === direction && !!orthDirection) {
-                return _testUpward(expression.gDivisor, orthDirection);
+            if (expression.divisorEdge === direction) {
+                childrenUpward = !!orthDirection ?
+                    _testUpward(expression.gDivisor, orthDirection) :
+                    _testUpward(expression.gDivisor, oppositeDirection(direction));
             }
             if (expression.resultEdge === oppositeDirection(direction))
-                return _testUpward(
-                    expression.gDivident,
-                    oppositeDirection(direction) as Direction,
-                    orthDirection
-                );
+                childrenUpward = !!orthDirection ?
+                    _testUpward(expression.gDivident, orthDirection) :
+                    _testUpward(expression.gDivident, oppositeDirection(direction));
         }
 
-        return [];
+        upward = _testUpward(expression.parent as GExpression, direction);
+
+        return [...childrenUpward, ...upward];
     }
 
-    return [..._testDownward(expression, direction), ..._testUpward(expression, direction)]
+
+    const ret = [..._testDownward(expression, direction), ..._testUpward(expression, direction)]
         .filter(_expression => expression.id !== _expression.gValue.id)
+
+    return ret;
 }
 
 export default getCommonEdgeValues;
