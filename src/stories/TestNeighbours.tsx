@@ -33,8 +33,10 @@ export const TestNeighbours = ({ rotations, json, layerTransformation, testedId,
     getCommonEdgeValues(testedExpression, operation.direction).map(({ gValue: { id }, direction }) => `${id}:${direction}`)
   ).join(', ');
 
+  const operationDefinition = `${operation.type}:${operation.type === "getNeighbours" ? operation.xy : operation.direction}`
+  
   return <>
-    <>{operation.type} of {testedId} are {results}</>
+    <>{operationDefinition} of {testedId} are {results}</>
     <DrawRoot root={expression} drawIds style={{ width: '100%', height: '200px', }} />
     <div style={{ whiteSpace: "pre", fontSize: "10px" }}>{`${JSON.stringify(expression.json, null, 2)}`}</div>
   </>

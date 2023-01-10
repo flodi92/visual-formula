@@ -10,7 +10,7 @@ export default {
 
 const Template: ComponentStory<typeof TestNeighbours> = (args) => <TestNeighbours {...args} />;
 
-const json1 = {
+export const testNeighboursJSON1 = {
   id: 1,
   type: "GEquation",
   gTerm1: {
@@ -111,18 +111,27 @@ const json1 = {
   },
 } as object;
 
-export const Primary = Template.bind({});
 
 const standardConfig = (
   testedId: ID,
   operation: { type: 'getNeighbours', xy: XY }
-    | { type: 'getCommonEdgeValues', direction: Direction }
-) => ({
+  | { type: 'getCommonEdgeValues', direction: Direction }
+  ) => ({
   rotations: 0,
-  json: json1,
+  json: testNeighboursJSON1,
   layerTransformation: { x: 100, y: 100, scaleX: 20, scaleY: 20 },
   testedId,
   operation,
 }) as TestNeighboursProps;
 
+export const Primary = Template.bind({});
 Primary.args = standardConfig(5, {type: "getCommonEdgeValues", direction: "right"});
+
+export const Test1 = Template.bind({});
+Test1.args = standardConfig(7, {type: "getCommonEdgeValues", direction: "right"});
+
+export const Test2 = Template.bind({});
+Test2.args = standardConfig(8, {type: "getCommonEdgeValues", direction: "left"});
+
+export const Test3 = Template.bind({});
+Test3.args = standardConfig(7, {type: "getCommonEdgeValues", direction: "left"});
