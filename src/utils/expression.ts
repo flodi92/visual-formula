@@ -1,6 +1,6 @@
 import { ID, } from "../types";
 import Expression from "../expression/Expression";
-import { GDifference, GEquation, GExpression, GProduct1D, GProduct2D, GQuotient1D, GQuotient2D, GSimpleValue, GSum, GTerm, GValue } from "../expression/gExpression";
+import { GAbstractRoot, GDifference, GEquation, GExpression, GProduct1D, GProduct2D, GQuotient1D, GQuotient2D, GSimpleValue, GSum, GTerm, GValue } from "../expression/gExpression";
 
 export function find<TExpression extends Expression>(id: ID | undefined, expression: TExpression): Expression {
     if (id === undefined) {
@@ -84,6 +84,9 @@ export const expressionToArray = (expression: Expression): Expression[] => [expr
         .reduce(
             (prev, child) => ([...prev, ...expressionToArray(child as Expression)]),
             [] as Expression[])];
+
+export const getRoot = (expression: Expression): GAbstractRoot =>
+    !!expression.parent ? getRoot(expression.parent) : <GAbstractRoot>expression;
 
 export const getMaxID = (expression: Expression) => Math.max(
     0, ...expressionToArray(expression).map(({ id }) => id).filter(id => !!id) as number[]
