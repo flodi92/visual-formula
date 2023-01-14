@@ -10,15 +10,18 @@ export class Configuration {
 export interface AutoAdaption<ConfigurationT extends Configuration> {
     root?: GAbstractRoot;
     getAdaptedIds(): ID[];
-    getPossibleConfigurations: (id: ID) => ConfigurationT[];
-    applyConfiguration: (configuration: ConfigurationT) => void;
-    applyConfigurations: (configurations: ConfigurationT[]) => void;
-    resetConfiguration: (configuration: ConfigurationT) => void;
-    resetConfigurations: (configurations: ConfigurationT[]) => void;
+    getPossibleConfigurations(id: ID): ConfigurationT[];
+    applyConfiguration(configuration: ConfigurationT): void;
+    applyConfigurations(configurations: ConfigurationT[]): void;
+    resetAll(): any;
+    resetConfiguration(configuration: ConfigurationT): void;
+    resetConfigurations(configurations: ConfigurationT[]): void;
 }
 
 export default function autoAdapt<AutoAdaptionT extends AutoAdaption<any>>(root: GAbstractRoot, adaption: AutoAdaptionT) {
     adaption.root = root;
+    adaption.resetAll()
+
     const adaptedIds = adaption.getAdaptedIds();
 
     const _autoAdapt = (_adaptedIds: ID[], _configPath: Configuration[]): Configuration[] | undefined => {

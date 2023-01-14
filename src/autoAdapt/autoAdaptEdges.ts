@@ -1,11 +1,13 @@
 import autoAdapt, { Configuration, AutoAdaption } from "./autoAdapt";
 import { ALL_XDIRECTIONS, ALL_YDIRECTIONS, Direction, ID, XDirection, YDirection } from "../types";
 import {
-    GAbstractDirectedExpression,GProduct2D, GAbstractRoot, GSimpleValue, GValue, GExpression,
+    GAbstractDirectedExpression, GProduct2D, GAbstractRoot, GSimpleValue, GValue, GExpression,
 } from "../expression/gExpression";
-import { find } from "../utils/expression";
+import { expressionToArray, find } from "../utils/expression";
 import { getGAbstractValueIds, isEdgePossible } from "../utils/gExpression";
 import { directionsToNumber, directionToNumber, directionToXY, oppositeDirection } from "../utils/general";
+import Expression from "../expression/Expression";
+import { cloneExpression } from "../conversion";
 
 abstract class EdgesConfiguration extends Configuration { }
 
@@ -26,11 +28,16 @@ class TwoEdgesConfiguration extends EdgesConfiguration {
 
 class AutoEdgeAdaption implements AutoAdaption<EdgesConfiguration> {
     private _root?: GAbstractRoot;
+    private _referenceRoot?: GExpression;
+
     public get root(): GAbstractRoot | undefined {
         return this._root;
     }
     public set root(value: GAbstractRoot | undefined) {
         this._root = value;
+
+        if (!value) return;
+        this._referenceRoot = cloneExpression(value) as GAbstractRoot;
     }
     getAdaptedIds(): ID[] {
         return this.root ? getGAbstractValueIds(this.root) : [];
@@ -94,31 +101,36 @@ class AutoEdgeAdaption implements AutoAdaption<EdgesConfiguration> {
     applyConfigurations(configurations: EdgesConfiguration[]) {
         configurations.forEach(configuration => this.applyConfiguration(configuration));
     };
+    resetAll() {
+        if (!this._root) return;
+
+        expressionToArray(this._root).forEach(
+            expression => resetEdges(expression)
+        );
+    }
     resetConfiguration(configuration: EdgesConfiguration) {
         if (!this._root) return;
 
         const expression = find(configuration.id, this._root) as GExpression;
-        if (!expression) return null;
-
-        if (expression instanceof GValue) {
-            expression.xEdge = undefined;
-            expression.yEdge = undefined;
-        }
-        else if (expression instanceof GSimpleValue) {
-            expression.edge = undefined;
-        }
+        resetEdges(expression);
     };
     resetConfigurations(configurations: EdgesConfiguration[]) {
         configurations.map(configuration => this.resetConfiguration(configuration));
     };
 
     private getGValueBadPreference(expression: GValue, xEdge: YDirection, yEdge: XDirection) {
+        const { parent, id } = expression;
 
-        const parent = expression.parent;
-        // TODO badPreference by prefering same config as former value
+        const reference = ((id !== undefined && !!this._referenceRoot)
+            ? find(id, this._referenceRoot) : undefined) as GValue | undefined;
 
-        if (parent instanceof GAbstractDirectedExpression
-            && !!parent.startDirection) {
+        const [_xEdge, _yEdge] = [reference?.xEdge, reference?.yEdge]
+
+        if (!!_xEdge && !!_yEdge && xEdge === _xEdge && yEdge === _yEdge) {
+            return 0;
+        }
+
+        if (parent instanceof GAbstractDirectedExpression && !!parent.startDirection) {
 
             // assure same badPreferences if relative constelation is the same
 
@@ -126,8 +138,7 @@ class AutoEdgeAdaption implements AutoAdaption<EdgesConfiguration> {
             const edgesNumber = <number>directionsToNumber(yEdge, xEdge);
 
             return (edgesNumber - startDirectionNumber + 4) % 4;
-        } else if (parent instanceof GProduct2D
-            && !!parent.yEdge && !!parent.xEdge) {
+        } else if (parent instanceof GProduct2D && !!parent.yEdge && !!parent.xEdge) {
 
             const isEdgeToInside =
                 (expression.typeInParent === "gFactorX" && yEdge === oppositeDirection(parent.yEdge))
@@ -144,6 +155,17 @@ class AutoEdgeAdaption implements AutoAdaption<EdgesConfiguration> {
         }
 
         return 2;
+    }
+}
+
+const resetEdges = (expression: Expression) => {
+    if (!expression) return;
+
+    if (expression instanceof GValue) {
+        expression.xEdge = undefined;
+        expression.yEdge = undefined;
+    } else if (expression instanceof GSimpleValue) {
+        expression.edge = undefined;
     }
 }
 
