@@ -17,6 +17,7 @@ import { getXNormedValues, getYNormedValues } from "./getNormedValues";
 import {
     getSummands, setSummands, getSubtrahends, setSubtrahends, sumStartDirection, differenceStartDirection,
 } from "./summandsSubtrahends"
+import Expression from "../../expression/Expression";
 
 const getFixedWidthOfNeighbour = (gValue: GValue) => {
     const neighbours = getNeighbours(gValue, 'Y');
@@ -169,6 +170,11 @@ const getYNeighbours = (gExpression: GExpression): GExpression[] => {
     return getNeighbours(gExpression, 'Y');
 }
 
+const getParentXY = (expression?: Expression): XY | undefined =>
+    !expression ? undefined :
+        (expression instanceof GAbstractDirectedExpression) ? directionToXY(expression.startDirection) :
+            getParentXY(expression.parent)
+
 export {
     getWidths,
     getHeights,
@@ -193,4 +199,5 @@ export {
     setSubtrahends,
     sumStartDirection,
     differenceStartDirection,
+    getParentXY,
 };

@@ -1,12 +1,13 @@
-import { isNumber } from "lodash";
+import { isInteger, isNumber } from "lodash";
 import {
     GExpression,
     GProduct1D,
     GQuotient1D,
-} from "../expression/gExpression"
+    GValue
+} from "../expression/gExpression";
 import { directionToXY } from "../utils/general";
 
-import { getFixedHeightOfNeighbour, getFixedWidthOfNeighbour, getGSimpleValues, getGValues, getXNormedValues, getYNormedValues } from "../utils/gExpression";
+import { getFixedHeightOfNeighbour, getFixedWidthOfNeighbour, getGSimpleValues, getGValues, getParentXY, getXNormedValues, getYNormedValues } from "../utils/gExpression";
 
 const autoConfigSize = (gExpression: GExpression) => {
     const xNormedValue = getXNormedValues(gExpression);
@@ -92,8 +93,8 @@ const autoConfigSize = (gExpression: GExpression) => {
             const height = getFixedHeightOfNeighbour(gValue);
 
             if (width === undefined && height === undefined && gValue.numericValue) {
-                gValue.unscaledWidth = Math.sqrt(gValue.numericValue);
-                gValue.unscaledHeight = Math.sqrt(gValue.numericValue);
+                [gValue.unscaledWidth, gValue.unscaledHeight] = suggestFactors(gValue);
+
                 return false;
             }
             return true;
@@ -101,6 +102,23 @@ const autoConfigSize = (gExpression: GExpression) => {
 
         endLength = gValues.length + gSimpleValues.length;
     }
+}
+
+const suggestFactors = (gValue: GValue): [number | undefined, number | undefined] => {
+    const { numericValue } = gValue;
+    if (numericValue === undefined) return [undefined, undefined];
+
+    if (!isInteger(numericValue)) { return [Math.sqrt(numericValue), Math.sqrt(numericValue)]; }
+
+    const start = Math.floor(Math.sqrt(numericValue));
+
+    for (let i = start; i < numericValue; i++) {
+        if (numericValue % start === 0) {
+            return getParentXY(gValue) === "X" ? [numericValue / i, i] : [i, numericValue / i];
+        }
+    }
+
+    return [undefined, undefined];
 }
 
 export default autoConfigSize;
