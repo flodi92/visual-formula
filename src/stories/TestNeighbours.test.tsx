@@ -32,4 +32,13 @@ test("getResultCommonEdgeValues", () => {
   expect(getResultCommonEdgeValues(testNeighboursJSON1, 7, 'bottom'))
     .toEqual(['11:top'])
 
+  expect(getResultCommonEdgeValues(testNeighboursJSON1, 13, 'left'))
+    .toEqual([])
+
+  expect(getResultCommonEdgeValues(testNeighboursJSON1, 13, 'bottom'))
+    .toEqual(['12:bottom', '11:bottom',])
+
+  expect(getResultCommonEdgeValues(testNeighboursJSON1, 13, 'top'))
+    .toEqual(['8:bottom', '12:top', '11:top'])
+
 })
