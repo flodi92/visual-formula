@@ -122,88 +122,105 @@ GQuotient1DExample.args = {
   layerTransformation: { x: 90, y: 90, scaleX: 20, scaleY: 20 }
 };
 
-// export const GQuotient2DExample = Template.bind({});
+export const GQuotient2DExample = Template.bind({});
 
-// GQuotient2DExample.args = {
-//   rotations: 0,
-//   json: {
-//     type: "GQuotient2D",
-//     gDivident: {
-//       type: 'GValue',
-//       mValue: "10",
-//       numericValue: 10,
-//     },
-//     gDivisor: {
-//       type: 'GValue',
-//       mValue: "5",
-//       numericValue: 5,
-//     }
-//   },
-//   layerTransformation: { x: 30, y:110, scaleX: 20, scaleY: 20 }
-// };
+GQuotient2DExample.args = {
+  rotations: 0,
+  json: {
+    type: "GQuotient2D",
+    resultEdge: "top",
+    divisorEdge: "left",
+    gDivident: {
+      type: 'GValue',
+      mValue: "10",
+      numericValue: 10,
+    },
+    gDivisor: {
+      type: 'GValue',
+      mValue: "5",
+      numericValue: 5,
+    }
+  },
+  layerTransformation: { x: 30, y: 110, scaleX: 20, scaleY: 20 }
+};
 
-// export const GEQuationExample = Template.bind({});
+export const GEQuationExample = Template.bind({});
 
-// GEQuationExample.args = {
-//   rotations: 0,
-//   json: {
-//     type: "GEquation",
-//     gTerm1: {
-//     type: "GQuotient2D",
-//     gDivident: {
-//       type: "GSum",
-//       startDirection: "left",
-//       gSummands: [
-//         {
-//           type: "GProduct1D",
-//           startDirection: "left",
-//           gComplexFactor: {
-//             type: "GValue",
-//             mValue: "5",
-//             numericValue: 5,
-//           },
-//           gSimpleFactor: {
-//             type: "GSimpleValue",
-//             mSimpleValue: "x",
-//             numericValue: 2,
-//           },
-//         },
-//         {
-//           type: "GValue",
-//           mValue: "6",
-//           numericValue: 6,
-//         },
-//       ],
-//     },
-//     gDivisor: {
-//       type: "GValue",
-//       mValue: "4",
-//       numericValue: 4,
-//     },
-//   },
-//     gTerm2: {
-//     type: "GDifference",
-//     startDirection: "left",
-//     gMinuend: {
-//       type: "GProduct1D",
-//       startDirection: "left",
-//       gComplexFactor: {
-//         type: "GValue",
-//         mValue: "7",
-//         numericValue: 7,
-//       },
-//       gSimpleFactor: {
-//         type: "GSimpleValue",
-//         mSimpleValue: "x",
-//         numericValue: 2,
-//       },
-//     },
-//     gSubtrahend: {
-//       type: "GValue",
-//       mValue: "10",
-//       numericValue: 10,
-//     },
-//   },
-//   },
-//   layerTransformation: { x: 100, y: 100, scaleX: 20, scaleY: 20 }
-// };
+GEQuationExample.args = {
+  rotations: 0,
+  json: {
+    type: "GEquation",
+    id: 41,
+    gTerm1: {
+      type: "GQuotient2D",
+      id: 42,
+      gDivident: {
+        type: "GSum",
+        id: 43,
+        startDirection: "left",
+        gSummands: [
+          {
+            type: "GProduct1D",
+            id: 44,
+            startDirection: "left",
+            gComplexFactor: {
+              type: "GValue",
+              id: 45,
+              mValue: "5",
+              numericValue: 5,
+            },
+            gSimpleFactor: {
+              type: "GSimpleValue",
+              id: 46,
+              mSimpleValue: "x",
+              numericValue: 2,
+            },
+          },
+          {
+            type: "GValue",
+            id: 47,
+            mValue: "6",
+            numericValue: 6,
+          },
+        ],
+      },
+      gDivisor: {
+        type: "GValue",
+        id: 48,
+        mValue: "4",
+        numericValue: 4,
+      },
+      divisorEdge: "right",
+      resultEdge: "bottom",
+    },
+    gTerm2: {
+      type: "GDifference",
+      id: 49,
+      startDirection: "left",
+      gMinuend: {
+        type: "GProduct1D",
+        id: 50,
+        startDirection: "left",
+        gComplexFactor: {
+          type: "GValue",
+          id: 51,
+          mValue: "7",
+          numericValue: 7,
+        },
+        gSimpleFactor: {
+          type: "GSimpleValue",
+          id: 52,
+          mSimpleValue: "x",
+          numericValue: 2,
+        },
+      },
+      gSubtrahend: {
+        type: "GValue",
+        id: 53,
+        mValue: "10",
+        numericValue: 10,
+      },
+    },
+  },
+  layerTransformation: { x: 100, y: 100, scaleX: 20, scaleY: 20 }
+};
