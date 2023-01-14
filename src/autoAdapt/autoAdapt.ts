@@ -39,6 +39,8 @@ export default function autoAdapt<AutoAdaptionT extends AutoAdaption<any>>(root:
             return configPath
         }).filter(configPath => !!configPath) as Configuration[][];
 
+        if (!configPaths.length) return undefined;
+
         const { configPath: bestConfigPath } = configPaths
             .map(configPath => ({
                 configPath,
