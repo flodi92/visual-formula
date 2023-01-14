@@ -46,7 +46,7 @@ const getCommonEdgeValues = (expression: GExpression, direction: Direction): Com
                         }
                     }
                 }
-                else if (isIntersection(x1, x2, _x1, _x2)) {
+                if (isIntersection(x1, x2, _x1, _x2)) {
                     if (direction === "bottom") {
                         if (y2 === _y1) {
                             buffer.push({ gValue, direction: "top" })
