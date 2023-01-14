@@ -72,3 +72,10 @@ export const isClockwise = (fromDirection?: Direction, toDirection?: Direction) 
         3: false, // anticlickwise
     }[(toNumber - fromNumber + 4) % 4];
 };
+
+export const isInRange = (v: number, min: number, max: number) =>
+    v >= min && v <= max;
+
+export const isIntersection = (min: number, max: number, _min: number, _max: number) =>
+    (isInRange(min, _min, _max) || isInRange(_min, min, max))
+    && _min !== max && min !== _max

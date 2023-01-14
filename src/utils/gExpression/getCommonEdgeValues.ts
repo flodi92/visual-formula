@@ -4,10 +4,8 @@ import {
 
 import { CommonEdgeValue, Direction } from "../../types";
 import { expressionToArray, getRoot } from "../expression";
+import { isIntersection } from "../general";
 
-const isInRange = (v: number, min: number, max: number) => v >= min && v <= max;
-const isIntersection = (min: number, max: number, _min: number, _max: number) =>
-    (isInRange(min, _min, _max) || isInRange(_min, min, max)) && _min !== max && min !== _max
 
 const getCommonEdgeValues = (expression: GExpression, direction: Direction): CommonEdgeValue[] => {
 
