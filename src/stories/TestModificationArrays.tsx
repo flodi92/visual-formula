@@ -24,6 +24,7 @@ interface TestModificationArraysProps {
     | 'reverse' | 'rotate' | 'substitute' | 'swap1DAnd2D' | 'swapXToY',
     any?
   ][],
+  isAutoAdaptEdges: boolean,
   json: object,
 }
 
@@ -31,6 +32,7 @@ export const TestModificationArrays = ({
   steps,
   idModificationParameters,
   rotations,
+  isAutoAdaptEdges = true,
   json,
   layerTransformation }: TestModificationArraysProps) => {
   const gEquation = getExpressionFromJSON(json) as GAbstractRoot;
@@ -49,7 +51,7 @@ export const TestModificationArrays = ({
 
   autoConfigSize(gEquation);
 
-  autoAdaptEdges(gEquation)
+  if (isAutoAdaptEdges) autoAdaptEdges(gEquation)
 
   if (steps > idModificationParameters.length) return <h1>Overflow!!</h1>
 

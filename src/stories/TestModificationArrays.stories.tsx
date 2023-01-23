@@ -126,10 +126,10 @@ SolveAll.args = {
     [64, 'reverse', { xy: 'Y' }],
     [44, 'moveSummand'],
     [67, 'reverse', { xy: 'X' }],
-    // [64, 'moveSubtrahend'], // TODO
+    [64, 'moveSubtrahend'],
     // [[44,50], 'swap1DAnd2D'] // TODO
-    [NaN /* ? */, 'reverseDistribute'],
-    [NaN /* ? */, 'moveDivisor'],
+    // [NaN /* ? */, 'reverseDistribute'],
+    // [NaN /* ? */, 'moveDivisor'],
 
   ],
   json: json1,
