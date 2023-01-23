@@ -33,14 +33,15 @@ const moveSummandOrSubtrahend = (
     fromDirection = fromDirection || toDirection || "left";
     toDirection = toDirection || fromDirection || "left";
 
-    const sameDirections = fromDirection === toDirection;
-    const oppositeDirections = oppositeDirection(fromDirection) === toDirection;
+    // TODO check directions
+    // const sameDirections = fromDirection === toDirection;
+    // const oppositeDirections = oppositeDirection(fromDirection) === toDirection;
 
     if (!fromDirection && !toDirection) fromDirection = toDirection = "left";
 
     if (
       firstFrom.id === id
-      && (isSummand ? oppositeDirections : sameDirections)
+      // && (isSummand ? oppositeDirections : sameDirections) // TODO check directions
     )
       return {
         moved: firstFrom,
@@ -52,7 +53,7 @@ const moveSummandOrSubtrahend = (
       };
     else if (
       lastFrom.id === id
-      && (isSummand ? sameDirections : oppositeDirections)
+      // && (isSummand ? sameDirections : oppositeDirections) // TODO check directions
     )
       return {
         moved: lastFrom,
