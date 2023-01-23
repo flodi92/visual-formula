@@ -110,6 +110,32 @@ Primary.args = {
   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
 };
 
+export const SolveAll = Template.bind({});
+
+SolveAll.args = {
+  steps: 1,
+  idModificationParameters: [
+    [48, 'moveDivisor'],
+    [61, 'distribute', { xy: 'X' }],
+    [50, 'reverse', { xy: 'Y' }],
+    [53, 'reverse', { xy: 'Y' }],
+    [53, 'reverse', { xy: 'X' }],
+    [43, 'reverse', { xy: 'X' }],
+    [47, 'reverse', { xy: 'X' }],
+    [44, 'reverse', { xy: 'X' }],
+    [64, 'reverse', { xy: 'Y' }],
+    [44, 'moveSummand'],
+    [67, 'reverse', { xy: 'X' }],
+    // [64, 'moveSubtrahend'], // TODO
+    // [[44,50], 'swap1DAnd2D'] // TODO
+    [NaN /* ? */, 'reverseDistribute'],
+    [NaN /* ? */, 'moveDivisor'],
+
+  ],
+  json: json1,
+  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+};
+
 export const TryWrong = Template.bind({});
 
 TryWrong.args = {

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './button.css';
 
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
@@ -8,21 +9,21 @@ import { ID } from '../types';
 import { moveSummand, moveSubtrahend, moveFactor, moveDivisor } from '../modification/modifyEquation';
 import { swapSummands, swapFactors1D, swapFactors2D, distribute, reverseDistribute } from '../modification/modifyTerm';
 import { reverse, rotate, substitute, swap1DAnd2D, swapXToY } from '../modification/reconfigTerm';
-import { autoAdaptTransformation, autoConfigSize, keepPositionForTransformation } from '../autoAdapt';
+import { autoAdaptEdges, autoAdaptTransformation, autoConfigSize, keepPositionForTransformation } from '../autoAdapt';
 import { setUnsetIDs } from '../utils/expression';
 
 interface TestModificationArraysProps {
-  steps: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8,
+  steps: number,
   rotations: 0 | 1 | 2 | 3,
   layerTransformation: { x: number, y: number, scaleX: number, scaleY: number }
-  idModificationParameters: 
-    [
-      ID,
-      'moveSummand' | 'moveSubtrahend' | 'moveFactor' | 'moveDivisor' | 'swapSummands'
-      | 'swapFactors1D' | 'swapFactors2D' | 'distribute' | 'reverseDistribute'
-      | 'reverse' | 'rotate' | 'substitute' | 'swap1DAnd2D' | 'swapXToY',
-      any?
-    ][],
+  idModificationParameters:
+  [
+    ID,
+    'moveSummand' | 'moveSubtrahend' | 'moveFactor' | 'moveDivisor' | 'swapSummands'
+    | 'swapFactors1D' | 'swapFactors2D' | 'distribute' | 'reverseDistribute'
+    | 'reverse' | 'rotate' | 'substitute' | 'swap1DAnd2D' | 'swapXToY',
+    any?
+  ][],
   json: object,
 }
 
@@ -47,6 +48,10 @@ export const TestModificationArrays = ({
     = keepPositionForTransformation({ gRoot: gEquation, modifiedID });
 
   autoConfigSize(gEquation);
+
+  autoAdaptEdges(gEquation)
+
+  if (steps > idModificationParameters.length) return <h1>Overflow!!</h1>
 
   for (let i = 0; i < steps; i++) {
     const [id, modification, parameters] = idModificationParameters[i];
