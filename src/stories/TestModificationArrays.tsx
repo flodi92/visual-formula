@@ -96,7 +96,9 @@ export const TestModificationArrays = ({
     positionForTransformation
   );
 
+  const [id, modification, parameters] = steps > 0 ? idModificationParameters[steps - 1] : [];
   return <>
+    <div style={{ fontStyle: "italic", fontSize: "13px" }}>{JSON.stringify({ id, modification, parameters })}</div>
     <DrawRoot root={gEquation} style={{ width: '100%', height: '200px' }} />
     <div style={{ whiteSpace: "pre", fontSize: "10px" }}>{`${JSON.stringify(gEquation.json, null, 2)}`}</div>
   </>
