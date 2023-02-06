@@ -2,8 +2,8 @@ import React from 'react';
 // import logo from './logo.svg';
 import './App.css';
 import GAbstractRoot from './expression/gExpression/GAbstractRoot';
-import DrawRoot from './draw/DrawRoot';
 import { getExpressionFromJSON } from './conversion';
+import { DrawRoot } from './drawReact';
 
 
 const Test = () => {
