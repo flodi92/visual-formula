@@ -5,8 +5,6 @@ import { ZERO_RADIUS } from './config';
 abstract class AbstractDrawZeros<T> extends AbstractDraw<T, GAbstractRoot> {
     protected abstract renderZero(vals: { x: number, y: number, r: number, isTerm1: boolean }): T;
 
-    protected abstract _empty(): T;
-
     public render(): T {
         if (!this.gEquation) return this._empty();
 
