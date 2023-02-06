@@ -2,7 +2,7 @@ import React from 'react';
 import './button.css';
 
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
-import DrawRoot from '../draw/DrawRoot';
+import { DrawRoot } from '../drawReact';
 import { getExpressionFromJSON } from '../conversion';
 import { swapSummands, swapFactors1D, swapFactors2D } from '../modification/modifyTerm';
 import { ID } from '../types';

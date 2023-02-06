@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './button.css';
 
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
-import DrawRoot from '../draw/DrawRoot';
+import { DrawRoot } from '../drawReact';
 import { getExpressionFromJSON } from '../conversion';
 import { ID } from '../types';
 import { moveSummand, moveSubtrahend, moveFactor, moveDivisor } from '../modification/modifyEquation';

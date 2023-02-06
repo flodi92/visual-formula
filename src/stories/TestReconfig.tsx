@@ -1,7 +1,7 @@
 import React from 'react';
 
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
-import DrawRoot from '../draw/DrawRoot';
+import { DrawRoot } from '../drawReact';
 import { getExpressionFromJSON } from '../conversion';
 import {
   swapXToY, rotate, reverse, swap1DAnd2D, substitute,
