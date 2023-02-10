@@ -27,4 +27,8 @@ export default class GTerm extends GAbstractRoot implements GTermI {
     public get unscaledHeight(): number {
         return this.gTerm?.unscaledHeight || 0;
     }
+
+    public get numericValue() {
+        return this.gTerm?.numericValue;
+    }
 }

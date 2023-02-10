@@ -56,4 +56,9 @@ export default class GEquation extends GAbstractRoot implements GEquationI {
 
         return { x, y, scaleX, scaleY }
     }
+
+    public get numericValue() {
+        return this.gTerm1?.numericValue !== undefined ?
+            this.gTerm1?.numericValue : this.gTerm2?.numericValue;
+    }
 }

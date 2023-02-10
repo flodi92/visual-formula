@@ -90,4 +90,11 @@ export default class GQuotient1D extends GAbstractDirectedExpression implements 
             : askingType === "gSimpleDivisor" ? this.gSimpleDivisorY
                 : undefined;
     }
+
+    public get numericValue() {
+        return this.gComplexDivident?.numericValue !== undefined
+            && this.gSimpleDivisor?.numericValue !== undefined
+            ? this.gComplexDivident.numericValue / this.gSimpleDivisor.numericValue
+            : undefined;
+    }
 }

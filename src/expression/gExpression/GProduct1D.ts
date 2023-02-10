@@ -79,4 +79,11 @@ export default class GProduct1D extends GAbstractDirectedExpression implements G
             : askingType === "gSimpleFactor" ? this.gSimpleFactorY
                 : undefined;
     }
+
+    public get numericValue() {
+        return this.gComplexFactor?.numericValue !== undefined
+            && this.gSimpleFactor?.numericValue !== undefined
+            ? this.gComplexFactor.numericValue * this.gSimpleFactor.numericValue
+            : undefined;
+    }
 }

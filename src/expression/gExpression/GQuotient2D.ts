@@ -110,4 +110,11 @@ export default class GQuotient2D extends GExpression implements GQuotient2DI {
             : askingType === "gDivisor" ? this.gDivisorY
                 : undefined;
     }
+
+    public get numericValue() {
+        return this.gDivident?.numericValue !== undefined
+            && this.gDivisor?.numericValue !== undefined
+            ? this.gDivident.numericValue / this.gDivisor.numericValue
+            : undefined;
+    }
 }

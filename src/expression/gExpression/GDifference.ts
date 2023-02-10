@@ -91,4 +91,11 @@ export default class GDifference extends GAbstractDirectedExpression implements 
             : askingType === "gSubtrahend" ? this.gSubtrahendY
                 : undefined;
     }
+
+    public get numericValue() {
+        return this.gMinuend?.numericValue !== undefined
+            && this.gSubtrahend?.numericValue !== undefined
+            ? this.gMinuend.numericValue - this.gSubtrahend.numericValue
+            : undefined;
+    }
 }

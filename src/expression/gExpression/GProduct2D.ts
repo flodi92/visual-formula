@@ -77,4 +77,11 @@ export default class GProduct2D extends GExpression implements GProduct2DI {
             : askingType === "gFactorY" ? this.gFactorYY
                 : undefined;
     }
+
+    public get numericValue() {
+        return this.gFactorX?.numericValue !== undefined
+            && this.gFactorY?.numericValue !== undefined
+            ? this.gFactorX.numericValue * this.gFactorY.numericValue
+            : undefined;
+    }
 }

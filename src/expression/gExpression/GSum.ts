@@ -66,4 +66,10 @@ export default class GSum extends GAbstractDirectedExpression implements GSumI {
     protected getOfParentY(): number | undefined {
         return this.unscaledY;
     }
+
+    public get numericValue() {
+        return this?.gSummands?.every(gSummand => gSummand.numericValue !== undefined) ?
+            this.gSummands.reduce((prev, gSummand) => prev + (gSummand.numericValue as number), 0)
+            : undefined;
+    }
 }

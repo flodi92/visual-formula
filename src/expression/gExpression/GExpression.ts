@@ -53,12 +53,12 @@ export default abstract class GExpression extends Expression {
     }
 
     public get isTerm1(): boolean {
-        const _isTerm1 = (expression: Expression): boolean => 
-        (expression.typeInParent === "gTerm1") ?
-            true :
-            (expression.typeInParent === "gTerm2" || !expression?.parent) ?
-                false :
-                _isTerm1(expression.parent);
+        const _isTerm1 = (expression: Expression): boolean =>
+            (expression.typeInParent === "gTerm1") ?
+                true :
+                (expression.typeInParent === "gTerm2" || !expression?.parent) ?
+                    false :
+                    _isTerm1(expression.parent);
         return _isTerm1(this);
     }
 
@@ -77,4 +77,6 @@ export default abstract class GExpression extends Expression {
     protected getLayerTransformationOfTerm(askingType?: TypeInParent): Transformation {
         return DEFAULT_TRANSFORMATION;
     }
+
+    public abstract get numericValue(): number | undefined;
 }
