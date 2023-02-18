@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import './button.css';
 
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
-import { DrawRoot } from '../drawReact';
-import { getExpressionFromJSON } from '../conversion';
+import { DrawMValue, DrawRoot } from '../drawReact';
+import { getExpressionFromJSON, getMExpressionFromExpression } from '../conversion';
 import { ID } from '../types';
 import { moveSummand, moveSubtrahend, moveFactor, moveDivisor } from '../modification/modifyEquation';
 import { swapSummands, swapFactors1D, swapFactors2D, distribute, reverseDistribute } from '../modification/modifyTerm';
@@ -115,7 +115,8 @@ export const TestModificationArrays = ({
   const [id, modification, parameters] = steps > 0 ? idModificationParameters[steps - 1] : [];
   return <>
     <div style={{ fontStyle: "italic", fontSize: "13px" }}>{JSON.stringify({ id, modification, parameters })}</div>
-    <DrawRoot root={gEquation} style={{ width: '100%', height: '300px' }} />
+    <DrawRoot root={gEquation} style={{ width: '600px', height: '200px' }} />
+    <DrawMValue mExpression={getMExpressionFromExpression(gEquation)}></DrawMValue>
     <div style={{ whiteSpace: "pre", fontSize: "10px" }}>{`${JSON.stringify(gEquation.json, null, 2)}`}</div>
   </>
 };
