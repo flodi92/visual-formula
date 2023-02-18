@@ -128,9 +128,9 @@ SolveAll.args = {
     [67, 'substitute'],
     [50, 'reverse', { xy: 'X' }],
     [[62, 51], 'substitute'],
-    [[44, 61], 'swap1DAnd2D'] // TODO
-    // [NaN /* ? */, 'reverseDistribute'],
-    // [NaN /* ? */, 'moveDivisor'],
+    [[44, 61], 'swap1DAnd2D'],
+    [49, 'reverseDistribute', { xy: 'X' }],
+    [71, 'moveFactor'],
 
   ],
   json: json1,
