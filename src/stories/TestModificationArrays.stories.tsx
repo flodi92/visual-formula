@@ -130,7 +130,7 @@ SolveAll.args = {
     [[62, 51], 'substitute'],
     [[44, 61], 'swap1DAnd2D'],
     [49, 'reverseDistribute', { xy: 'X' }],
-    [71, 'moveFactor'],
+    [69, 'moveFactor'],
 
   ],
   json: json1,
