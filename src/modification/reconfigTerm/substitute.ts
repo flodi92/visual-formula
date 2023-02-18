@@ -3,6 +3,7 @@ import { ID } from "../../types";
 import { getMExpressionFromExpression } from "../../conversion";
 import { find, replace } from "../../utils/expression";
 import { directionToXY } from "../../utils/general";
+import { autoAdaptEdges } from "../../autoAdapt";
 
 export const substitute = (expression: GExpression,
   { ids, id }: { ids: [ID, ID], id?: undefined } | { id: ID, ids?: undefined }): boolean => {
@@ -15,15 +16,17 @@ export const substitute = (expression: GExpression,
     const mValue = getMExpressionFromExpression(term);
 
     if (!mValue) return false;
+
     const replacedTerm = new GValue({
+      id: term.id,
       unscaledWidth: term.unscaledWidth,
       unscaledHeight: term.unscaledHeight,
       numericValue: term.numericValue,
       mValue: mValue,
-      xEdge: "bottom",
-      yEdge: "right",
 
     });
+
+    autoAdaptEdges(replacedTerm)
 
     replace(id, expression, replacedTerm);
     return true;

@@ -1,7 +1,7 @@
 import autoAdapt, { Configuration, AutoAdaption } from "./autoAdapt";
 import { ALL_XDIRECTIONS, ALL_YDIRECTIONS, Direction, ID, XDirection, YDirection } from "../types";
 import {
-    GAbstractDirectedExpression, GProduct2D, GAbstractRoot, GSimpleValue, GValue, GExpression,
+    GAbstractDirectedExpression, GProduct2D, GSimpleValue, GValue, GExpression,
 } from "../expression/gExpression";
 import { expressionToArray, find } from "../utils/expression";
 import { getGAbstractValueIds, isEdgePossible } from "../utils/gExpression";
@@ -27,17 +27,17 @@ class TwoEdgesConfiguration extends EdgesConfiguration {
 }
 
 class AutoEdgeAdaption implements AutoAdaption<EdgesConfiguration> {
-    private _root?: GAbstractRoot;
+    private _root?: GExpression;
     private _referenceRoot?: GExpression;
 
-    public get root(): GAbstractRoot | undefined {
+    public get root(): GExpression | undefined {
         return this._root;
     }
-    public set root(value: GAbstractRoot | undefined) {
+    public set root(value: GExpression | undefined) {
         this._root = value;
 
         if (!value) return;
-        this._referenceRoot = cloneExpression(value) as GAbstractRoot;
+        this._referenceRoot = cloneExpression(value) as GExpression;
     }
     getAdaptedIds(): ID[] {
         return this.root ? getGAbstractValueIds(this.root) : [];
@@ -169,7 +169,7 @@ const resetEdges = (expression: Expression) => {
     }
 }
 
-export default function autoAdaptEdges(root: GAbstractRoot) {
+export default function autoAdaptEdges(root: GExpression) {
     return autoAdapt<AutoEdgeAdaption>(root, new AutoEdgeAdaption())
 }
 

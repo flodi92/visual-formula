@@ -1,5 +1,5 @@
 import { ID } from "../types";
-import GAbstractRoot from "../expression/gExpression/GAbstractRoot";
+import GExpression from "../expression/gExpression/GExpression";
 
 export class Configuration {
     public constructor(
@@ -8,7 +8,7 @@ export class Configuration {
 }
 
 export interface AutoAdaption<ConfigurationT extends Configuration> {
-    root?: GAbstractRoot;
+    root?: GExpression;
     getAdaptedIds(): ID[];
     getPossibleConfigurations(id: ID): ConfigurationT[];
     applyConfiguration(configuration: ConfigurationT): void;
@@ -18,7 +18,7 @@ export interface AutoAdaption<ConfigurationT extends Configuration> {
     resetConfigurations(configurations: ConfigurationT[]): void;
 }
 
-export default function autoAdapt<AutoAdaptionT extends AutoAdaption<any>>(root: GAbstractRoot, adaption: AutoAdaptionT) {
+export default function autoAdapt<AutoAdaptionT extends AutoAdaption<any>>(root: GExpression, adaption: AutoAdaptionT) {
     adaption.root = root;
     adaption.resetAll()
 
