@@ -16,13 +16,13 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
             id: ID,
             coords: { a: [number, number], ba: [number, number], b: [number, number], bc: [number, number], c: [number, number] },
             strokeWidth: number,
-            isTerm1: boolean
+            isTerm1: boolean | undefined
         }): T;
     protected abstract _renderNormedGValue(vals: {
         id: ID,
         coords: { a: [number, number], b: [number, number], c: [number, number] },
         strokeWidth: number,
-        isTerm1: boolean,
+        isTerm1: boolean | undefined,
         isABNorm: boolean,
         isBCNorm: boolean,
     }): T;
@@ -101,7 +101,7 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
         id: ID,
         coords: { x1: number, y1: number, x2: number, y2: number },
         strokeWidth: number,
-        isTerm1: boolean,
+        isTerm1: boolean | undefined,
     }): T;
 
     protected renderGSimpleValue(gValue: GSimpleValue): T {

@@ -63,4 +63,15 @@ export default abstract class Expression implements ExpressionI {
     public get typeInParent() {
         return this._typeInParent;
     }
+
+    public get isTerm1(): boolean | undefined {
+        const _isTerm1 = (expression?: Expression): boolean | undefined =>
+            !expression ? undefined :
+                (expression.typeInParent === "gTerm1" || expression.typeInParent === "mTerm1") ?
+                    true :
+                    (expression.typeInParent === "gTerm2" || expression.typeInParent === "mTerm2") ?
+                        false :
+                        _isTerm1(expression.parent);
+        return _isTerm1(this);
+    }
 }

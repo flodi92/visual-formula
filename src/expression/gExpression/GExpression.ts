@@ -52,16 +52,6 @@ export default abstract class GExpression extends Expression {
         return this.unscaledY === 1;
     }
 
-    public get isTerm1(): boolean {
-        const _isTerm1 = (expression: Expression): boolean =>
-            (expression.typeInParent === "gTerm1") ?
-                true :
-                (expression.typeInParent === "gTerm2" || !expression?.parent) ?
-                    false :
-                    _isTerm1(expression.parent);
-        return _isTerm1(this);
-    }
-
     protected getLefts(askingExpression: GExpression): GExpression[] | undefined {
         return undefined;
     }

@@ -14,7 +14,7 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
         id?: number;
         coords: { a?: [number, number]; ba?: [number, number]; b?: [number, number]; bc?: [number, number]; c?: [number, number]; };
         strokeWidth: number;
-        isTerm1: boolean;
+        isTerm1: boolean | undefined;
     }): ReactNode {
         if (!id || !a || !ba || !b || !bc || !c) { return this._empty(); }
 
@@ -32,7 +32,7 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
         id?: number;
         coords: { a: [number, number]; b: [number, number]; c: [number, number]; };
         strokeWidth: number;
-        isTerm1: boolean;
+        isTerm1: boolean | undefined;
         isABNorm: boolean;
         isBCNorm: boolean;
     }): ReactNode {
@@ -60,7 +60,7 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
         id: number | undefined;
         coords: { x1: number; y1: number; x2: number; y2: number; };
         strokeWidth: number;
-        isTerm1: boolean;
+        isTerm1: boolean | undefined;
     }): ReactNode {
         const d = `M${x1} ${y1} L ${x2} ${y2}`;
         return (
@@ -111,7 +111,6 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
                 <div
                     style={{
                         position: "absolute",
-                        color: gValue.isTerm1 ? "black" : "red",
                         fontSize: `${FONT_SIZE}px`,
                         ...positioning,
                     }}
