@@ -10,6 +10,11 @@ import { directionToXY } from "../utils/general";
 import { getFixedHeightOfNeighbour, getFixedWidthOfNeighbour, getGSimpleValues, getGValues, getParentXY, getXNormedValues, getYNormedValues } from "../utils/gExpression";
 
 const autoConfigSize = (gExpression: GExpression) => {
+    let gValues = getGValues(gExpression);
+    let gSimpleValues = getGSimpleValues(gExpression);
+
+    [...gValues, ...gSimpleValues].forEach(gValue => [gValue.unscaledWidth, gValue.unscaledHeight] = [undefined, undefined]);
+
     const xNormedValue = getXNormedValues(gExpression);
     const yNormedValue = getYNormedValues(gExpression);
 
@@ -18,9 +23,6 @@ const autoConfigSize = (gExpression: GExpression) => {
 
     yNormedValue.forEach(gValue => isNumber(gValue.numericValue)
         && ([gValue.unscaledWidth, gValue.unscaledHeight] = [gValue.numericValue, 1]));
-
-    let gValues = getGValues(gExpression);
-    let gSimpleValues = getGSimpleValues(gExpression);
 
     let startLength = Number.POSITIVE_INFINITY, endLength = Number.NEGATIVE_INFINITY;
     while (startLength > endLength) {
