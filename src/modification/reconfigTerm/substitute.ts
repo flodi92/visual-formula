@@ -18,6 +18,7 @@ export const substitute = (expression: GExpression,
     const replacedTerm = new GValue({
       unscaledWidth: term.unscaledWidth,
       unscaledHeight: term.unscaledHeight,
+      numericValue: term.numericValue,
       mValue: mValue,
       xEdge: "bottom",
       yEdge: "right",
