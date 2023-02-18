@@ -1,9 +1,10 @@
+import { M_COLOR_1, M_COLOR_2 } from "../draw/config";
 import { MDifference, MEquation, MExpression, MProduct, MQuotient, MSum, MValue } from "../expression/mExpression";
 
 const DrawMExpression = ({ mExpression }: { mExpression?: MExpression }): JSX.Element => {
     if (!mExpression) return <></>
 
-    const style = { color: mExpression.isTerm1 ? "black" : "red" };
+    const style = { color: mExpression.isTerm1 ? M_COLOR_1 : M_COLOR_2 };
 
     if (mExpression instanceof MValue) {
         return (

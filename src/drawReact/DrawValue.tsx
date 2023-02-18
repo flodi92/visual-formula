@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { GAbstractValue, GSimpleValue, GValue } from "../expression/gExpression";
 import { MExpression } from "../expression/mExpression";
 import AbstractDrawValue from "../draw/AbstractDrawValue";
-import { CORNER_PADDING, FONT_SIZE, NORM_STROKE_WIDHT, ROUND_PADDING, STANDARD_STROKE_WIDHT } from "../draw/config";
+import { CORNER_PADDING, FONT_SIZE, G_COLOR_1, G_COLOR_2, NORM_STROKE_WIDHT, ROUND_PADDING, STANDARD_STROKE_WIDHT } from "../draw/config";
 import DrawMValue from "./DrawMValue";
 
 class DrawValue extends AbstractDrawValue<ReactNode> {
@@ -24,7 +24,7 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
                 id={`path-${id}`}
                 key={`path-${id}`}
                 d={d} strokeWidth={strokeWidth}
-                stroke={isTerm1 ? "black" : "red"}
+                stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
                 fill="none" />
         );
     }
@@ -45,13 +45,13 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
                     id={`path1-${id}`}
                     key={`path1-${id}`}
                     d={d1} strokeWidth={isABNorm ? NORM_STROKE_WIDHT : STANDARD_STROKE_WIDHT}
-                    stroke={isTerm1 ? "black" : "red"}
+                    stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
                     fill="none" />
                 <path
                     id={`path2-${id}`}
                     key={`path2-${id}`}
                     d={d2} strokeWidth={isBCNorm ? NORM_STROKE_WIDHT : STANDARD_STROKE_WIDHT}
-                    stroke={isTerm1 ? "black" : "red"}
+                    stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
                     fill="none" />
             </>
         )
@@ -68,7 +68,7 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
                 id={`path-${id}`}
                 key={`path-${id}`}
                 d={d} strokeWidth={STANDARD_STROKE_WIDHT}
-                stroke={isTerm1 ? "black" : "red"}
+                stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
                 strokeDasharray={"5,5"}
                 fill="none" />
         );

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import AbstractDrawId from "../draw/AbstractDrawId";
-import { FONT_SIZE } from "../draw/config";
+import { FONT_SIZE, ID_COLOR_1, ID_COLOR_2 } from "../draw/config";
 
 class DrawId extends AbstractDrawId<ReactNode> {
     public render(): ReactNode {
@@ -8,7 +8,7 @@ class DrawId extends AbstractDrawId<ReactNode> {
 
         return <text
             x={x + 0.5 * width} y={y + 0.5 * height}
-            fill={isTerm1 ? "blue" : "orange"}
+            fill={isTerm1 ? ID_COLOR_1 : ID_COLOR_2}
             style={{ backgroundColor: "yellow", textDecoration: "underline", fontWeight: "bold" }}
             fontSize={`${FONT_SIZE * 0.8}px`}>
             {`${id}`}

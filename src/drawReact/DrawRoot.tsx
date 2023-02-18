@@ -6,6 +6,7 @@ import AbstractDrawRoot from "../draw/AbstractDrawRoot";
 import DrawId from "./DrawId";
 import DrawValue from "./DrawValue";
 import DrawZeros from "./DrawZeros";
+import { RESULT_COLOR } from "../draw/config";
 
 class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
     protected _empty(): ReactNode { return <></> }
@@ -21,7 +22,7 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
 
         return <svg {...{ style: this.style }}>
             <rect
-                fill='#88888844'
+                fill={RESULT_COLOR}
                 {...{
                     x: this.gExpression.x,
                     y: this.gExpression.y,
