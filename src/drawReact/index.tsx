@@ -1,3 +1,4 @@
 import DrawRoot from "./DrawRoot";
+import DrawMValue from "./DrawMValue";
 
-export { DrawRoot }
+export { DrawRoot, DrawMValue }

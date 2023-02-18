@@ -75,13 +75,8 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
     }
 
     protected _renderMExpression(mExpression?: MExpression): ReactNode {
-        const style = {
-            fontFamily: "sans-serif",
-            fontWeight: "bold",
-        }
         return (
-            ///@ts-ignore        
-            <math {...style}>{DrawMValue(mExpression)}</math>
+            <DrawMValue mExpression={mExpression} />
         );
     };
 

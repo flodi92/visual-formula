@@ -1,12 +1,10 @@
-import { ReactNode } from "react";
 import { MDifference, MEquation, MExpression, MProduct, MQuotient, MSum, MValue } from "../expression/mExpression";
 
-const DrawMValue = (mExpression?: MExpression): ReactNode => {
+const DrawMExpression = ({ mExpression }: { mExpression?: MExpression }): JSX.Element => {
     if (!mExpression) return <></>
 
-    let buffer;
     if (mExpression instanceof MValue) {
-        buffer = (
+        return (
             mExpression.isConstant ?
                 // @ts-ignore    
                 <mi>{(mExpression.mValue)}</mi>
@@ -14,61 +12,76 @@ const DrawMValue = (mExpression?: MExpression): ReactNode => {
                 : <mn>{(mExpression.mValue)}</mn>
         );
     } else if (mExpression instanceof MSum) {
-        buffer = (
+        return <>{(
             mExpression?.mSummands?.map((mSummand, idx, { length }) => (
                 <>
-                    {DrawMValue(mSummand)}
+                    <DrawMExpression mExpression={mSummand} />
                     {/* @ts-ignore */}
                     {idx < length - 1 && <mo>+</mo>}
                 </>))
-        );
+        )}</>;
     } else if (mExpression instanceof MDifference) {
-        buffer = (
+        return (
             <>
-                {DrawMValue(mExpression.mMinuend)}
+                <DrawMExpression mExpression={mExpression.mMinuend} />
                 {/* @ts-ignore */}
                 <mo>&minus;</mo>
-                {DrawMValue(mExpression.mSubtrahend)}
+                <DrawMExpression mExpression={mExpression.mSubtrahend} />
             </>
         );
     } else if (mExpression instanceof MProduct) {
-        buffer = mExpression?.mFactors?.map((mFactor, idx, { length }) => {
+        return <> {mExpression?.mFactors?.map((mFactor, idx, { length }) => {
             const isBracket: boolean = !(mFactor instanceof MValue);
             return (
                 <>
                     {/* @ts-ignore */}
                     {isBracket && <mo>(</mo>}
-                    {DrawMValue(mFactor)}
+                    <DrawMExpression mExpression={mFactor} />
                     {/* @ts-ignore */}
                     {isBracket && <mo>)</mo>}
                     {/* @ts-ignore */}
                     {idx < length - 1 && <mo>&times;</mo>}
                 </>
             );
-        });
+        })}</>;
     } else if (mExpression instanceof MQuotient) {
         {/* TODO brackets */ }
-        buffer = (
+        return (
             // @ts-ignore
             <mfrac>
                 {/* @ts-ignore */}
-                <mrow> {DrawMValue(mExpression.mDivident)} </mrow>
+                <mrow> <DrawMExpression mExpression={mExpression.mDivident} /> </mrow>
                 {/* @ts-ignore */}
-                <mrow> {DrawMValue(mExpression.mDivisor)} </mrow>
+                <mrow> <DrawMExpression mExpression={mExpression.mDivisor} /> </mrow>
                 {/* @ts-ignore */}
             </mfrac>
         );
     } else if (mExpression instanceof MEquation) {
-        buffer = (
+        return (
             <>
-                {DrawMValue(mExpression.mTerm1)}
+                <DrawMExpression mExpression={mExpression.mTerm1} />
                 {/* @ts-ignore */}
                 <mo>=</mo>
-                {DrawMValue(mExpression.mTerm2)}
+                <DrawMExpression mExpression={mExpression.mTerm2} />
             </>
         )
     }
-    return buffer;
+    return <></>;
+}
+
+const DrawMValue = ({ mExpression }: { mExpression?: MExpression }): JSX.Element => {
+
+    const style = {
+        fontFamily: "sans-serif",
+        fontWeight: "bold",
+    }
+
+    return (
+        // @ts-ignore    
+        <math {...style}>
+            <DrawMExpression {...{ mExpression }} />
+            {/* @ts-ignore     */}
+        </math>)
 }
 
 export default DrawMValue;
