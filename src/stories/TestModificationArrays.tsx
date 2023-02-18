@@ -18,7 +18,7 @@ interface TestModificationArraysProps {
   layerTransformation: { x: number, y: number, scaleX: number, scaleY: number }
   idModificationParameters:
   [
-    ID,
+    ID | [ID, ID],
     'moveSummand' | 'moveSubtrahend' | 'moveFactor' | 'moveDivisor' | 'swapSummands'
     | 'swapFactors1D' | 'swapFactors2D' | 'distribute' | 'reverseDistribute'
     | 'reverse' | 'rotate' | 'substitute' | 'swap1DAnd2D' | 'swapXToY',
@@ -44,7 +44,8 @@ export const TestModificationArrays = ({
 
   gEquation.layerTransformation = layerTransformation;
 
-  const [modifiedID] = idModificationParameters[0];
+  const [_modifiedID] = idModificationParameters[0];
+  const modifiedID = Array.isArray(_modifiedID) ? _modifiedID[0] : _modifiedID;
 
   const positionForTransformation
     = keepPositionForTransformation({ gRoot: gEquation, modifiedID });
@@ -56,38 +57,53 @@ export const TestModificationArrays = ({
   if (steps > idModificationParameters.length) return <h1>Overflow!!</h1>
 
   for (let i = 0; i < steps; i++) {
-    const [id, modification, parameters] = idModificationParameters[i];
+    const [idOrIds, modification, parameters] = idModificationParameters[i];
 
-    switch (modification) {
-      case "moveSummand":
-        moveSummand({ gEquation, id }); break;
-      case "moveSubtrahend":
-        moveSubtrahend({ gEquation, id }); break;
-      case "moveFactor":
-        moveFactor({ gEquation, id }); break;
-      case "moveDivisor":
-        moveDivisor({ gEquation, id }); break;
-      case "swapSummands":
-        swapSummands(gEquation, { id, ...parameters }); break;
-      case "swapFactors1D":
-        swapFactors1D(gEquation, { id, ...parameters }); break;
-      case "swapFactors2D":
-        swapFactors2D(gEquation, { id, ...parameters }); break;
-      case "distribute":
-        distribute({ id, expression: gEquation, ...parameters }); break;
-      case "reverseDistribute":
-        reverseDistribute({ id, expression: gEquation, ...parameters }); break;
-      case "reverse":
-        reverse(gEquation, { id, ...parameters }); break;
-      case "rotate":
-        rotate({ id, expression: gEquation, ...parameters }); break;
-      case "substitute":
-        substitute(gEquation, { id }); break;
-      case "swap1DAnd2D":
-        swap1DAnd2D(gEquation, { id }); break;
-      case "swapXToY":
-        swapXToY(gEquation, { id }); break;
+    const [id, ids] = Array.isArray(idOrIds) ? [undefined, idOrIds] : [idOrIds, undefined]
+    if (id !== undefined) {
+      switch (modification) {
+        case "moveSummand":
+          moveSummand({ gEquation, id }); break;
+        case "moveSubtrahend":
+          moveSubtrahend({ gEquation, id }); break;
+        case "moveFactor":
+          moveFactor({ gEquation, id }); break;
+        case "moveDivisor":
+          moveDivisor({ gEquation, id }); break;
+        case "swapSummands":
+          swapSummands(gEquation, { id, ...parameters }); break;
+        case "swapFactors1D":
+          swapFactors1D(gEquation, { id, ...parameters }); break;
+        case "swapFactors2D":
+          swapFactors2D(gEquation, { id, ...parameters }); break;
+        case "distribute":
+          distribute({ id, expression: gEquation, ...parameters }); break;
+        case "reverseDistribute":
+          reverseDistribute({ id, expression: gEquation, ...parameters }); break;
+        case "reverse":
+          reverse(gEquation, { id, ...parameters }); break;
+        case "rotate":
+          rotate({ id, expression: gEquation, ...parameters }); break;
+        case "substitute":
+          substitute(gEquation, { id }); break;
+        case "swap1DAnd2D":
+          swap1DAnd2D(gEquation, { id }); break;
+        case "swapXToY":
+          swapXToY(gEquation, { id }); break;
+      }
+    } else if (ids !== undefined) {
+      switch (modification) {
+        case "swap1DAnd2D":
+          swap1DAnd2D(gEquation, { ids });
+          autoConfigSize(gEquation);
+          break;
+        case "substitute":
+          substitute(gEquation, { ids });
+          break;
+      }
     }
+
+
     setUnsetIDs(gEquation);
   }
 
@@ -99,7 +115,7 @@ export const TestModificationArrays = ({
   const [id, modification, parameters] = steps > 0 ? idModificationParameters[steps - 1] : [];
   return <>
     <div style={{ fontStyle: "italic", fontSize: "13px" }}>{JSON.stringify({ id, modification, parameters })}</div>
-    <DrawRoot root={gEquation} style={{ width: '100%', height: '200px' }} />
+    <DrawRoot root={gEquation} style={{ width: '100%', height: '300px' }} />
     <div style={{ whiteSpace: "pre", fontSize: "10px" }}>{`${JSON.stringify(gEquation.json, null, 2)}`}</div>
   </>
 };
