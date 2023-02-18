@@ -36,21 +36,35 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
         isABNorm: boolean;
         isBCNorm: boolean;
     }): ReactNode {
-        const d1 = `M${a[0]} ${a[1]} L${b[0]} ${b[1]}`;
-        const d2 = `M${b[0]} ${b[1]} L${c[0]} ${c[1]}`;
+        const abStroke = isABNorm ? NORM_STROKE_WIDHT : STANDARD_STROKE_WIDHT;
+        const bcStroke = isBCNorm ? NORM_STROKE_WIDHT : STANDARD_STROKE_WIDHT;
+
+        const adjustCorner = (j: [number, number], k: [number, number], delta: number) => {
+
+            const [[jx, kx], [jy, ky]] = [[j[0], k[0]], [j[1], k[1]]]
+                .map(([j, k]) => j === k ? [j, k] : [j, k + Math.sign(k - j) * delta]);
+
+            return [jx, jy, kx, ky];
+        }
+
+        const [ax, ay, bx1, by1] = adjustCorner(a, b, bcStroke * 0.5);
+        const [cx, cy, bx2, by2] = adjustCorner(c, b, -abStroke * 0.5);
+
+        const d1 = `M${ax} ${ay} L${bx1} ${by1}`;
+        const d2 = `M${cx} ${cy} L${bx2} ${by2}`;
 
         return (
             <>
                 <path
                     id={`path1-${id}`}
                     key={`path1-${id}`}
-                    d={d1} strokeWidth={isABNorm ? NORM_STROKE_WIDHT : STANDARD_STROKE_WIDHT}
+                    d={d1} strokeWidth={abStroke}
                     stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
                     fill="none" />
                 <path
                     id={`path2-${id}`}
                     key={`path2-${id}`}
-                    d={d2} strokeWidth={isBCNorm ? NORM_STROKE_WIDHT : STANDARD_STROKE_WIDHT}
+                    d={d2} strokeWidth={bcStroke}
                     stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
                     fill="none" />
             </>
