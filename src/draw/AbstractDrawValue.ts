@@ -8,7 +8,7 @@ import { ID } from '../types';
 import { getCommonEdgeValues } from '../utils/gExpression';
 
 import AbstractDraw from './AbstractDraw';
-import { EDGE_END_GAP, GVALUE_RADIUS, STANDARD_STROKE_WIDHT } from "./config";
+import { EDGE_END_GAP, GVALUE_RADIUS, NORM_STROKE_WIDHT, STANDARD_STROKE_WIDHT } from "./config";
 
 abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
     protected abstract _renderRoundGValue(vals:
@@ -20,11 +20,10 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
         }): T;
     protected abstract _renderNormedGValue(vals: {
         id: ID,
-        coords: { a: [number, number], b: [number, number], c: [number, number] },
-        strokeWidth: number,
+        coords: { a: [number, number], ab: [number, number], bc: [number, number], c: [number, number], },
+        abStrokeWidth: number,
+        bcStrokeWidth: number,
         isTerm1: boolean | undefined,
-        isABNorm: boolean,
-        isBCNorm: boolean,
     }): T;
 
     protected renderGValue(gValue: GValue): T {
@@ -83,16 +82,28 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
                 coords: { a, ba, b, bc, c }
             })
         } else {
-            const isABNorm = (a[0] === b[0] && yNorm) || (a[1] === b[1] && xNorm)
-            const isBCNorm = (b[0] === c[0] && yNorm) || (b[1] === c[1] && xNorm)
+            const isABNorm = (a[0] === b[0] && yNorm) || (a[1] === b[1] && xNorm);
+            const isBCNorm = (b[0] === c[0] && yNorm) || (b[1] === c[1] && xNorm);
+
+            const abStrokeWidth = isABNorm ? NORM_STROKE_WIDHT : STANDARD_STROKE_WIDHT;
+            const bcStrokeWidth = isBCNorm ? NORM_STROKE_WIDHT : STANDARD_STROKE_WIDHT;
+
+            const adjustCorner = (j: [number, number], k: [number, number], delta: number) => {
+
+               return [[j[0], k[0]], [j[1], k[1]]]
+                    .map(([j, k]) => j === k ? k : k + Math.sign(k - j) * delta) as [number, number];
+
+            }
+
+            const ab = adjustCorner(a, b, bcStrokeWidth * 0.5);
+            const bc = adjustCorner(c, b, -abStrokeWidth * 0.5);
 
             return this._renderNormedGValue({
                 id: this.gExpression.id,
-                strokeWidth: STANDARD_STROKE_WIDHT,
+                abStrokeWidth,
+                bcStrokeWidth,
                 isTerm1: gValue.isTerm1,
-                coords: { a, b, c },
-                isABNorm,
-                isBCNorm,
+                coords: { a, ab, bc, c },
             });
         }
     }

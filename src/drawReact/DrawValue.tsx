@@ -28,43 +28,28 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
                 fill="none" />
         );
     }
-    protected _renderNormedGValue({ id, coords: { a, b, c }, strokeWidth, isTerm1, isABNorm, isBCNorm }: {
+    protected _renderNormedGValue({ id, coords: { a, ab,bc, c }, isTerm1, abStrokeWidth  ,bcStrokeWidth }: {
         id?: number;
-        coords: { a: [number, number]; b: [number, number]; c: [number, number]; };
-        strokeWidth: number;
+        coords: { a: [number, number], ab: [number, number], bc: [number, number], c: [number, number], },
+        abStrokeWidth: number;
+        bcStrokeWidth: number;
         isTerm1: boolean | undefined;
-        isABNorm: boolean;
-        isBCNorm: boolean;
     }): ReactNode {
-        const abStroke = isABNorm ? NORM_STROKE_WIDHT : STANDARD_STROKE_WIDHT;
-        const bcStroke = isBCNorm ? NORM_STROKE_WIDHT : STANDARD_STROKE_WIDHT;
-
-        const adjustCorner = (j: [number, number], k: [number, number], delta: number) => {
-
-            const [[jx, kx], [jy, ky]] = [[j[0], k[0]], [j[1], k[1]]]
-                .map(([j, k]) => j === k ? [j, k] : [j, k + Math.sign(k - j) * delta]);
-
-            return [jx, jy, kx, ky];
-        }
-
-        const [ax, ay, bx1, by1] = adjustCorner(a, b, bcStroke * 0.5);
-        const [cx, cy, bx2, by2] = adjustCorner(c, b, -abStroke * 0.5);
-
-        const d1 = `M${ax} ${ay} L${bx1} ${by1}`;
-        const d2 = `M${cx} ${cy} L${bx2} ${by2}`;
-
+        const d1 = `M${a[0]} ${a[1]} L${ab[0]} ${ab[1]}`;
+        const d2 = `M${bc[0]} ${bc[1]} L${c[0]} ${c[1]}`;
+bc
         return (
             <>
                 <path
                     id={`path1-${id}`}
                     key={`path1-${id}`}
-                    d={d1} strokeWidth={abStroke}
+                    d={d1} strokeWidth={abStrokeWidth}
                     stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
                     fill="none" />
                 <path
                     id={`path2-${id}`}
                     key={`path2-${id}`}
-                    d={d2} strokeWidth={bcStroke}
+                    d={d2} strokeWidth={bcStrokeWidth}
                     stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
                     fill="none" />
             </>
