@@ -1,12 +1,12 @@
 import { ReactNode, useState } from "react";
 import { GAbstractRoot, GExpression } from "../expression/gExpression";
-import { expressionToArray } from "../utils/expression";
+import { expressionToArray, find } from "../utils/expression";
 import { getGAbstractValues } from "../utils/gExpression";
 import AbstractDrawRoot from "../draw/AbstractDrawRoot";
 import DrawId from "./DrawId";
 import DrawValue from "./DrawValue";
 import DrawZeros from "./DrawZeros";
-import { RESULT_COLOR } from "../draw/config";
+import { RESULT_COLOR, SELECTED_COLOR } from "../draw/config";
 import { ID } from "../types";
 import { InteractionProps } from "../draw/AbstractDraw";
 
@@ -22,16 +22,32 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
             .map(expression => expression instanceof GExpression ? new DrawId(expression) : null)
             .filter(val => val !== null)) as DrawId[] : [];
 
-        return <svg {...{ style: this.style }}>
+        const resultRect = <rect
+            fill={RESULT_COLOR}
+            {...{
+                x: this.gExpression.x,
+                y: this.gExpression.y,
+                width: this.gExpression.width,
+                height: this.gExpression.height
+            }}
+        />;
+
+        const selectedGExpression = props.selectedID !== undefined ? find(props.selectedID, this.gExpression) : undefined;
+        const selectedRect = (selectedGExpression instanceof GExpression) ?
             <rect
-                fill={RESULT_COLOR}
+                fill={SELECTED_COLOR}
                 {...{
-                    x: this.gExpression.x,
-                    y: this.gExpression.y,
-                    width: this.gExpression.width,
-                    height: this.gExpression.height
+                    x: selectedGExpression.x,
+                    y: selectedGExpression.y,
+                    width: selectedGExpression.width,
+                    height: selectedGExpression.height
                 }}
             />
+            : <></>;
+
+        return <svg {...{ style: this.style }}>
+            {resultRect}
+            {selectedRect}
             {drawValues.map((drawValue, idx) => <g key={idx}>{drawValue.render(props)}</g>)}
             {drawZero.render()}
             {drawnIds.map((drawnId, idx) => <g key={idx}>{drawnId.render()}</g>)}

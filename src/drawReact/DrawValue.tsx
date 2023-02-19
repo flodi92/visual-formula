@@ -1,11 +1,13 @@
-import { ReactNode, CSSProperties } from "react";
+import { CSSProperties, ReactNode } from "react";
+import { InteractionProps } from "../draw/AbstractDraw";
+import AbstractDrawValue from "../draw/AbstractDrawValue";
+import {
+    CORNER_PADDING, DEFAULT_OPACITY, FONT_SIZE, GHOST_STROKE_WIDTH, G_COLOR_1, G_COLOR_2, HOVERED_OPACITY, HOVERED_SELECTED_OPACITY, ROUND_PADDING, SELECTED_OPACITY
+} from "../draw/config";
 import { GAbstractValue, GSimpleValue, GValue } from "../expression/gExpression";
 import { MExpression } from "../expression/mExpression";
-import AbstractDrawValue from "../draw/AbstractDrawValue";
-import { CORNER_PADDING, FONT_SIZE, G_COLOR_1, G_COLOR_2, NORM_STROKE_WIDHT, ROUND_PADDING, STANDARD_STROKE_WIDHT } from "../draw/config";
-import DrawMValue from "./DrawMValue";
 import { ID } from "../types";
-import { InteractionProps } from "../draw/AbstractDraw";
+import DrawMValue from "./DrawMValue";
 
 class DrawValue extends AbstractDrawValue<ReactNode> {
     protected _renderRoundGValue({ id, coords: { a, ba, b, bc, c }, strokeWidth, isTerm1 }: {
@@ -152,9 +154,10 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
         return {
 
             filter: `opacity(${(
-                id === props.hoveredID && id === props.selectedID ? 0.3 :
-                    id === props.hoveredID ? 0.7 :
-                        id === props.selectedID ? 0.5 : 1
+                id === props.hoveredID && id === props.selectedID ? HOVERED_SELECTED_OPACITY :
+                    id === props.selectedID ? SELECTED_OPACITY :
+                        id === props.hoveredID ? HOVERED_OPACITY
+                            : DEFAULT_OPACITY
             )})`
         }
     }
@@ -179,11 +182,11 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
 const GhostPath = ({ id, d }: { id: ID, d: string }) => (<path
     id={`ghost-${id}`}
     key={`ghost-${id}`}
-    strokeWidth={20}
+    strokeWidth={GHOST_STROKE_WIDTH}
     d={d}
     stroke="black"
     style={{ filter: "opacity(0)" }}
     fill="none"
-/>)/* TODO strokeWidth config */
+/>)
 
 export default DrawValue;
