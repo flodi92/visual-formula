@@ -3,6 +3,8 @@ import { M_COLOR_1, M_COLOR_2 } from "../draw/config";
 import { MDifference, MEquation, MExpression, MProduct, MQuotient, MSum, MValue } from "../expression/mExpression";
 import { handlersOfId, interactionStyle } from "./drawUtils";
 
+import './DrawMValue.css';
+
 const DrawMExpression = ({ mExpression, interactionProps }: ({ mExpression?: MExpression, interactionProps: InteractionProps })): JSX.Element => {
     if (!mExpression) return <></>
 
