@@ -15,7 +15,8 @@ export const M_COLOR_2 = 'red';
 export const ID_COLOR_1 = 'blue';
 export const ID_COLOR_2 = 'orange';
 export const RESULT_COLOR = '#88888844';
-export const SELECTED_COLOR = '#5490de55';
+export const SELECTED_COLOR = '#5490de44';
+export const SELECTED_TEXT_COLOR = '#5490de77';
 
 export const HOVERED_SELECTED_OPACITY = 1;
 export const SELECTED_OPACITY = 0.75;

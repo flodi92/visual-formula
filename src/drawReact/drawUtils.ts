@@ -1,6 +1,6 @@
-import { CSSProperties, MouseEvent, MouseEventHandler } from "react";
+import { CSSProperties, MouseEvent } from "react";
 import { InteractionProps } from "../draw/AbstractDraw";
-import { DEFAULT_OPACITY, HOVERED_OPACITY, HOVERED_SELECTED_OPACITY, SELECTED_OPACITY } from "../draw/config";
+import { DEFAULT_OPACITY, HOVERED_OPACITY, HOVERED_SELECTED_OPACITY, SELECTED_OPACITY, SELECTED_TEXT_COLOR } from "../draw/config";
 import Expression from "../expression/Expression";
 import { ID } from "../types";
 
@@ -39,6 +39,7 @@ export const interactionStyle = (expression: Expression | undefined, props: Inte
                 isSelected ? SELECTED_OPACITY :
                     isHovering ? HOVERED_OPACITY
                         : DEFAULT_OPACITY
-        )})`
+        )})`,
+        backgroundColor: isSelected ? SELECTED_TEXT_COLOR : undefined,
     }
 }
