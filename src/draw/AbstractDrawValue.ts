@@ -5,8 +5,8 @@ import GValue from '../expression/gExpression/GValue';
 import { zip } from 'lodash';
 import { MExpression } from '../expression/mExpression';
 import { ID } from '../types';
-import { getCommonEdgeValues } from '../utils/gExpression';
 
+import { getGappedNeighbours } from "../utils/gExpression/getCommonEdgeValues";
 import AbstractDraw, { InteractionProps } from './AbstractDraw';
 import { EDGE_END_GAP, GVALUE_RADIUS, NORM_STROKE_WIDHT, STANDARD_STROKE_WIDHT } from "./config";
 
@@ -34,10 +34,9 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
         const xNorm = gValue.isNormX;
         const yNorm = gValue.isNormY;
 
-        const gapTop = !!getCommonEdgeValues(gValue, "top")?.length ? EDGE_END_GAP : 0; // TODO other method
-        const gapBottom = !!getCommonEdgeValues(gValue, "bottom")?.length ? EDGE_END_GAP : 0;
-        const gapLeft = !!getCommonEdgeValues(gValue, "left")?.length ? EDGE_END_GAP : 0;
-        const gapRight = !!getCommonEdgeValues(gValue, "right")?.length ? EDGE_END_GAP : 0;
+        const {
+            gapTop, gapBottom, gapLeft, gapRight,
+        } = this.computeGaps(gValue)
 
         const [a, b, c] =
             (
@@ -120,11 +119,15 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
         const { x, y, width, height } = this.gExpression;
         const edge = gValue.edge;
 
+        const {
+            gapTop, gapBottom, gapLeft, gapRight,
+        } = this.computeGaps(gValue)
+
         const [x1, y1, x2, y2] =
-            edge === "top" ? [x, y, x + width, y]
-                : edge === "left" ? [x, y, x, y + height]
-                    : edge === "bottom" ? [x, y + height, x + width, y + height]
-                        : edge === "right" ? [x + width, y, x + width, y + height]
+            edge === "top" ? [x + gapLeft, y, x + width - gapRight, y]
+                : edge === "left" ? [x, y + gapTop, x, y + height- gapBottom]
+                    : edge === "bottom" ? [x + gapLeft, y + height, x + width - gapRight, y + height ]
+                        : edge === "right" ? [x + width, y + gapTop, x + width, y + height - gapBottom]
                             : []
 
         if (!x1 || !y1 || !x2 || !y2 || !this.gExpression.id) return this._empty();
@@ -134,7 +137,21 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
                 coords: { x1, y1, x2, y2 },
                 strokeWidth: STANDARD_STROKE_WIDHT,
                 isTerm1: gValue.isTerm1,
-            }, props );
+            }, props);
+    }
+
+    private computeGaps(gValue: GAbstractValue) {
+        const gapTop = !!getGappedNeighbours(gValue, "top")?.length ? EDGE_END_GAP : 0;
+        const gapBottom = !!getGappedNeighbours(gValue, "bottom")?.length ? EDGE_END_GAP : 0;
+        const gapLeft = !!getGappedNeighbours(gValue, "left")?.length ? EDGE_END_GAP : 0;
+        const gapRight = !!getGappedNeighbours(gValue, "right")?.length ? EDGE_END_GAP : 0;
+
+        return {
+            gapTop,
+            gapBottom,
+            gapLeft,
+            gapRight,
+        }
     }
 
     protected abstract _renderMExpression(mExpression: MExpression | undefined, props: InteractionProps): T;
