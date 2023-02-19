@@ -116,7 +116,7 @@ export const TestModificationArrays = ({
   return <>
     <div style={{ fontStyle: "italic", fontSize: "13px" }}>{JSON.stringify({ id, modification, parameters })}</div>
     <DrawRoot root={gEquation} style={{ width: '600px', height: '200px' }} />
-    <DrawMValue mExpression={getMExpressionFromExpression(gEquation)}></DrawMValue>
+    <DrawMValue mExpression={getMExpressionFromExpression(gEquation)} />
     <div style={{ whiteSpace: "pre", fontSize: "10px" }}>{`${JSON.stringify(gEquation.json, null, 2)}`}</div>
   </>
 };

@@ -137,8 +137,8 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
             }, props );
     }
 
-    protected abstract _renderMExpression(mExpression?: MExpression): T;
-    protected abstract _renderMValueInGValue(gValue: GAbstractValue): T;
+    protected abstract _renderMExpression(mExpression: MExpression | undefined, props: InteractionProps): T;
+    protected abstract _renderMValueInGValue(gValue: GAbstractValue, props: InteractionProps): T;
 }
 
 export default AbstractDrawValue;

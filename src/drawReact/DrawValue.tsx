@@ -1,14 +1,14 @@
-import { CSSProperties, ReactNode, MouseEvent } from "react";
+import { ReactNode } from "react";
 import { InteractionProps } from "../draw/AbstractDraw";
 import AbstractDrawValue from "../draw/AbstractDrawValue";
 import {
-    CORNER_PADDING, DEFAULT_OPACITY, FONT_SIZE, GHOST_STROKE_WIDTH, G_COLOR_1, G_COLOR_2, HOVERED_OPACITY, HOVERED_SELECTED_OPACITY, ROUND_PADDING, SELECTED_OPACITY
+    CORNER_PADDING, FONT_SIZE, GHOST_STROKE_WIDTH, G_COLOR_1, G_COLOR_2, ROUND_PADDING
 } from "../draw/config";
-import Expression from "../expression/Expression";
 import { GAbstractValue, GSimpleValue, GValue } from "../expression/gExpression";
 import { MExpression } from "../expression/mExpression";
 import { ID } from "../types";
 import DrawMValue from "./DrawMValue";
+import { handlersOfId, interactionStyle } from "./drawUtils";
 
 class DrawValue extends AbstractDrawValue<ReactNode> {
     protected _renderRoundGValue({ id, coords: { a, ba, b, bc, c }, strokeWidth, isTerm1 }: {
@@ -21,11 +21,11 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
 
         const d = `M${a[0]},${a[1]} L${ba[0]},${ba[1]} Q${b[0]},${b[1]},${bc[0]},${bc[1]} L${c[0]},${c[1]}`;
         return (
-            <g {...this.handlersOfId(id, props)}>
+            <g {...(handlersOfId(id, props))}>
                 <path
                     id={`path-${id}`}
                     key={`path-${id}`}
-                    style={this.style(id, props)}
+                    style={interactionStyle(this.gExpression, props)}
                     d={d} strokeWidth={strokeWidth}
                     stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
                     fill="none" />
@@ -45,18 +45,18 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
         const d1 = `M${a[0]} ${a[1]} L${ab[0]} ${ab[1]}`;
         const d2 = `M${bc[0]} ${bc[1]} L${c[0]} ${c[1]}`;
         return (
-            <g {...this.handlersOfId(id, props)}>
+            <g {...handlersOfId(id, props)}>
                 <path
                     id={`path1-${id}`}
                     key={`path1-${id}`}
-                    style={this.style(id, props)}
+                    style={interactionStyle(this.gExpression, props)}
                     d={d1} strokeWidth={abStrokeWidth}
                     stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
                     fill="none" />
                 <path
                     id={`path2-${id}`}
                     key={`path2-${id}`}
-                    style={this.style(id, props)}
+                    style={interactionStyle(this.gExpression, props)}
                     d={d2} strokeWidth={bcStrokeWidth}
                     stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
                     fill="none" />
@@ -74,11 +74,11 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
 
         const d = `M${x1} ${y1} L ${x2} ${y2}`;
         return (
-            <g {...this.handlersOfId(id, props)}>
+            <g {...handlersOfId(id, props)}>
                 <path
                     id={`path-${id}`}
                     key={`path-${id}`}
-                    style={this.style(id, props)}
+                    style={interactionStyle(this.gExpression, props)}
                     d={d} strokeWidth={strokeWidth}
                     stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
                     strokeDasharray={"5,5"}
@@ -88,13 +88,13 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
         );
     }
 
-    protected _renderMExpression(mExpression?: MExpression): ReactNode {
+    protected _renderMExpression(mExpression: MExpression | undefined, props: InteractionProps): ReactNode {
         return (
-            <DrawMValue mExpression={mExpression} />
+            <DrawMValue mExpression={mExpression} interactionProps={props} />
         );
     };
 
-    protected _renderMValueInGValue(gValue: GAbstractValue) {
+    protected _renderMValueInGValue(gValue: GAbstractValue, props: InteractionProps) {
 
         const positioning = gValue instanceof GSimpleValue && gValue.edge ? ({
             left: { top: "50%", left: 0 },
@@ -130,9 +130,9 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
                     }}
                 >
                     {gValue instanceof GSimpleValue ?
-                        this._renderMExpression(gValue.mSimpleValue) :
+                        this._renderMExpression(gValue.mSimpleValue, props) :
                         gValue instanceof GValue ?
-                            this._renderMExpression(gValue.mValue)
+                            this._renderMExpression(gValue.mValue, props)
                             : <></>}
                 </div>
             </div>
@@ -143,53 +143,17 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
         return <></>;
     }
 
-    private handlersOfId(id: ID, props: InteractionProps) {
-        return ({
-            onMouseEnter: () => props.onEnterID(id),
-            onMouseLeave: () => props.onLeaveID(id),
-            onClick: (e: MouseEvent) => {
-                e.stopPropagation();
-                props.onClickID(id);
-            },
-        })
-    }
-
-    private style(id: ID, props: InteractionProps): CSSProperties {
-        const isSelected = (() => {
-            if (id === undefined) return false;
-
-            let buffer: Expression | undefined = this.gExpression;
-            while (!!buffer) {
-                if ( buffer.id === props.selectedID) return true;
-                buffer = buffer.parent;
-            }
-
-            return false;
-        })()
-
-        const isHovering = id === props.hoveredID;
-
-        return {
-            filter: `opacity(${(
-                isHovering && isSelected ? HOVERED_SELECTED_OPACITY :
-                    isSelected ? SELECTED_OPACITY :
-                        isHovering ? HOVERED_OPACITY
-                            : DEFAULT_OPACITY
-            )})`
-        }
-    }
-
     public render(props: InteractionProps): ReactNode {
         return (this.gExpression instanceof GValue) ?
             <>
                 {this.renderGValue(this.gExpression, props)}
-                {this._renderMValueInGValue(this.gExpression)}
+                {this._renderMValueInGValue(this.gExpression, props)}
             </>
             :
             (this.gExpression instanceof GSimpleValue) ?
                 <>
                     {this.renderGSimpleValue(this.gExpression, props)}
-                    {this._renderMValueInGValue(this.gExpression)}
+                    {this._renderMValueInGValue(this.gExpression, props)}
                 </> :
                 <></>
     }

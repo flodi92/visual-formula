@@ -1,35 +1,44 @@
+import { InteractionProps } from "../draw/AbstractDraw";
 import { M_COLOR_1, M_COLOR_2 } from "../draw/config";
 import { MDifference, MEquation, MExpression, MProduct, MQuotient, MSum, MValue } from "../expression/mExpression";
+import { handlersOfId, interactionStyle } from "./drawUtils";
 
-const DrawMExpression = ({ mExpression }: { mExpression?: MExpression }): JSX.Element => {
+const DrawMExpression = ({ mExpression, interactionProps }: ({ mExpression?: MExpression, interactionProps: InteractionProps })): JSX.Element => {
     if (!mExpression) return <></>
 
-    const style = { color: mExpression.isTerm1 ? M_COLOR_1 : M_COLOR_2 };
+
+    const props = {
+        style: {
+            color: mExpression.isTerm1 ? M_COLOR_1 : M_COLOR_2,
+            ...interactionStyle(mExpression, interactionProps),
+        },
+        ...handlersOfId(mExpression?.id, interactionProps)
+    }
 
     if (mExpression instanceof MValue) {
         return (
             mExpression.isConstant ?
                 // @ts-ignore    
-                <mi{...{ style }}>{(mExpression.mValue)}</mi>
+                <mi{...props}>{(mExpression.mValue)}</mi>
                 // @ts-ignore    
-                : <mn{...{ style }}>{(mExpression.mValue)}</mn>
+                : <mn{...props}>{(mExpression.mValue)}</mn>
         );
     } else if (mExpression instanceof MSum) {
         return <>{(
             mExpression?.mSummands?.map((mSummand, idx, { length }) => (
                 <>
-                    <DrawMExpression mExpression={mSummand} {...{ style }} />
+                    <DrawMExpression mExpression={mSummand} {...{ interactionProps }} />
                     {/* @ts-ignore */}
-                    {idx < length - 1 && <mo {...{ style }}>+</mo>}
+                    {idx < length - 1 && <mo {...props}>+</mo>}
                 </>))
         )}</>;
     } else if (mExpression instanceof MDifference) {
         return (
             <>
-                <DrawMExpression mExpression={mExpression.mMinuend} {...{ style }} />
+                <DrawMExpression mExpression={mExpression.mMinuend} {...{ interactionProps }} />
                 {/* @ts-ignore */}
-                <mo {...{ style }}>&minus;</mo>
-                <DrawMExpression mExpression={mExpression.mSubtrahend} {...{ style }} />
+                <mo {...props}>&minus;</mo>
+                <DrawMExpression mExpression={mExpression.mSubtrahend} {...{ interactionProps }} />
             </>
         );
     } else if (mExpression instanceof MProduct) {
@@ -38,12 +47,12 @@ const DrawMExpression = ({ mExpression }: { mExpression?: MExpression }): JSX.El
             return (
                 <>
                     {/* @ts-ignore */}
-                    {isBracket && <mo {...{ style }}>(</mo>}
-                    <DrawMExpression mExpression={mFactor} {...{ style }} />
+                    {isBracket && <mo {...props}>(</mo>}
+                    <DrawMExpression mExpression={mFactor} {...{ interactionProps }} />
                     {/* @ts-ignore */}
-                    {isBracket && <mo {...{ style }}>)</mo>}
+                    {isBracket && <mo {...props}>)</mo>}
                     {/* @ts-ignore */}
-                    {idx < length - 1 && <mo {...{ style }}>&times;</mo>}
+                    {idx < length - 1 && <mo {...props}>&times;</mo>}
                 </>
             );
         })}</>;
@@ -51,7 +60,7 @@ const DrawMExpression = ({ mExpression }: { mExpression?: MExpression }): JSX.El
         {/* TODO brackets */ }
         return (
             // @ts-ignore
-            <mfrac {...{ style }}>
+            <mfrac {...props}>
                 {/* @ts-ignore */}
                 <mrow> <DrawMExpression mExpression={mExpression.mDivident} /> </mrow>
                 {/* @ts-ignore */}
@@ -62,17 +71,18 @@ const DrawMExpression = ({ mExpression }: { mExpression?: MExpression }): JSX.El
     } else if (mExpression instanceof MEquation) {
         return (
             <>
-                <DrawMExpression mExpression={mExpression.mTerm1} />
+                <DrawMExpression mExpression={mExpression.mTerm1} {...{ interactionProps }} />
                 {/* @ts-ignore */}
                 <mo>=</mo>
-                <DrawMExpression mExpression={mExpression.mTerm2} />
+                <DrawMExpression mExpression={mExpression.mTerm2} {...{ interactionProps }} />
             </>
         )
     }
     return <></>;
 }
 
-const DrawMValue = ({ mExpression }: { mExpression?: MExpression }): JSX.Element => {
+const DrawMValue = ({ mExpression, interactionProps }
+    : { mExpression?: MExpression, interactionProps?: InteractionProps }): JSX.Element => {
 
     const style = {
         fontFamily: "sans-serif",
@@ -82,7 +92,13 @@ const DrawMValue = ({ mExpression }: { mExpression?: MExpression }): JSX.Element
     return (
         // @ts-ignore    
         <math {...style}>
-            <DrawMExpression {...{ mExpression }} />
+            <DrawMExpression {...{
+                mExpression, interactionProps: interactionProps || {
+                    onClickID() { },
+                    onEnterID() { },
+                    onLeaveID() { },
+                }
+            }} />
             {/* @ts-ignore     */}
         </math>)
 }
