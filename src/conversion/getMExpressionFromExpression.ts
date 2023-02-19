@@ -52,13 +52,13 @@ const getMExpressionFromExpression = (expression?: Expression): MExpression | un
     }
     else if (expression instanceof GQuotient1D) {
         buffer = new MQuotient();
-        buffer.mDivisor = getMExpressionFromExpression(expression.gSimpleDivisor);
         buffer.mDivident = getMExpressionFromExpression(expression.gComplexDivident);
+        buffer.mDivisor = getMExpressionFromExpression(expression.gSimpleDivisor);
     }
     else if (expression instanceof GQuotient2D) {
         buffer = new MQuotient();
-        buffer.mDivisor = getMExpressionFromExpression(expression.gDivident);
-        buffer.mDivident = getMExpressionFromExpression(expression.gDivisor);
+        buffer.mDivident = getMExpressionFromExpression(expression.gDivident);
+        buffer.mDivisor = getMExpressionFromExpression(expression.gDivisor);
     }
     else if (expression instanceof GValue) {
         buffer = getMExpressionFromExpression(expression.mValue);
