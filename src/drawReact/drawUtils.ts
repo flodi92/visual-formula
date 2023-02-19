@@ -31,7 +31,7 @@ export const interactionStyle = (expression: Expression | undefined, props: Inte
         return false;
     })()
 
-    const isHovering = expression?.id === props?.hoveredID && expression?.id !== undefined;
+    const isHovering = expression?.id === props?.hoveredID;
 
     return {
         filter: `opacity(${(
