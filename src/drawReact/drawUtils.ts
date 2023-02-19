@@ -4,13 +4,13 @@ import { DEFAULT_OPACITY, HOVERED_OPACITY, HOVERED_SELECTED_OPACITY, SELECTED_OP
 import Expression from "../expression/Expression";
 import { ID } from "../types";
 
-export const handlersOfId = (id: ID | undefined, props: InteractionProps) => {
+export const handlersOfId = (id: ID | undefined, props: InteractionProps | undefined) => {
     return id !== undefined ? ({
-        onMouseEnter: () => props.onEnterID(id),
-        onMouseLeave: () => props.onLeaveID(id),
+        onMouseEnter: () => props?.onEnterID(id),
+        onMouseLeave: () => props?.onLeaveID(id),
         onClick: (e: MouseEvent<SVGGElement>) => {
             e.stopPropagation();
-            props.onClickID(id);
+            props?.onClickID(id);
         },
     }) : ({
         onMouseEnter: () => { },
@@ -19,19 +19,19 @@ export const handlersOfId = (id: ID | undefined, props: InteractionProps) => {
     })
 }
 
-export const interactionStyle = (expression: Expression | undefined, props: InteractionProps): CSSProperties => {
+export const interactionStyle = (expression: Expression | undefined, props: InteractionProps | undefined): CSSProperties => {
     const isSelected = (() => {
         if (expression?.id === undefined) return false;
 
         while (!!expression) {
-            if (expression.id === props.selectedID) return true;
+            if (expression.id === props?.selectedID) return true;
             expression = expression.parent;
         }
 
         return false;
     })()
 
-    const isHovering = expression?.id === props.hoveredID;
+    const isHovering = expression?.id === props?.hoveredID && expression?.id !== undefined;
 
     return {
         filter: `opacity(${(
