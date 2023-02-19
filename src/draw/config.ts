@@ -18,6 +18,8 @@ export const RESULT_COLOR = '#88888844';
 export const SELECTED_COLOR = '#5490de44';
 export const SELECTED_TEXT_COLOR = '#5490de77';
 
+export const STROKE_DASH_ARRAY = "4,2";
+
 export const HOVERED_SELECTED_OPACITY = 1;
 export const SELECTED_OPACITY = 0.75;
 export const HOVERED_OPACITY = 0.65;

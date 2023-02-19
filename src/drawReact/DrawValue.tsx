@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { InteractionProps } from "../draw/AbstractDraw";
 import AbstractDrawValue from "../draw/AbstractDrawValue";
 import {
-    CORNER_PADDING, FONT_SIZE, GHOST_STROKE_WIDTH, G_COLOR_1, G_COLOR_2, ROUND_PADDING
+    CORNER_PADDING, FONT_SIZE, GHOST_STROKE_WIDTH, G_COLOR_1, G_COLOR_2, ROUND_PADDING, STROKE_DASH_ARRAY
 } from "../draw/config";
 import { GAbstractValue, GSimpleValue, GValue } from "../expression/gExpression";
 import { MExpression } from "../expression/mExpression";
@@ -81,7 +81,7 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
                     style={interactionStyle(this.gExpression, props)}
                     d={d} strokeWidth={strokeWidth}
                     stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
-                    strokeDasharray={"5,5"}
+                    strokeDasharray={STROKE_DASH_ARRAY}
                     fill="none" />
                 <GhostPath {...{ id, d }} />
             </g>
