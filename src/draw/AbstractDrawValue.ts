@@ -7,7 +7,7 @@ import { MExpression } from '../expression/mExpression';
 import { ID } from '../types';
 import { getCommonEdgeValues } from '../utils/gExpression';
 
-import AbstractDraw from './AbstractDraw';
+import AbstractDraw, { InteractionProps } from './AbstractDraw';
 import { EDGE_END_GAP, GVALUE_RADIUS, NORM_STROKE_WIDHT, STANDARD_STROKE_WIDHT } from "./config";
 
 abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
@@ -17,16 +17,16 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
             coords: { a: [number, number], ba: [number, number], b: [number, number], bc: [number, number], c: [number, number] },
             strokeWidth: number,
             isTerm1: boolean | undefined
-        }): T;
+        }, props: InteractionProps): T;
     protected abstract _renderNormedGValue(vals: {
         id: ID,
         coords: { a: [number, number], ab: [number, number], bc: [number, number], c: [number, number], },
         abStrokeWidth: number,
         bcStrokeWidth: number,
         isTerm1: boolean | undefined,
-    }): T;
+    }, props: InteractionProps): T;
 
-    protected renderGValue(gValue: GValue): T {
+    protected renderGValue(gValue: GValue, props: InteractionProps): T {
         if (!this.gExpression) return this._empty();
         const { x, y, width, height } = this.gExpression
         const [xEdge, yEdge] = [gValue.xEdge, gValue.yEdge];
@@ -80,7 +80,7 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
                 strokeWidth: STANDARD_STROKE_WIDHT,
                 isTerm1: gValue.isTerm1,
                 coords: { a, ba, b, bc, c }
-            })
+            }, props)
         } else {
             const isABNorm = (a[0] === b[0] && yNorm) || (a[1] === b[1] && xNorm);
             const isBCNorm = (b[0] === c[0] && yNorm) || (b[1] === c[1] && xNorm);
@@ -90,7 +90,7 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
 
             const adjustCorner = (j: [number, number], k: [number, number], delta: number) => {
 
-               return [[j[0], k[0]], [j[1], k[1]]]
+                return [[j[0], k[0]], [j[1], k[1]]]
                     .map(([j, k]) => j === k ? k : k + Math.sign(k - j) * delta) as [number, number];
 
             }
@@ -104,7 +104,7 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
                 bcStrokeWidth,
                 isTerm1: gValue.isTerm1,
                 coords: { a, ab, bc, c },
-            });
+            }, props);
         }
     }
 
@@ -113,9 +113,9 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
         coords: { x1: number, y1: number, x2: number, y2: number },
         strokeWidth: number,
         isTerm1: boolean | undefined,
-    }): T;
+    }, props: InteractionProps): T;
 
-    protected renderGSimpleValue(gValue: GSimpleValue): T {
+    protected renderGSimpleValue(gValue: GSimpleValue, props: InteractionProps): T {
         if (!this.gExpression) return this._empty();
         const { x, y, width, height } = this.gExpression;
         const edge = gValue.edge;
@@ -134,8 +134,7 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
                 coords: { x1, y1, x2, y2 },
                 strokeWidth: STANDARD_STROKE_WIDHT,
                 isTerm1: gValue.isTerm1,
-            }
-        );
+            }, props );
     }
 
     protected abstract _renderMExpression(mExpression?: MExpression): T;

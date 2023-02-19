@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { GAbstractRoot, GExpression } from "../expression/gExpression";
 import { expressionToArray } from "../utils/expression";
 import { getGAbstractValues } from "../utils/gExpression";
@@ -7,10 +7,12 @@ import DrawId from "./DrawId";
 import DrawValue from "./DrawValue";
 import DrawZeros from "./DrawZeros";
 import { RESULT_COLOR } from "../draw/config";
+import { ID } from "../types";
+import { InteractionProps } from "../draw/AbstractDraw";
 
 class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
     protected _empty(): ReactNode { return <></> }
-    public render(): ReactNode {
+    public render(props: InteractionProps): ReactNode {
         const gAValues = getGAbstractValues(this.gExpression);
         const drawValues: DrawValue[] = gAValues.map(gaValue => new DrawValue(gaValue));
 
@@ -30,7 +32,7 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
                     height: this.gExpression.height
                 }}
             />
-            {drawValues.map((drawValue, idx) => <g key={idx}>{drawValue.render()}</g>)}
+            {drawValues.map((drawValue, idx) => <g key={idx}>{drawValue.render(props)}</g>)}
             {drawZero.render()}
             {drawnIds.map((drawnId, idx) => <g key={idx}>{drawnId.render()}</g>)}
         </svg>
@@ -40,7 +42,19 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
 const DrawRoot = ({ root, style, drawIds = false, }: { root: GAbstractRoot, style: any, drawIds?: boolean }) => {
     const drawRoot = new _DrawRoot(root, style, drawIds)
 
-    return <>{drawRoot.render()}</>;
+
+    const [hoveredID, setHoveredID] = useState<ID | undefined>();
+    const [selectedID, setSelectedID] = useState<ID | undefined>();
+
+    return <>{drawRoot.render(
+        {
+            onClickID: id => setSelectedID(selectedID === undefined ? id : undefined),
+            onEnterID: id => setHoveredID(id),
+            onLeaveID: () => setHoveredID(undefined),
+            hoveredID,
+            selectedID,
+        }
+    )}</>;
 }
 
 export default DrawRoot;
