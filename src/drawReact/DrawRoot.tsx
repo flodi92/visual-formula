@@ -9,6 +9,7 @@ import DrawZeros from "./DrawZeros";
 import { RESULT_COLOR, SELECTED_COLOR } from "../draw/config";
 import { ID } from "../types";
 import { InteractionProps } from "../draw/AbstractDraw";
+import Expression from "../expression/Expression";
 
 class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
     protected _empty(): ReactNode { return <></> }
@@ -45,7 +46,9 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
             />
             : <></>;
 
-        return <svg {...{ style: this.style }}>
+        return <svg {...{ style: this.style }}
+            onClick={() => props.onClickID(undefined)}
+        >
             {resultRect}
             {selectedRect}
             {drawValues.map((drawValue, idx) => <g key={idx}>{drawValue.render(props)}</g>)}
@@ -58,13 +61,27 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
 const DrawRoot = ({ root, style, drawIds = false, }: { root: GAbstractRoot, style: any, drawIds?: boolean }) => {
     const drawRoot = new _DrawRoot(root, style, drawIds)
 
+    const computeSelectedID = (newID: ID | undefined, oldID: ID | undefined): ID | undefined => {
+        if (newID === undefined) return undefined;
+
+        let buffer: Expression | undefined = find(newID, root);
+
+        while (!!buffer && oldID !== undefined) {
+            if (buffer.id === oldID) {
+                return buffer.parent?.id;
+            }
+            buffer = buffer.parent;
+        }
+
+        return newID
+    }
 
     const [hoveredID, setHoveredID] = useState<ID | undefined>();
     const [selectedID, setSelectedID] = useState<ID | undefined>();
 
     return <>{drawRoot.render(
         {
-            onClickID: id => setSelectedID(selectedID === undefined ? id : undefined),
+            onClickID: id => setSelectedID(computeSelectedID(id, selectedID)),
             onEnterID: id => setHoveredID(id),
             onLeaveID: () => setHoveredID(undefined),
             hoveredID,

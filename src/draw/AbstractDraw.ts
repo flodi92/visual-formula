@@ -10,7 +10,7 @@ abstract class AbstractDraw<T, ExpressionT extends Expression> {
 }
 
 export interface InteractionProps {
-    onClickID: ((id: ID) => void),
+    onClickID: ((id: ID | undefined) => void),
     onEnterID: ((id: ID) => void),
     onLeaveID: ((id: ID) => void),
     hoveredID?: ID,

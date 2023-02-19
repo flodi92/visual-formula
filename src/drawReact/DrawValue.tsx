@@ -1,9 +1,10 @@
-import { CSSProperties, ReactNode } from "react";
+import { CSSProperties, ReactNode, MouseEvent } from "react";
 import { InteractionProps } from "../draw/AbstractDraw";
 import AbstractDrawValue from "../draw/AbstractDrawValue";
 import {
     CORNER_PADDING, DEFAULT_OPACITY, FONT_SIZE, GHOST_STROKE_WIDTH, G_COLOR_1, G_COLOR_2, HOVERED_OPACITY, HOVERED_SELECTED_OPACITY, ROUND_PADDING, SELECTED_OPACITY
 } from "../draw/config";
+import Expression from "../expression/Expression";
 import { GAbstractValue, GSimpleValue, GValue } from "../expression/gExpression";
 import { MExpression } from "../expression/mExpression";
 import { ID } from "../types";
@@ -146,17 +147,33 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
         return ({
             onMouseEnter: () => props.onEnterID(id),
             onMouseLeave: () => props.onLeaveID(id),
-            onClick: () => props.onClickID(id),
+            onClick: (e: MouseEvent) => {
+                e.stopPropagation();
+                props.onClickID(id);
+            },
         })
     }
 
     private style(id: ID, props: InteractionProps): CSSProperties {
-        return {
+        const isSelected = (() => {
+            if (id === undefined) return false;
 
+            let buffer: Expression | undefined = this.gExpression;
+            while (!!buffer) {
+                if ( buffer.id === props.selectedID) return true;
+                buffer = buffer.parent;
+            }
+
+            return false;
+        })()
+
+        const isHovering = id === props.hoveredID;
+
+        return {
             filter: `opacity(${(
-                id === props.hoveredID && id === props.selectedID ? HOVERED_SELECTED_OPACITY :
-                    id === props.selectedID ? SELECTED_OPACITY :
-                        id === props.hoveredID ? HOVERED_OPACITY
+                isHovering && isSelected ? HOVERED_SELECTED_OPACITY :
+                    isSelected ? SELECTED_OPACITY :
+                        isHovering ? HOVERED_OPACITY
                             : DEFAULT_OPACITY
             )})`
         }
