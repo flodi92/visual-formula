@@ -63,13 +63,13 @@ export const TestModificationArrays = ({
     if (id !== undefined) {
       switch (modification) {
         case "moveSummand":
-          moveSummand({ gEquation, id }); break;
+          moveSummand(gEquation, { id }); break;
         case "moveSubtrahend":
-          moveSubtrahend({ gEquation, id }); break;
+          moveSubtrahend(gEquation, { id }); break;
         case "moveFactor":
-          moveFactor({ gEquation, id }); break;
+          moveFactor(gEquation, { id }); break;
         case "moveDivisor":
-          moveDivisor({ gEquation, id }); break;
+          moveDivisor(gEquation, { id }); break;
         case "swapSummands":
           swapSummands(gEquation, { id, ...parameters }); break;
         case "swapFactors1D":
@@ -77,13 +77,13 @@ export const TestModificationArrays = ({
         case "swapFactors2D":
           swapFactors2D(gEquation, { id, ...parameters }); break;
         case "distribute":
-          distribute({ id, expression: gEquation, ...parameters }); break;
+          distribute(gEquation, { id, ...parameters }); break;
         case "reverseDistribute":
-          reverseDistribute({ id, expression: gEquation, ...parameters }); break;
+          reverseDistribute(gEquation, { id, ...parameters }); break;
         case "reverse":
           reverse(gEquation, { id, ...parameters }); break;
         case "rotate":
-          rotate({ id, expression: gEquation, ...parameters }); break;
+          rotate(gEquation, { id, ...parameters }); break;
         case "substitute":
           substitute(gEquation, { id }); break;
         case "swap1DAnd2D":

@@ -1,28 +1,36 @@
 import { GEquation, GExpression, GProduct1D, GProduct2D, GQuotient1D, GQuotient2D, GSimpleValue } from "../../expression/gExpression";
-import { ID, XDirection, XY, YDirection } from "../../types";
+import { XDirection, XY, YDirection } from "../../types";
 import { directionToXY, oppositeDirection } from "../../utils/general";
+import Modification from "../Modification";
 
 // // moveFactor, moveDivisor //////////////////////////////////////////////////////////////////////////////
 
-export const moveFactor = ({ gEquation, id }: { gEquation: GExpression, id: ID }) => {
+export interface MoveFactor extends Modification {
+  type?: "moveFactor",
+}
+export interface MoveDivisor extends Modification {
+  type?: "moveDivisor",
+}
+
+export const moveFactor = (gEquation: GExpression, { id }: MoveFactor) => {
   if (!(gEquation instanceof GEquation)) return false; // Must be GEquation
 
   const testFromTerm = (from: 1 | 2) => {
     let fromTerm = gEquation[`gTerm${from}`];
     if (!fromTerm) return undefined;
-    
+
     if (fromTerm instanceof GProduct1D) {
       return fromTerm.gSimpleFactor?.id === id
-      ? {
-        moved: fromTerm.gSimpleFactor,
-        remaining: fromTerm.gComplexFactor,
-        startDirection: oppositeDirection(fromTerm.startDirection),
-        is1D: true,
-        from,
+        ? {
+          moved: fromTerm.gSimpleFactor,
+          remaining: fromTerm.gComplexFactor,
+          startDirection: oppositeDirection(fromTerm.startDirection),
+          is1D: true,
+          from,
         }
         : undefined;
-      } else if (fromTerm instanceof GProduct2D) {
-        return fromTerm.gFactorX?.id === id
+    } else if (fromTerm instanceof GProduct2D) {
+      return fromTerm.gFactorX?.id === id
         ? {
           moved: fromTerm.gFactorX,
           remaining: fromTerm.gFactorY,
@@ -93,7 +101,7 @@ export const moveFactor = ({ gEquation, id }: { gEquation: GExpression, id: ID }
   return true;
 };
 
-export const moveDivisor = ({ gEquation, id }: { gEquation: GExpression, id: ID }) => {
+export const moveDivisor = (gEquation: GExpression, { id }: MoveDivisor) => {
   if (!(gEquation instanceof GEquation)) return false; // Must be Equation
 
   const testFromTerm = (from: 1 | 2) => {

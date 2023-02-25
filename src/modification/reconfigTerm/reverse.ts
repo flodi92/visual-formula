@@ -4,7 +4,7 @@ import Modification from "../Modification";
 import { find } from "../../utils/expression";
 import { oppositeDirection } from "../../utils/general";
 
-export interface Reverse extends Modification { xy?: XY, isRecursive?: boolean }
+export interface Reverse extends Modification { type?: "reverse", xy?: XY, isRecursive?: boolean }
 
 export const reverse = (expression: GExpression, { id, xy, isRecursive = true }: Reverse = {}) => {
   if (!xy) return false;

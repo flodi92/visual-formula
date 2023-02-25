@@ -4,7 +4,7 @@ import Modification from "../Modification";
 import { find } from "../../utils/expression";
 import { getSwappedDirection } from "../../utils/general";
 
-export interface SwapXToY extends Modification { }
+export interface SwapXToY extends Modification { type?: 'swapXToY' }
 
 export const swapXToY = (expression: GExpression, { id }: SwapXToY = {}) => {
   const _swapXToY = (expression: GExpression): boolean => {

@@ -4,13 +4,27 @@ import { directionToXY, oppositeDirection } from "../../utils/general";
 import { find, replace } from "../../utils/expression";
 import { getXNeighbours, getYNeighbours, isNormableToXY } from "../../utils/gExpression";
 import Expression from "../../expression/Expression";
+import Modification from "../Modification";
+
+export interface Swap1DAnd2D extends Modification {
+  type?: "swap1DAnd2D",
+  ids?: [ID, ID],
+  id?: undefined
+}
+export interface MultiSwap1DAnd2D extends Modification {
+  type?: "swap1DAnd2D",
+  id?: ID
+  ids?: undefined,
+}
 
 export const swap1DAnd2D = (expression: GExpression,
-  { ids, id }: { ids: [ID, ID?], id?: undefined } | { id: ID, ids?: undefined }) => {
+  { id, ids }: Swap1DAnd2D | MultiSwap1DAnd2D) => {
 
-  ids = ((ids !== undefined) ? ids : [id]);
+  if (id === undefined && ids === undefined) return false;
 
-  const terms = ids.map(id => find(id, expression)).filter(term => !!term) as [Expression, Expression?];
+  const _ids = ((ids !== undefined) ? ids : [id]);
+
+  const terms = _ids.map(id => find(id, expression)).filter(term => !!term) as [Expression, Expression?];
 
   let commonEdgeChildren: GTypeInParent[] | undefined;
   if (terms.length === 2 && terms.every(term => term instanceof GProduct1D || term instanceof GQuotient1D)) {

@@ -3,6 +3,7 @@ import { find } from "../../utils/expression";
 import Modification from "../Modification";
 
 export interface SwapSummands extends Modification {
+  type?: "swapSummands",
   indexA: number,
   indexB: number,
 }
@@ -23,4 +24,3 @@ export const swapSummands = (expression: GExpression, { id, indexA, indexB, }: S
   return true;
 };
 
-export default swapSummands;

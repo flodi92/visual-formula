@@ -2,6 +2,7 @@ import { GEquation, GExpression } from "../../expression/gExpression";
 import { ID } from "../../types";
 import { isParallel, oppositeDirection } from "../../utils/general";
 import { getSummands, setSummands, getSubtrahends, setSubtrahends, sumStartDirection, differenceStartDirection } from "../../utils/gExpression";
+import Modification from "../Modification";
 
 // // moveSummand, moveSubtrahend ////////////////////////////////////////////////////
 const moveSummandOrSubtrahend = (
@@ -104,12 +105,19 @@ const moveSummandOrSubtrahend = (
   return true;
 };
 
-export const moveSummand = (
-  { gEquation, id }: { gEquation: GExpression, id: ID }
-): boolean =>
-  moveSummandOrSubtrahend({ gEquation, id, isSummand: true });
+export interface MoveSummand extends Modification {
+  type?: "moveSummand",
+}
+export interface MoveSubtrahend extends Modification {
+  type?: "moveSubtrahend",
+}
 
-export const moveSubtrahend = (
-  { gEquation, id }: { gEquation: GExpression, id: ID }
-): boolean =>
-  moveSummandOrSubtrahend({ gEquation, id, isSummand: false });
+export const moveSummand = (gEquation: GExpression, { id }: MoveSummand): boolean => {
+  if (id === undefined) return false;
+  return moveSummandOrSubtrahend({ gEquation, id, isSummand: true });
+}
+
+export const moveSubtrahend = (gEquation: GExpression, { id }: MoveSubtrahend): boolean => {
+  if (id === undefined) return false;
+  return moveSummandOrSubtrahend({ gEquation, id, isSummand: false });
+}

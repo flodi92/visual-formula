@@ -4,7 +4,7 @@ import { find } from "../../utils/expression";
 import { directionToXY } from "../../utils/general";
 import { GExpression, GProduct1D, GSimpleValue, GValue } from "../../expression/gExpression";
 
-export interface SwapFactors1D extends Modification { }
+export interface SwapFactors1D extends Modification { type?: "swapFactors1D" }
 
 export const swapFactors1D = (expression: GExpression, { id }: SwapFactors1D = {}) => {
   const term = find(id, expression);

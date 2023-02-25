@@ -42,13 +42,13 @@ export const TestMoveInEquation = ({
 
     switch (modification) {
       case "moveSummand":
-        moveSummand({ gEquation, id }); break;
+        moveSummand(gEquation, { id }); break;
       case "moveSubtrahend":
-        moveSubtrahend({ gEquation, id }); break;
+        moveSubtrahend(gEquation, { id }); break;
       case "moveFactor":
-        moveFactor({ gEquation, id }); break;
+        moveFactor(gEquation, { id }); break;
       case "moveDivisor":
-        moveDivisor({ gEquation, id }); break;
+        moveDivisor(gEquation, { id }); break;
     }
   }
   autoAdaptTransformation(

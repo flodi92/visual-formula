@@ -4,9 +4,20 @@ import { getMExpressionFromExpression } from "../../conversion";
 import { find, replace } from "../../utils/expression";
 import { directionToXY } from "../../utils/general";
 import { autoAdaptEdges } from "../../autoAdapt";
+import Modification from "../Modification";
 
-export const substitute = (expression: GExpression,
-  { ids, id }: { ids: [ID, ID], id?: undefined } | { id: ID, ids?: undefined }): boolean => {
+export interface Substitute extends Modification {
+  type?: "substitute",
+  ids?: [ID, ID],
+  id?: undefined
+}
+export interface MultiSubstitute extends Modification {
+  type?: "substitute",
+  id?: ID
+  ids?: undefined,
+}
+
+export const substitute = (expression: GExpression, { id, ids }: Substitute | MultiSubstitute): boolean => {
 
   if (id !== undefined) {
     const term = find(id, expression);

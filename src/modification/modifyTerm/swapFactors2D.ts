@@ -4,7 +4,7 @@ import { find } from "../../utils/expression";
 import { isClockwise } from "../../utils/general";
 import { reverse, rotate } from "../reconfigTerm";
 
-export interface SwapFactors2D extends Modification { }
+export interface SwapFactors2D extends Modification { type?: "swapFactors2D" }
 
 export const swapFactors2D = (expression: GExpression, { id }: SwapFactors2D = {}) => {
   const term = find(id, expression);

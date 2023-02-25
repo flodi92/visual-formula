@@ -3,10 +3,15 @@ import { GAbstractRoot, GDifference, GExpression, GProduct1D, GProduct2D, GQuoti
 import { ID, XY } from "../../types";
 import { compareExpressions, find, replace } from "../../utils/expression";
 import { getSubtrahends, getSummands, setSubtrahends, setSummands } from "../../utils/gExpression";
+import Modification from "../Modification";
 
-export const reverseDistribute = ({ expression, id, xy }
-  : { expression: GAbstractRoot, id: ID, xy: XY }) => {
-  if ([expression, id, xy].some((val) => val == null)) return false;
+export interface ReverseDistribute extends Modification {
+  type?: "reverseDistribute",
+  xy: XY
+}
+
+export const reverseDistribute = (expression: GAbstractRoot, { id, xy }: ReverseDistribute) => {
+  if (id === undefined) return false;
 
   const parent = find(id, expression);
 

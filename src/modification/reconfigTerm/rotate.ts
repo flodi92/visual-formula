@@ -4,7 +4,7 @@ import { find } from "../../utils/expression";
 import { getRotatedDirection } from "../../utils/general";
 import Modification from "../Modification";
 
-export interface Rotate extends Modification { isClockwise?: boolean }
+export interface Rotate extends Modification { type?: "rotate", isClockwise?: boolean }
 
 export const rotate = (expression: GExpression, { id, isClockwise = false }: Rotate = {}) => {
   const _rotate = (expression: GExpression): boolean => {

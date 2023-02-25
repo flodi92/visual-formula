@@ -4,15 +4,21 @@ import { ID, XY } from "../../types";
 import { find, replace } from "../../utils/expression";
 import { directionToXY, isParallel, oppositeDirection } from "../../utils/general";
 import { getSubtrahends, getSummands, setSubtrahends, setSummands } from "../../utils/gExpression";
+import Modification from "../Modification";
 import { reverse } from "../reconfigTerm";
 
+export interface Distribute extends Modification {
+  type?: "distribute",
+  xy: XY
+}
+
 // distributive operations //////////////////////////////////////////////
-export const distribute = ({ expression, id, xy }
-  : { expression: GAbstractRoot, id: ID, xy: XY }) => {
+export const distribute = (expression: GAbstractRoot, { id, xy }: Distribute) => {
   //TODO idxs to distribute
   //TODO rename distribute
 
-  if ([expression, id, xy].some((val) => val == null)) return false;
+  if (id === undefined) return false;
+
   const parent = find(id, expression);
   if (!parent) return false;
 
