@@ -24,3 +24,8 @@ export const HOVERED_SELECTED_OPACITY = 1;
 export const SELECTED_OPACITY = 0.75;
 export const HOVERED_OPACITY = 0.65;
 export const DEFAULT_OPACITY = 0.5;
+
+export const OPERATOR_OUTER_RADIUS = 4.3;
+export const OPERATOR_RADIUS = 2.5;
+export const OPERATOR_COLOR_1 = 'white';
+export const OPERATOR_COLOR_2 = 'red';

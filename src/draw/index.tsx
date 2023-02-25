@@ -4,6 +4,7 @@ import AbstractDrawId from './AbstractDrawId';
 import AbstractDrawRoot from './AbstractDrawRoot';
 import AbstractDrawValue from './AbstractDrawValue';
 import AbstractDrawZeros from './AbstractDrawZeros';
+import AbstractDrawOperators from './AbstractDrawOperators';
 
 export {
     AbstractDraw,
@@ -11,4 +12,5 @@ export {
     AbstractDrawRoot,
     AbstractDrawValue,
     AbstractDrawZeros,
+    AbstractDrawOperators,
 }

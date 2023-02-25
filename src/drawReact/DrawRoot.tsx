@@ -1,5 +1,5 @@
 import { ReactNode, useState } from "react";
-import { GAbstractRoot, GExpression } from "../expression/gExpression";
+import { GAbstractRoot, GDifference, GExpression, GProduct1D, GProduct2D, GQuotient1D, GQuotient2D, GSum } from "../expression/gExpression";
 import { expressionToArray, find } from "../utils/expression";
 import { getGAbstractValues } from "../utils/gExpression";
 import AbstractDrawRoot from "../draw/AbstractDrawRoot";
@@ -10,6 +10,7 @@ import { RESULT_COLOR, SELECTED_COLOR } from "../draw/config";
 import { ID } from "../types";
 import { InteractionProps } from "../draw/AbstractDraw";
 import Expression from "../expression/Expression";
+import DrawOperators from "./DrawOperators";
 
 class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
     protected _empty(): ReactNode { return <></> }
@@ -22,6 +23,17 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
         const drawnIds: DrawId[] = this.drawIds ? (expressionToArray(this.gExpression)
             .map(expression => expression instanceof GExpression ? new DrawId(expression) : null)
             .filter(val => val !== null)) as DrawId[] : [];
+
+        const drawOperators = (expressionToArray(this.gExpression)
+            .filter(expression => !!expression && (
+                (expression instanceof GSum)
+                || (expression instanceof GDifference)
+                || (expression instanceof GProduct1D)
+                || (expression instanceof GQuotient1D)
+                || (expression instanceof GProduct2D)
+                || (expression instanceof GQuotient2D)
+            )) as GExpression[])
+            .map(expression => new DrawOperators(expression))
 
         const resultRect = <rect
             fill={RESULT_COLOR}
@@ -51,9 +63,10 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
         >
             {resultRect}
             {selectedRect}
-            {drawValues.map((drawValue, idx) => <g key={idx}>{drawValue.render(props)}</g>)}
+            {drawValues.map((drawValue, idx) => drawValue.render(props))}
+            {drawOperators.map(drawOperator => drawOperator.render(props))}
             {drawZero.render()}
-            {drawnIds.map((drawnId, idx) => <g key={idx}>{drawnId.render()}</g>)}
+            {drawnIds.map((drawnId, idx) => drawnId.render())}
         </svg>
     }
 }
