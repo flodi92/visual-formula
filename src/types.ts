@@ -20,4 +20,8 @@ export const DEFAULT_TRANSFORMATION = { x: 0, y: 0, scaleX: 1, scaleY: 1 };
 export type ID = number;
 export type CommonEdgeValue = { gValue: GAbstractValue, direction: Direction }
 
+export type ModificationType = "swapSummands" | "swapFactors2D" | "swapFactors1D" | "distribute" | "reverseDistribute"
+    | "reverse" | "rotate" | "substitute" | "swap1DAnd2D" | "swapXToY"
+    | "moveSummand" | "moveSubtrahend" | "moveFactor" | "moveDivisor";
+
 export type CreationState = 'success' | 'invalid' | 'undrawable';

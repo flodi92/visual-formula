@@ -1,4 +1,4 @@
-import { GExpression, GProduct1D, GProduct2D, GQuotient1D, GQuotient2D, GSimpleValue, GValue } from "../../expression/gExpression";
+import { GAbstractRoot, GExpression, GProduct1D, GProduct2D, GQuotient1D, GQuotient2D, GSimpleValue, GValue } from "../../expression/gExpression";
 import { Direction, ID, GTypeInParent, YDirection, XDirection } from "../../types";
 import { directionToXY, oppositeDirection } from "../../utils/general";
 import { find, replace } from "../../utils/expression";
@@ -17,7 +17,7 @@ export interface MultiSwap1DAnd2D extends Modification {
   ids?: undefined,
 }
 
-export const swap1DAnd2D = (expression: GExpression,
+export const swap1DAnd2D = (expression: GAbstractRoot,
   { id, ids }: Swap1DAnd2D | MultiSwap1DAnd2D) => {
 
   if (id === undefined && ids === undefined) return false;
@@ -209,7 +209,7 @@ export const swap1DAnd2D = (expression: GExpression,
       })
     } else return false;
 
-    replace(newTerm.id as ID, expression, newTerm as GExpression);
+    replace(newTerm.id as ID, expression, newTerm);
 
   }
   return true;

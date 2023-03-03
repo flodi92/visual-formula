@@ -1,4 +1,4 @@
-import { GEquation, GExpression } from "../../expression/gExpression";
+import { GEquation, GAbstractRoot } from "../../expression/gExpression";
 import { ID } from "../../types";
 import { isParallel, oppositeDirection } from "../../utils/general";
 import { getSummands, setSummands, getSubtrahends, setSubtrahends, sumStartDirection, differenceStartDirection } from "../../utils/gExpression";
@@ -6,7 +6,7 @@ import Modification from "../Modification";
 
 // // moveSummand, moveSubtrahend ////////////////////////////////////////////////////
 const moveSummandOrSubtrahend = (
-  { gEquation, id, isSummand }: { gEquation: GExpression, id: ID, isSummand: boolean }
+  { gEquation, id, isSummand }: { gEquation: GAbstractRoot, id: ID, isSummand: boolean }
 ): boolean => {
   if (!(gEquation instanceof GEquation)) return false; // Must be GEquation
 
@@ -112,12 +112,12 @@ export interface MoveSubtrahend extends Modification {
   type?: "moveSubtrahend",
 }
 
-export const moveSummand = (gEquation: GExpression, { id }: MoveSummand): boolean => {
+export const moveSummand = (gEquation: GAbstractRoot, { id }: MoveSummand): boolean => {
   if (id === undefined) return false;
   return moveSummandOrSubtrahend({ gEquation, id, isSummand: true });
 }
 
-export const moveSubtrahend = (gEquation: GExpression, { id }: MoveSubtrahend): boolean => {
+export const moveSubtrahend = (gEquation: GAbstractRoot, { id }: MoveSubtrahend): boolean => {
   if (id === undefined) return false;
   return moveSummandOrSubtrahend({ gEquation, id, isSummand: false });
 }

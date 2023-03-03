@@ -1,4 +1,4 @@
-import { GAbstractValue, GExpression, GProduct1D, GProduct2D, GSimpleValue, GValue } from "../../expression/gExpression";
+import { GAbstractValue, GAbstractRoot, GProduct1D, GProduct2D, GSimpleValue, GValue, GExpression } from "../../expression/gExpression";
 import { ID } from "../../types";
 import { getMExpressionFromExpression } from "../../conversion";
 import { find, replace } from "../../utils/expression";
@@ -17,7 +17,7 @@ export interface MultiSubstitute extends Modification {
   ids?: undefined,
 }
 
-export const substitute = (expression: GExpression, { id, ids }: Substitute | MultiSubstitute): boolean => {
+export const substitute = (expression: GAbstractRoot, { id, ids }: Substitute | MultiSubstitute): boolean => {
 
   if (id !== undefined) {
     const term = find(id, expression);

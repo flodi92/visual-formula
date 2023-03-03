@@ -1,4 +1,4 @@
-import { GEquation, GExpression, GProduct1D, GProduct2D, GQuotient1D, GQuotient2D, GSimpleValue } from "../../expression/gExpression";
+import { GEquation, GAbstractRoot, GProduct1D, GProduct2D, GQuotient1D, GQuotient2D, GSimpleValue } from "../../expression/gExpression";
 import { XDirection, XY, YDirection } from "../../types";
 import { directionToXY, oppositeDirection } from "../../utils/general";
 import Modification from "../Modification";
@@ -12,7 +12,7 @@ export interface MoveDivisor extends Modification {
   type?: "moveDivisor",
 }
 
-export const moveFactor = (gEquation: GExpression, { id }: MoveFactor) => {
+export const moveFactor = (gEquation: GAbstractRoot, { id }: MoveFactor) => {
   if (!(gEquation instanceof GEquation)) return false; // Must be GEquation
 
   const testFromTerm = (from: 1 | 2) => {
@@ -101,7 +101,7 @@ export const moveFactor = (gEquation: GExpression, { id }: MoveFactor) => {
   return true;
 };
 
-export const moveDivisor = (gEquation: GExpression, { id }: MoveDivisor) => {
+export const moveDivisor = (gEquation: GAbstractRoot, { id }: MoveDivisor) => {
   if (!(gEquation instanceof GEquation)) return false; // Must be Equation
 
   const testFromTerm = (from: 1 | 2) => {
@@ -150,7 +150,7 @@ export const moveDivisor = (gEquation: GExpression, { id }: MoveDivisor) => {
     from,
   } = testFromTerm(1) || testFromTerm(2) || {};
 
-  if (!moved) return false;
+  if (!moved || !from) return false;
 
   const to = { [1]: 2, [2]: 1 }[from] as 1 | 2;
   const toTerm = gEquation[`gTerm${to}`];

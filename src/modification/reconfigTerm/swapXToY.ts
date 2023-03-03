@@ -1,4 +1,4 @@
-import { GAbstractDirectedExpression, GAbstractValue, GExpression, GProduct2D, GQuotient2D, GSimpleValue, GValue } from "../../expression/gExpression";
+import { GAbstractDirectedExpression, GAbstractRoot, GAbstractValue, GExpression, GProduct2D, GQuotient2D, GSimpleValue, GValue } from "../../expression/gExpression";
 import { XDirection, YDirection } from "../../types";
 import Modification from "../Modification";
 import { find } from "../../utils/expression";
@@ -6,7 +6,7 @@ import { getSwappedDirection } from "../../utils/general";
 
 export interface SwapXToY extends Modification { type?: 'swapXToY' }
 
-export const swapXToY = (expression: GExpression, { id }: SwapXToY = {}) => {
+export const swapXToY = (expression: GAbstractRoot, { id }: SwapXToY = {}) => {
   const _swapXToY = (expression: GExpression): boolean => {
     if (!expression) return false;
     else if (expression instanceof GAbstractDirectedExpression) {

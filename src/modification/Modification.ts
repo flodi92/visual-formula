@@ -1,8 +1,8 @@
-import { ID } from "../types";
+import { ID, ModificationType } from "../types";
 
 export default interface Modification {
     id?: ID;
     ids?: [ID, ID]
-    type?: string;
+    type?: ModificationType;
 }
 
