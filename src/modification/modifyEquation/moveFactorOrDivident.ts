@@ -150,7 +150,7 @@ export const moveDivisor = (gEquation: GExpression, { id }: MoveDivisor) => {
     from,
   } = testFromTerm(1) || testFromTerm(2) || {};
 
-  if (!moved) return undefined;
+  if (!moved) return false;
 
   const to = { [1]: 2, [2]: 1 }[from] as 1 | 2;
   const toTerm = gEquation[`gTerm${to}`];
