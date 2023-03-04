@@ -35,34 +35,41 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
         const yNorm = gValue.isNormY;
 
         const {
-            gapTop, gapBottom, gapLeft, gapRight,
+            gapTopLeft,
+            gapTopRight,
+            gapBottomLeft,
+            gapBottomRight,
+            gapLeftTop,
+            gapLeftBottom,
+            gapRightTop,
+            gapRightBottom,
         } = this.computeGaps(gValue)
 
         const [a, b, c] =
             (
                 (xEdge === "top" && yEdge === "left")
                     ? [
-                        [x, y + height - gapBottom],
+                        [x, y + height - gapLeftBottom],
                         [x, y],
-                        [x + width - gapLeft, y],
+                        [x + width - gapTopRight, y],
                     ] :
                     (xEdge === "bottom" && yEdge === "left")
                         ? [
-                            [x, y + gapTop],
+                            [x, y + gapLeftTop],
                             [x, y + height],
-                            [x + width - gapLeft, y + height],
+                            [x + width - gapBottomRight, y + height],
                         ] :
                         (xEdge === "bottom" && yEdge === "right")
                             ? [
-                                [x + width, y + gapTop],
+                                [x + width, y + gapRightTop],
                                 [x + width, y + height],
-                                [x + gapRight, y + height],
+                                [x + gapBottomLeft, y + height],
                             ] :
                             (xEdge === "top" && yEdge === "right")
                                 ? [
-                                    [x + gapRight, y],
+                                    [x + gapTopLeft, y],
                                     [x + width, y],
-                                    [x + width, y + height - gapBottom],
+                                    [x + width, y + height - gapRightBottom],
                                 ] :
                                 []) as [number, number][]
 
@@ -120,14 +127,21 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
         const edge = gValue.edge;
 
         const {
-            gapTop, gapBottom, gapLeft, gapRight,
+            gapTopLeft,
+            gapTopRight,
+            gapBottomLeft,
+            gapBottomRight,
+            gapLeftTop,
+            gapLeftBottom,
+            gapRightTop,
+            gapRightBottom,
         } = this.computeGaps(gValue)
 
         const [x1, y1, x2, y2] =
-            edge === "top" ? [x + gapLeft, y, x + width - gapRight, y]
-                : edge === "left" ? [x, y + gapTop, x, y + height- gapBottom]
-                    : edge === "bottom" ? [x + gapLeft, y + height, x + width - gapRight, y + height ]
-                        : edge === "right" ? [x + width, y + gapTop, x + width, y + height - gapBottom]
+            edge === "top" ? [x + gapTopLeft, y, x + width - gapTopRight, y]
+                : edge === "bottom" ? [x + gapBottomLeft, y + height, x + width - gapBottomRight, y + height]
+                    : edge === "left" ? [x, y + gapLeftTop, x, y + height - gapLeftBottom]
+                        : edge === "right" ? [x + width, y + gapRightTop, x + width, y + height - gapRightBottom]
                             : []
 
         if (!x1 || !y1 || !x2 || !y2 || !this.gExpression.id) return this._empty();
@@ -141,16 +155,27 @@ abstract class AbstractDrawValue<T> extends AbstractDraw<T, GAbstractValue> {
     }
 
     private computeGaps(gValue: GAbstractValue) {
-        const gapTop = !!getGappedNeighbours(gValue, "top")?.length ? EDGE_END_GAP : 0;
-        const gapBottom = !!getGappedNeighbours(gValue, "bottom")?.length ? EDGE_END_GAP : 0;
-        const gapLeft = !!getGappedNeighbours(gValue, "left")?.length ? EDGE_END_GAP : 0;
-        const gapRight = !!getGappedNeighbours(gValue, "right")?.length ? EDGE_END_GAP : 0;
+        const gappedNeighbours = getGappedNeighbours(gValue);
+
+        const gapTopLeft = gappedNeighbours.top?.some(({ direction }) => direction === "left") ? EDGE_END_GAP : 0;
+        const gapTopRight = gappedNeighbours.top?.some(({ direction }) => direction === "right") ? EDGE_END_GAP : 0;
+        const gapBottomLeft = gappedNeighbours.bottom?.some(({ direction }) => direction === "left") ? EDGE_END_GAP : 0;
+        const gapBottomRight = gappedNeighbours.bottom?.some(({ direction }) => direction === "right") ? EDGE_END_GAP : 0;
+
+        const gapLeftTop = gappedNeighbours.left?.some(({ direction }) => direction === "top") ? EDGE_END_GAP : 0;
+        const gapLeftBottom = gappedNeighbours.left?.some(({ direction }) => direction === "bottom") ? EDGE_END_GAP : 0;
+        const gapRightTop = gappedNeighbours.right?.some(({ direction }) => direction === "top") ? EDGE_END_GAP : 0;
+        const gapRightBottom = gappedNeighbours.right?.some(({ direction }) => direction === "bottom") ? EDGE_END_GAP : 0;
 
         return {
-            gapTop,
-            gapBottom,
-            gapLeft,
-            gapRight,
+            gapTopLeft,
+            gapTopRight,
+            gapBottomLeft,
+            gapBottomRight,
+            gapLeftTop,
+            gapLeftBottom,
+            gapRightTop,
+            gapRightBottom,
         }
     }
 

@@ -19,6 +19,14 @@ export type Transformation = { x: number, y: number, scaleX: number, scaleY: num
 export const DEFAULT_TRANSFORMATION = { x: 0, y: 0, scaleX: 1, scaleY: 1 };
 export type ID = number;
 export type CommonEdgeValue = { gValue: GAbstractValue, direction: Direction }
+export type GappedNeighbour = CommonEdgeValue & { edgeDirection: Direction }
+
+export type GappedNeighbours = {
+    top: CommonEdgeValue[];
+    right: CommonEdgeValue[];
+    bottom: CommonEdgeValue[];
+    left: CommonEdgeValue[];
+}
 
 export type ModificationType = "swapSummands" | "swapFactors2D" | "swapFactors1D" | "distribute" | "reverseDistribute"
     | "reverse" | "rotate" | "substitute" | "swap1DAnd2D" | "swapXToY"

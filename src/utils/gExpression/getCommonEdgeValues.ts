@@ -2,7 +2,7 @@ import {
     GAbstractValue, GExpression, GSimpleValue, GValue
 } from "../../expression/gExpression";
 
-import { CommonEdgeValue, Direction } from "../../types";
+import { ALL_DIRECTIONS, CommonEdgeValue, Direction, GappedNeighbour, GappedNeighbours } from "../../types";
 import { expressionToArray, getRoot } from "../expression";
 import { isInRange, isIntersection } from "../general";
 
@@ -66,42 +66,43 @@ const getCommonEdgeValues = (expression: GExpression, direction: Direction): Com
         );
 
     return buffer;
-}
+};
 
-export const getGappedNeighbours = (expression: GAbstractValue, direction: Direction): CommonEdgeValue[] => {
+export const getGappedNeighbours = (expression: GAbstractValue): GappedNeighbours => {
+    const buffer: GappedNeighbour[] = [];
+
     const root = getRoot(expression);
 
-    const gValues = expressionToArray(root)
+    const comparedValues = expressionToArray(root)
         .filter(_expression => _expression instanceof GAbstractValue && _expression.id !== expression.id) as GAbstractValue[];
 
-    const expressionCoords = getEdgeCoords(expression);
+    const coords = getEdgeCoords(expression);
 
-    const buffer: CommonEdgeValue[] = [];
+    for (const comparedValue of comparedValues) {
+        const _comparedCoords = getEdgeCoords(comparedValue);
 
-    gValues.forEach(gValue => {
-        const gValueCoords = getEdgeCoords(gValue);
-
-        for (const expressionEdgeCoords of expressionCoords) {
-            for (const [[_x1, _y1], [_x2, _y2]] of gValueCoords) {
-
-                for (const [x, y, d] of expressionEdgeCoords) {
-                    if (d !== direction) { continue; }
-                    for (const [_x, _y] of [[_x1, _y1], [_x2, _y2]]) {
-                        if (
-                            (x === _x && isInRange(y, _y1, _y2))
-                            || (y === _y && isInRange(x, _x1, _x2))
-                        ) {
-
-                            buffer.push({ gValue, direction: d })
-
-                        }
+        for (const [[x1, y1, d1], [x2, y2, d2], edgeDirection] of coords) {
+            for (const [[_x1, _y1, _d1], [_x2, _y2, _d2]] of _comparedCoords) {
+                for (const [x, y, d] of [[x1, y1, d1], [x2, y2, d2]] as [number, number, Direction][]) {
+                    if (
+                        ((y === _y1 && y === _y2 && isInRange(x, _x1, _x2))
+                            || (x === _x1 && x === _x2 && isInRange(y, _y1, _y2)))
+                    ) {
+                        buffer.push({ gValue: comparedValue, direction: d, edgeDirection })
                     }
                 }
+
             }
         }
-    })
-    
-    return buffer;
+    }
+
+    return ALL_DIRECTIONS.reduce((prev, _edgeDirection) => (
+        {
+            ...prev,
+            [_edgeDirection]: buffer.filter(({ edgeDirection }) => edgeDirection === _edgeDirection)
+                .map(({ gValue, direction }) => ({ gValue, direction })) as { direction: Direction }[]
+        }
+    ), {}) as GappedNeighbours;
 }
 
 const getEdgeCoords = (gValue: GAbstractValue) => {
@@ -110,12 +111,12 @@ const getEdgeCoords = (gValue: GAbstractValue) => {
 
     const edges = gValue instanceof GValue ? [gValue.xEdge, gValue.yEdge] : gValue instanceof GSimpleValue ? [gValue.edge] : []
     return edges.map(edge => (
-        edge === "top" ? [[x1, y1, 'left'], [x2, y1, 'right']] :
-            edge === "right" ? [[x2, y1, 'top'], [x2, y2, 'bottom']] :
-                edge === "bottom" ? [[x1, y2, 'left'], [x2, y2, 'right']] :
-                    edge === "left" ? [[x1, y1, 'top'], [x1, y2, 'bottom']] :
+        edge === "top" ? [[x1, y1, 'left'], [x2, y1, 'right'], 'top'] :
+            edge === "right" ? [[x2, y1, 'top'], [x2, y2, 'bottom'], 'right'] :
+                edge === "bottom" ? [[x1, y2, 'left'], [x2, y2, 'right'], 'bottom'] :
+                    edge === "left" ? [[x1, y1, 'top'], [x1, y2, 'bottom'], 'left'] :
                         []
-    )) as [[number, number, Direction], [number, number, Direction]][]
+    )) as [[number, number, Direction], [number, number, Direction], Direction][]
 }
 
 export default getCommonEdgeValues;
