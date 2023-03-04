@@ -6,7 +6,7 @@ import { zip } from 'lodash';
 import { MExpression } from '../expression/mExpression';
 import { ID } from '../types';
 
-import { getGappedNeighbours } from "../utils/gExpression/getCommonEdgeValues";
+import { getGappedNeighbours } from "../utils/gExpression";
 import AbstractDraw, { InteractionProps } from './AbstractDraw';
 import { EDGE_END_GAP, GVALUE_RADIUS, NORM_STROKE_WIDHT, STANDARD_STROKE_WIDHT } from "./config";
 

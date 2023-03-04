@@ -12,6 +12,8 @@ import getHeights from "./getHeights";
 import getNeighbours from "./getNeighbours";
 import getCommonEdgeValues from "./getCommonEdgeValues";
 import isEdgePossible from "./isEdgePossible";
+import getEdgeCoords from "./getEdgeCoords";
+import getGappedNeighbours from "./getGappedNeighbours";
 import { getXNormedValues, getYNormedValues } from "./getNormedValues";
 
 import {
@@ -191,6 +193,8 @@ export {
     isNormableToXY,
     getCommonEdgeValues,
     isEdgePossible,
+    getEdgeCoords,
+    getGappedNeighbours,
     getXNormedValues,
     getYNormedValues,
     getSummands,
