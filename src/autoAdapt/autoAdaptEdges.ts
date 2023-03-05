@@ -1,13 +1,14 @@
-import autoAdapt, { Configuration, AutoAdaption } from "./autoAdapt";
-import { ALL_XDIRECTIONS, ALL_YDIRECTIONS, Direction, ID, XDirection, YDirection } from "../types";
-import {
-    GAbstractDirectedExpression, GProduct2D, GSimpleValue, GValue, GExpression,
-} from "../expression/gExpression";
-import { expressionToArray, find } from "../utils/expression";
-import { getGAbstractValueIds, isEdgePossible } from "../utils/gExpression";
-import { directionsToNumber, directionToNumber, directionToXY, oppositeDirection } from "../utils/general";
-import Expression from "../expression/Expression";
 import { cloneExpression } from "../conversion";
+import Expression from "../expression/Expression";
+import {
+    GAbstractDirectedExpression, GAbstractValue, GExpression, GProduct2D, GSimpleValue, GValue
+} from "../expression/gExpression";
+import { Direction, ID, XDirection, YDirection } from "../types";
+import { expressionToArray, find } from "../utils/expression";
+import { directionsToNumber, directionToNumber, directionToXY, oppositeDirection } from "../utils/general";
+import { getGAbstractValueIds } from "../utils/gExpression";
+import getPossibleEdges from "../utils/gExpression/getPossibleEdges";
+import autoAdapt, { AutoAdaption, Configuration } from "./autoAdapt";
 
 abstract class EdgesConfiguration extends Configuration { }
 
@@ -47,15 +48,12 @@ class AutoEdgeAdaption implements AutoAdaption<EdgesConfiguration> {
         if (!this._root) return []
 
         const expression = find(id, this._root);
-        if (!expression || !(expression instanceof GExpression)) return [];
+        if (!expression || !(expression instanceof GAbstractValue)) return [];
 
-        const possibleXdirections = ALL_XDIRECTIONS.filter((direction) =>
-            isEdgePossible(expression, direction)
-        );
+        const possibleEdges = getPossibleEdges(expression);
 
-        const possibleYdirections = ALL_YDIRECTIONS.filter((direction) =>
-            isEdgePossible(expression, direction)
-        );
+        const possibleXdirections = possibleEdges.filter(edge => directionToXY(edge) === 'X') as XDirection[];
+        const possibleYdirections = possibleEdges.filter(edge => directionToXY(edge) === 'Y') as YDirection[];
 
 
         if (expression instanceof GValue) {
