@@ -1,10 +1,9 @@
 import Expression from "../expression/Expression";
-import { GEquation, GExpression, GProduct2D, GSimpleValue, GSum, GValue } from "../expression/gExpression";
-import { ID, XY } from "../types";
-import { expressionToArray } from "../utils/expression";
+import { GExpression, GSum } from "../expression/gExpression";
+import { XY } from "../types";
 import Modification from "./Modification";
 import { MoveDivisor, MoveFactor, MoveSubtrahend, MoveSummand } from "./modifyEquation";
-import { SwapSummands, SwapFactors1D, SwapFactors2D } from "./modifyTerm";
+import { SwapFactors1D, SwapFactors2D, SwapSummands } from "./modifyTerm";
 import { Reverse } from "./reconfigTerm";
 
 const getModification = (
