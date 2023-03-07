@@ -1,20 +1,26 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useLayoutEffect, useRef, useState } from "react";
+import { InteractionProps } from "../draw/AbstractDraw";
+import AbstractDrawRoot from "../draw/AbstractDrawRoot";
+import { RESULT_COLOR, SELECTED_COLOR } from "../draw/config";
+import drawRootHandlers from "../draw/drawRootHandlers";
 import { GAbstractRoot, GDifference, GExpression, GProduct1D, GProduct2D, GQuotient1D, GQuotient2D, GSum } from "../expression/gExpression";
+import Modification from "../modification/Modification";
+import { ID } from "../types";
 import { expressionToArray, find } from "../utils/expression";
 import { getGAbstractValues } from "../utils/gExpression";
-import AbstractDrawRoot from "../draw/AbstractDrawRoot";
 import DrawId from "./DrawId";
+import DrawOperators from "./DrawOperators";
 import DrawValue from "./DrawValue";
 import DrawZeros from "./DrawZeros";
-import { RESULT_COLOR, SELECTED_COLOR } from "../draw/config";
-import { ID } from "../types";
-import { InteractionProps } from "../draw/AbstractDraw";
-import Expression from "../expression/Expression";
-import DrawOperators from "./DrawOperators";
 
 class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
     protected _empty(): ReactNode { return <></> }
-    public render(props: InteractionProps): ReactNode {
+    public render(props: InteractionProps & {
+        onMouseDownContainer: (x: number, y: number) => void,
+        onMouseUpContainer: (x: number, y: number) => void,
+        onSelectedMouseDown: () => void,
+        onSelectedMouseUp: () => void,
+    }): ReactNode {
         const gAValues = getGAbstractValues(this.gExpression);
         const drawValues: DrawValue[] = gAValues.map(gaValue => new DrawValue(gaValue));
 
@@ -49,6 +55,14 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
         const selectedRect = (selectedGExpression instanceof GExpression) ?
             <rect
                 fill={SELECTED_COLOR}
+                onMouseDown={e => {
+                    e.preventDefault();
+                    props.onSelectedMouseDown();
+                }}
+                onMouseUp={e => {
+                    e.preventDefault();
+                    props.onSelectedMouseUp();
+                }}
                 {...{
                     x: selectedGExpression.x,
                     y: selectedGExpression.y,
@@ -59,7 +73,12 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
             : <></>;
 
         return <svg {...{ style: this.style }}
-            onClick={() => props.onClickID(undefined)}
+            onMouseDown={(e) => {
+                props.onMouseDownContainer(e.clientX - 16, e.clientY - 30); // TODO better determination of position
+            }}
+            onMouseUp={e => {
+                props.onMouseUpContainer(e.clientX - 16, e.clientY - 30);
+            }}
         >
             {resultRect}
             {selectedRect}
@@ -71,32 +90,35 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
     }
 }
 
-const DrawRoot = ({ root, style, drawIds = false, }: { root: GAbstractRoot, style: any, drawIds?: boolean }) => {
-    const drawRoot = new _DrawRoot(root, style, drawIds)
+const DrawRoot = ({ root: _root, style, drawIds = false, onModify = () => { } }: {
+    root: GAbstractRoot,
+    style: any,
+    drawIds?: boolean,
+    onModify?: ((modification?: Modification) => void)
+}) => {
+    const [{ root }, setRoot] = useState({ root: _root });
+    useLayoutEffect(() => setRoot({ root: _root }), [_root]);
 
-    const computeSelectedID = (newID: ID | undefined, oldID: ID | undefined): ID | undefined => {
-        if (newID === undefined) return undefined;
-
-        let buffer: Expression | undefined = find(newID, root);
-
-        while (!!buffer && oldID !== undefined) {
-            if (buffer.id === oldID) {
-                return buffer.parent?.id;
-            }
-            buffer = buffer.parent;
-        }
-
-        return newID
-    }
-
-    const [hoveredID, setHoveredID] = useState<ID | undefined>();
     const [selectedID, setSelectedID] = useState<ID | undefined>();
+    const [hoveredID, setHoveredID] = useState<ID | undefined>();
+
+    const dragContainerRef = useRef<{ x?: number, y?: number }>();
+    const dragValueRef = useRef<ID>();
+
+    const drawRoot = new _DrawRoot(root, style, drawIds);
 
     return <>{drawRoot.render(
         {
-            onClickID: id => setSelectedID(computeSelectedID(id, selectedID)),
-            onEnterID: id => setHoveredID(id),
-            onLeaveID: () => setHoveredID(undefined),
+            ...drawRootHandlers({
+                root,
+                setRoot: root => setRoot({ root }),
+                selectedID,
+                setSelectedID,
+                dragValue: dragValueRef,
+                dragContainer: dragContainerRef,
+                hoveredID,
+                setHoveredID,
+            }),
             hoveredID,
             selectedID,
         }

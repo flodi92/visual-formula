@@ -13,6 +13,7 @@ export interface InteractionProps {
     onClickID: ((id: ID | undefined) => void),
     onEnterID: ((id: ID) => void),
     onLeaveID: ((id: ID) => void),
+    onMouseDownID: ((id: ID) => void),
     hoveredID?: ID,
     selectedID?: ID,
 }

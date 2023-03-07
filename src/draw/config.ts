@@ -29,3 +29,5 @@ export const OPERATOR_OUTER_RADIUS = 4.3;
 export const OPERATOR_RADIUS = 2.5;
 export const OPERATOR_COLOR_1 = 'white';
 export const OPERATOR_COLOR_2 = 'red';
+
+export const MIN_DRAG_AND_DROP = 3;

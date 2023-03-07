@@ -99,6 +99,7 @@ const DrawMValue = ({ mExpression, interactionProps }
                     onClickID() { },
                     onEnterID() { },
                     onLeaveID() { },
+                    onMouseDownID() { },
                 }
             }} />
             {/* @ts-ignore     */}
