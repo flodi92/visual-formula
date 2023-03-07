@@ -74,10 +74,12 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
 
         return <svg {...{ style: this.style }}
             onMouseDown={(e) => {
-                props.onMouseDownContainer(e.clientX - 16, e.clientY - 30); // TODO better determination of position
+                const {left, top} = e.currentTarget.getBoundingClientRect();
+                props.onMouseDownContainer(e.clientX - left, e.clientY - top);
             }}
             onMouseUp={e => {
-                props.onMouseUpContainer(e.clientX - 16, e.clientY - 30);
+                const {left, top} = e.currentTarget.getBoundingClientRect();
+                props.onMouseUpContainer(e.clientX - left, e.clientY - top);
             }}
         >
             {resultRect}
