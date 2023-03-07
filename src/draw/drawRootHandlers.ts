@@ -8,7 +8,7 @@ import { ID, XY } from "../types";
 import { MIN_DRAG_AND_DROP } from "./config";
 
 const drawRootHandlers = ({
-    root, setRoot, selectedID, setSelectedID, dragValue, dragContainer, hoveredID, setHoveredID,
+    root, setRoot, selectedID, setSelectedID, dragValue, dragContainer, hoveredID, setHoveredID, getBox
 }: {
     root: GAbstractRoot,
     setRoot: (val: GAbstractRoot) => void,
@@ -21,6 +21,8 @@ const drawRootHandlers = ({
 
     hoveredID: ID | undefined,
     setHoveredID: (val: ID | undefined) => void,
+
+    getBox: () => { width: number, height: number }
 }) => {
 
     const computeSelectedID = (newID: ID | undefined, oldID: ID | undefined): ID | undefined => {
@@ -39,7 +41,7 @@ const drawRootHandlers = ({
     }
 
     const handleModify = (modification: Modification) => {
-        modify(root, modification);
+        modify(root, modification, getBox());
         setRoot(root);
     }
 

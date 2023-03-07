@@ -7,6 +7,7 @@ export const CORNER_PADDING = 3;
 export const EDGE_END_GAP = 3;
 export const FONT_SIZE = 11;
 export const ZERO_RADIUS = 5;
+export const CONTAINER_PADDING = 5;
 
 export const G_COLOR_1 = 'black';
 export const G_COLOR_2 = 'red';

@@ -1,46 +1,54 @@
+import { autoAdaptTransformation, keepPositionForTransformation } from "../autoAdapt";
+import { CONTAINER_PADDING } from "../draw/config";
 import { GAbstractRoot } from "../expression/gExpression";
 import Modification from "./Modification";
 import { MoveDivisor, moveDivisor, moveFactor, MoveFactor, moveSubtrahend, MoveSubtrahend, MoveSummand, moveSummand } from "./modifyEquation";
 import { distribute, Distribute, reverseDistribute, ReverseDistribute, swapFactors1D, SwapFactors1D, swapFactors2D, SwapFactors2D, SwapSummands, swapSummands } from "./modifyTerm";
 import { reverse, Reverse, rotate, Rotate, substitute, Substitute, swap1DAnd2D, Swap1DAnd2D, swapXToY, SwapXToY } from "./reconfigTerm";
 
-const modify = (expression: GAbstractRoot, modification: Modification): boolean => {
+const modify = (gRoot: GAbstractRoot, modification: Modification, box: { width: number, height: number }): boolean => {
+
+    const positionForTransformation
+        = keepPositionForTransformation({ gRoot, modifiedID: modification.id });
+
+    let buffer = false;
+
     switch (modification.type) {
         case "swapSummands":
-            return swapSummands(expression, modification as SwapSummands);
+            buffer = swapSummands(gRoot, modification as SwapSummands); break;
         case "swapFactors2D":
-            return swapFactors2D(expression, modification as SwapFactors2D);
+            buffer = swapFactors2D(gRoot, modification as SwapFactors2D); break;
         case "swapFactors1D":
-            return swapFactors1D(expression, modification as SwapFactors1D);
+            buffer = swapFactors1D(gRoot, modification as SwapFactors1D); break;
         case "distribute":
-            return distribute(expression, modification as Distribute);
+            buffer = distribute(gRoot, modification as Distribute); break;
         case "reverseDistribute":
-            return reverseDistribute(expression, modification as ReverseDistribute);
+            buffer = reverseDistribute(gRoot, modification as ReverseDistribute); break;
 
         case "reverse":
-            return reverse(expression, modification as Reverse);
+            buffer = reverse(gRoot, modification as Reverse); break;
         case "rotate":
-            return rotate(expression, modification as Rotate);
+            buffer = rotate(gRoot, modification as Rotate); break;
         case "substitute":
-            return substitute(expression, modification as Substitute);
+            buffer = substitute(gRoot, modification as Substitute); break;
         case "swap1DAnd2D":
-            return swap1DAnd2D(expression, modification as Swap1DAnd2D);
+            buffer = swap1DAnd2D(gRoot, modification as Swap1DAnd2D); break;
         case "swapXToY":
-            return swapXToY(expression, modification as SwapXToY);
+            buffer = swapXToY(gRoot, modification as SwapXToY); break;
 
         case "moveSummand":
-            return moveSummand(expression, modification as MoveSummand);
+            buffer = moveSummand(gRoot, modification as MoveSummand); break;
         case "moveSubtrahend":
-            return moveSubtrahend(expression, modification as MoveSubtrahend);
+            buffer = moveSubtrahend(gRoot, modification as MoveSubtrahend); break;
         case "moveFactor":
-            return moveFactor(expression, modification as MoveFactor);
+            buffer = moveFactor(gRoot, modification as MoveFactor); break;
         case "moveDivisor":
-            return moveDivisor(expression, modification as MoveDivisor);
-
-        default:
-            return false;
+            buffer = moveDivisor(gRoot, modification as MoveDivisor); break;
     }
 
+    autoAdaptTransformation({ gRoot, ...box, padding: CONTAINER_PADDING }, positionForTransformation);
+
+    return buffer;
 }
 
 export default modify;

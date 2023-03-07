@@ -1,4 +1,4 @@
-import { ReactNode, useLayoutEffect, useRef, useState } from "react";
+import { ReactNode, RefObject, useLayoutEffect, useRef, useState } from "react";
 import { InteractionProps } from "../draw/AbstractDraw";
 import AbstractDrawRoot from "../draw/AbstractDrawRoot";
 import { RESULT_COLOR, SELECTED_COLOR } from "../draw/config";
@@ -20,6 +20,7 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
         onMouseUpContainer: (x: number, y: number) => void,
         onSelectedMouseDown: () => void,
         onSelectedMouseUp: () => void,
+        svgRef: RefObject<SVGSVGElement>,
     }): ReactNode {
         const gAValues = getGAbstractValues(this.gExpression);
         const drawValues: DrawValue[] = gAValues.map(gaValue => new DrawValue(gaValue));
@@ -74,13 +75,14 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
 
         return <svg {...{ style: this.style }}
             onMouseDown={(e) => {
-                const {left, top} = e.currentTarget.getBoundingClientRect();
+                const { left, top } = e.currentTarget.getBoundingClientRect();
                 props.onMouseDownContainer(e.clientX - left, e.clientY - top);
             }}
             onMouseUp={e => {
-                const {left, top} = e.currentTarget.getBoundingClientRect();
+                const { left, top } = e.currentTarget.getBoundingClientRect();
                 props.onMouseUpContainer(e.clientX - left, e.clientY - top);
             }}
+            ref={props.svgRef}
         >
             {resultRect}
             {selectedRect}
@@ -109,6 +111,8 @@ const DrawRoot = ({ root: _root, style, drawIds = false, onModify = () => { } }:
 
     const drawRoot = new _DrawRoot(root, style, drawIds);
 
+    const svgRef: RefObject<SVGSVGElement> = useRef<SVGSVGElement>(null);
+
     return <>{drawRoot.render(
         {
             ...drawRootHandlers({
@@ -120,9 +124,14 @@ const DrawRoot = ({ root: _root, style, drawIds = false, onModify = () => { } }:
                 dragContainer: dragContainerRef,
                 hoveredID,
                 setHoveredID,
+                getBox: () => ({
+                    width: svgRef.current?.width.animVal.value || 0,
+                    height: svgRef.current?.height.animVal.value || 0
+                })
             }),
             hoveredID,
             selectedID,
+            svgRef,
         }
     )}</>;
 }
