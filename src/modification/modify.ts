@@ -1,6 +1,8 @@
-import { autoAdaptTransformation, keepPositionForTransformation } from "../autoAdapt";
+import { autoAdaptEdges, autoAdaptTransformation, keepPositionForTransformation } from "../autoAdapt";
 import { CONTAINER_PADDING } from "../draw/config";
 import { GAbstractRoot } from "../expression/gExpression";
+import { find } from "../utils/expression";
+import { removeEdges } from "../utils/gExpression";
 import Modification from "./Modification";
 import { MoveDivisor, moveDivisor, moveFactor, MoveFactor, moveSubtrahend, MoveSubtrahend, MoveSummand, moveSummand } from "./modifyEquation";
 import { distribute, Distribute, reverseDistribute, ReverseDistribute, swapFactors1D, SwapFactors1D, swapFactors2D, SwapFactors2D, SwapSummands, swapSummands } from "./modifyTerm";
@@ -46,9 +48,20 @@ const modify = (gRoot: GAbstractRoot, modification: Modification, box: { width: 
             buffer = moveDivisor(gRoot, modification as MoveDivisor); break;
     }
 
+    if (!buffer) return false;
+
     autoAdaptTransformation({ gRoot, ...box, padding: CONTAINER_PADDING }, positionForTransformation);
 
-    return buffer;
+    if (['substitute', 'swap1DAnd2D', 'swapXToY'].some(val => val === modification.type)) {
+
+        const child = find(modification.id, gRoot);
+
+        removeEdges(child);
+
+        autoAdaptEdges(gRoot);
+    }
+
+    return true;
 }
 
 export default modify;

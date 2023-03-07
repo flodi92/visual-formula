@@ -173,7 +173,17 @@ const getYNeighbours = (gExpression: GExpression): GExpression[] => {
 const getParentXY = (expression?: Expression): XY | undefined =>
     !expression ? undefined :
         (expression instanceof GAbstractDirectedExpression) ? directionToXY(expression.startDirection) :
-            getParentXY(expression.parent)
+            getParentXY(expression.parent);
+
+const removeEdges = (child: Expression | undefined) => {
+    if (child instanceof GValue) {
+        ([child.xEdge, child.yEdge] = [undefined, undefined])
+    } else if (child instanceof GSimpleValue) {
+        child.edge = undefined
+    } else {
+        child?.children.forEach(_child => removeEdges(_child));
+    }
+}
 
 export {
     getWidths,
@@ -200,4 +210,5 @@ export {
     sumStartDirection,
     differenceStartDirection,
     getParentXY,
+    removeEdges,
 };
