@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './button.css';
 
 import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
-import { DrawMValue, DrawRoot } from '../drawReact';
+import { DrawMValue, DrawRoot, useInteractionHandlers } from '../drawReact';
 import { getExpressionFromJSON, getMExpressionFromExpression } from '../conversion';
 import { ID } from '../types';
 import { moveSummand, moveSubtrahend, moveFactor, moveDivisor } from '../modification/modifyEquation';
@@ -103,7 +103,6 @@ export const TestModificationArrays = ({
       }
     }
 
-
     setUnsetIDs(gEquation);
   }
 
@@ -113,10 +112,13 @@ export const TestModificationArrays = ({
   );
 
   const [id, modification, parameters] = steps > 0 ? idModificationParameters[steps - 1] : [];
+
+  const { root, ...interactionProps } = useInteractionHandlers(gEquation);
+
   return <>
     <div style={{ fontStyle: "italic", fontSize: "13px" }}>{JSON.stringify({ id, modification, parameters })}</div>
-    <DrawRoot root={gEquation} style={{ width: '600px', height: '200px' }} />
-    <DrawMValue mExpression={getMExpressionFromExpression(gEquation)} />
-    <div style={{ whiteSpace: "pre", fontSize: "10px" }}>{`${JSON.stringify(gEquation.json, null, 2)}`}</div>
+    <DrawRoot {...{ root, ...interactionProps }} style={{ width: '600px', height: '200px' }} />
+    <DrawMValue mExpression={getMExpressionFromExpression(root)}{...interactionProps} />
+    <div style={{ whiteSpace: "pre", fontSize: "10px" }}>{`${JSON.stringify(root.json, null, 2)}`}</div>
   </>
 };
