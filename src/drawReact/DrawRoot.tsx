@@ -1,11 +1,8 @@
-import { ReactNode, RefObject, useLayoutEffect, useRef, useState } from "react";
+import { ReactNode, RefObject } from "react";
 import { InteractionProps } from "../draw/AbstractDraw";
 import AbstractDrawRoot from "../draw/AbstractDrawRoot";
 import { RESULT_COLOR, SELECTED_COLOR } from "../draw/config";
-import drawRootHandlers from "../draw/drawRootHandlers";
 import { GAbstractRoot, GDifference, GExpression, GProduct1D, GProduct2D, GQuotient1D, GQuotient2D, GSum } from "../expression/gExpression";
-import Modification from "../modification/Modification";
-import { ID } from "../types";
 import { expressionToArray, find } from "../utils/expression";
 import { getGAbstractValues } from "../utils/gExpression";
 import DrawId from "./DrawId";
@@ -13,15 +10,17 @@ import DrawOperators from "./DrawOperators";
 import DrawValue from "./DrawValue";
 import DrawZeros from "./DrawZeros";
 
+type DrawRootProps = InteractionProps & {
+    onMouseDownContainer?: (x: number, y: number) => void,
+    onMouseUpContainer?: (x: number, y: number) => void,
+    onSelectedMouseDown?: () => void,
+    onSelectedMouseUp?: () => void,
+    svgRef?: RefObject<SVGSVGElement>,
+};
+
 class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
     protected _empty(): ReactNode { return <></> }
-    public render(props: InteractionProps & {
-        onMouseDownContainer: (x: number, y: number) => void,
-        onMouseUpContainer: (x: number, y: number) => void,
-        onSelectedMouseDown: () => void,
-        onSelectedMouseUp: () => void,
-        svgRef: RefObject<SVGSVGElement>,
-    }): ReactNode {
+    public render(props: DrawRootProps): ReactNode {
         const gAValues = getGAbstractValues(this.gExpression);
         const drawValues: DrawValue[] = gAValues.map(gaValue => new DrawValue(gaValue));
 
@@ -58,11 +57,11 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
                 fill={SELECTED_COLOR}
                 onMouseDown={e => {
                     e.preventDefault();
-                    props.onSelectedMouseDown();
+                    props?.onSelectedMouseDown && props.onSelectedMouseDown();
                 }}
                 onMouseUp={e => {
                     e.preventDefault();
-                    props.onSelectedMouseUp();
+                    props?.onSelectedMouseUp && props.onSelectedMouseUp();
                 }}
                 {...{
                     x: selectedGExpression.x,
@@ -76,11 +75,11 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
         return <svg {...{ style: this.style }}
             onMouseDown={(e) => {
                 const { left, top } = e.currentTarget.getBoundingClientRect();
-                props.onMouseDownContainer(e.clientX - left, e.clientY - top);
+                props?.onMouseDownContainer && props.onMouseDownContainer(e.clientX - left, e.clientY - top);
             }}
             onMouseUp={e => {
                 const { left, top } = e.currentTarget.getBoundingClientRect();
-                props.onMouseUpContainer(e.clientX - left, e.clientY - top);
+                props?.onMouseUpContainer && props.onMouseUpContainer(e.clientX - left, e.clientY - top);
             }}
             ref={props.svgRef}
         >
@@ -94,46 +93,41 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
     }
 }
 
-const DrawRoot = ({ root: _root, style, drawIds = false, onModify = () => { } }: {
+const DrawRoot = ({
+    root,
+    style,
+    drawIds = false,
+    onClickID = () => { },
+    onEnterID = () => { },
+    onLeaveID = () => { },
+    onMouseDownContainer = () => { },
+    onMouseDownID = () => { },
+    onMouseUpContainer = () => { },
+    onSelectedMouseDown = () => { },
+    onSelectedMouseUp = () => { },
+    svgRef,
+    hoveredID,
+    selectedID,
+}: DrawRootProps & {
     root: GAbstractRoot,
     style: any,
     drawIds?: boolean,
-    onModify?: ((modification?: Modification) => void)
 }) => {
-    const [{ root }, setRoot] = useState({ root: _root });
-    useLayoutEffect(() => setRoot({ root: _root }), [_root]);
-
-    const [selectedID, setSelectedID] = useState<ID | undefined>();
-    const [hoveredID, setHoveredID] = useState<ID | undefined>();
-
-    const dragContainerRef = useRef<{ x?: number, y?: number }>();
-    const dragValueRef = useRef<ID>();
-
     const drawRoot = new _DrawRoot(root, style, drawIds);
 
-    const svgRef: RefObject<SVGSVGElement> = useRef<SVGSVGElement>(null);
-
-    return <>{drawRoot.render(
-        {
-            ...drawRootHandlers({
-                root,
-                setRoot: root => setRoot({ root }),
-                selectedID,
-                setSelectedID,
-                dragValue: dragValueRef,
-                dragContainer: dragContainerRef,
-                hoveredID,
-                setHoveredID,
-                getBox: () => ({
-                    width: svgRef.current?.width.animVal.value || 0,
-                    height: svgRef.current?.height.animVal.value || 0
-                })
-            }),
-            hoveredID,
-            selectedID,
-            svgRef,
-        }
-    )}</>;
+    return <>{drawRoot.render({
+        onClickID,
+        onEnterID,
+        onLeaveID,
+        onMouseDownContainer,
+        onMouseDownID,
+        onMouseUpContainer,
+        onSelectedMouseDown,
+        onSelectedMouseUp,
+        svgRef,
+        hoveredID,
+        selectedID,
+    })}</>;
 }
 
 export default DrawRoot;

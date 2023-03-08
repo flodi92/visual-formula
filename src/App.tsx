@@ -3,11 +3,11 @@ import React from 'react';
 import './App.css';
 import GAbstractRoot from './expression/gExpression/GAbstractRoot';
 import { getExpressionFromJSON } from './conversion';
-import { DrawRoot } from './drawReact';
+import { DrawRoot, useInteractionHandlers } from './drawReact';
 
 
 const Test = () => {
-  const root = getExpressionFromJSON({
+  const _root = getExpressionFromJSON({
     type: 'GValue',
     mValue: '1',
     xEdge: 'bottom',
@@ -17,9 +17,11 @@ const Test = () => {
     numericValue: 2,
   }) as GAbstractRoot;
 
-  root.layerTransformation = { x: 30, y: 30, scaleX: 10, scaleY: 10 }
+  _root.layerTransformation = { x: 30, y: 30, scaleX: 10, scaleY: 10 }
 
-  return <DrawRoot root={root} style={{ backgroundColor: 'gray', width: '100%', height: '100%' }} />
+  const { root, ...interactionProps } = useInteractionHandlers(_root);
+  
+  return <DrawRoot {...{ root, ...interactionProps }} style={{ backgroundColor: 'gray', width: '100%', height: '100%' }} />
 }
 
 function App() {

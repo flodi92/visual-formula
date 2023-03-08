@@ -9,16 +9,16 @@ let mousedownPos: [number, number] = [-1, -1];
 
 export const handlersOfId = (id: ID | undefined, props: InteractionProps | undefined) => {
     return id !== undefined ? ({
-        onMouseEnter: () => props?.onEnterID(id),
-        onMouseLeave: () => props?.onLeaveID(id),
+        onMouseEnter: () => props?.onEnterID && props.onEnterID(id),
+        onMouseLeave: () => props?.onLeaveID && props.onLeaveID(id),
         onMouseDown: (e: MouseEvent<SVGGElement>) => {
-            props?.onMouseDownID(id);
+            props?.onMouseDownID && props.onMouseDownID(id);
             mouseDownId = id;
             mousedownPos = [e.screenX, e.screenY];        },
         onMouseUp: (e: MouseEvent<SVGGElement>) => {
             
             if (mouseDownId === id && mousedownPos[0] === e.screenX && mousedownPos[1] === e.screenY) {
-                props?.onClickID(id);
+                props?.onClickID && props.onClickID(id);
                 e.stopPropagation();
                 e.preventDefault();
             }

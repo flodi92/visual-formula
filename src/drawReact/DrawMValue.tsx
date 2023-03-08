@@ -83,8 +83,8 @@ const DrawMExpression = ({ mExpression, interactionProps }: ({ mExpression?: MEx
     return <></>;
 }
 
-const DrawMValue = ({ mExpression, interactionProps }
-    : { mExpression?: MExpression, interactionProps?: InteractionProps }): JSX.Element => {
+const DrawMValue = ({ mExpression, ...interactionProps }
+    : { mExpression?: MExpression } & InteractionProps): JSX.Element => {
 
     const style = {
         fontFamily: "sans-serif",
