@@ -90,7 +90,7 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
 
     protected _renderMExpression(mExpression: MExpression | undefined, props: InteractionProps): ReactNode {
         return (
-            <DrawMValue mExpression={mExpression} interactionProps={props} />
+            <DrawMValue mExpression={mExpression} {...props} />
         );
     };
 
