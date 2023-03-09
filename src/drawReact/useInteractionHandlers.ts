@@ -1,10 +1,11 @@
-import { RefObject, useRef, useState } from "react";
+import { RefObject, useLayoutEffect, useRef, useState } from "react";
+import { cloneExpression } from "../conversion";
 import drawRootHandlers from "../draw/drawRootHandlers";
 import { GAbstractRoot } from "../expression/gExpression";
 import { ID } from "../types";
 
 const useInteractionHandlers = (initialRoot: GAbstractRoot) => {
-    const [{ root }, setRoot] = useState({ root: initialRoot });
+    const [{ root }, setRoot] = useState({ root: cloneExpression(initialRoot, { isAdoptIDs: true }) });
 
     const [selectedID, setSelectedID] = useState<ID | undefined>();
     const [hoveredID, setHoveredID] = useState<ID | undefined>();
@@ -13,6 +14,11 @@ const useInteractionHandlers = (initialRoot: GAbstractRoot) => {
     const dragValueRef = useRef<ID>();
 
     const svgRef: RefObject<SVGSVGElement> = useRef<SVGSVGElement>(null);
+
+    useLayoutEffect(
+        () => setRoot({ root: cloneExpression(initialRoot, { isAdoptIDs: true }) }),
+        [JSON.stringify(initialRoot.json)]
+    );
 
     return {
         hoveredID,

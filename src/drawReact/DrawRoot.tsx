@@ -85,10 +85,10 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
         >
             {resultRect}
             {selectedRect}
-            {drawValues.map((drawValue, idx) => drawValue.render(props))}
-            {drawOperators.map(drawOperator => drawOperator.render(props))}
+            {drawValues.map((drawValue, idx) => <g key={idx}>{drawValue.render(props)}</g>)}
+            {drawOperators.map((drawOperator, idx) => <g key={idx}>{drawOperator.render(props)}</g>)}
             {drawZero.render()}
-            {drawnIds.map((drawnId, idx) => drawnId.render())}
+            {drawnIds.map((drawnId, idx) => <g key={idx}>{drawnId.render()}</g>)}
         </svg>
     }
 }
