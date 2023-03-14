@@ -4,7 +4,7 @@ import { expressionToArray, find } from "../utils/expression";
 import getModification from "../modification/getModification";
 import Modification from "../modification/Modification";
 import modify from "../modification/modify";
-import { ID, XY } from "../types";
+import { ID, ModificationType, XY } from "../types";
 import { MIN_DRAG_AND_DROP } from "./config";
 
 const drawRootHandlers = ({
@@ -149,6 +149,9 @@ const drawRootHandlers = ({
         onSelectedMouseDown: () => { },
 
         onSelectedMouseUp: () => { },
+
+        onButtonModification: (type: ModificationType) =>
+            handleModify({ type, id: selectedID })
     };
 }
 

@@ -1,0 +1,22 @@
+ul.additional-modifications {
+    list-style-type: none;
+    margin: 0;
+    margin-bottom: 1em;;
+    padding: 0;
+    overflow: hidden;
+}
+
+ul.additional-modifications li {
+    float: left;
+    display: block;
+    padding: 3px 10px;
+    color: white;
+    background-color: #b3b3b3;
+    font-size: 10px;
+    font-family: sans-serif;
+    cursor: pointer;
+}
+
+ul.additional-modifications li:hover {
+    background-color: #808080;
+}

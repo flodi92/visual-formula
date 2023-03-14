@@ -1,6 +1,7 @@
 import { ReactNode, RefObject } from "react";
 import { InteractionProps } from "../draw/AbstractDraw";
 import AbstractDrawRoot from "../draw/AbstractDrawRoot";
+import { ModificationType } from '../types';
 import { RESULT_COLOR, SELECTED_COLOR } from "../draw/config";
 import { GAbstractRoot, GDifference, GExpression, GProduct1D, GProduct2D, GQuotient1D, GQuotient2D, GSum } from "../expression/gExpression";
 import { expressionToArray, find } from "../utils/expression";
@@ -10,12 +11,15 @@ import DrawOperators from "./DrawOperators";
 import DrawValue from "./DrawValue";
 import DrawZeros from "./DrawZeros";
 
+import './DrawRoot.css';
+
 type DrawRootProps = InteractionProps & {
     onMouseDownContainer?: (x: number, y: number) => void,
     onMouseUpContainer?: (x: number, y: number) => void,
     onSelectedMouseDown?: () => void,
     onSelectedMouseUp?: () => void,
     svgRef?: RefObject<SVGSVGElement>,
+    onButtonModification?: (type: ModificationType) => void,
 };
 
 class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
@@ -72,24 +76,32 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
             />
             : <></>;
 
-        return <svg {...{ style: this.style }}
-            onMouseDown={(e) => {
-                const { left, top } = e.currentTarget.getBoundingClientRect();
-                props?.onMouseDownContainer && props.onMouseDownContainer(e.clientX - left, e.clientY - top);
-            }}
-            onMouseUp={e => {
-                const { left, top } = e.currentTarget.getBoundingClientRect();
-                props?.onMouseUpContainer && props.onMouseUpContainer(e.clientX - left, e.clientY - top);
-            }}
-            ref={props.svgRef}
-        >
-            {resultRect}
-            {selectedRect}
-            {drawValues.map((drawValue, idx) => <g key={idx}>{drawValue.render(props)}</g>)}
-            {drawOperators.map((drawOperator, idx) => <g key={idx}>{drawOperator.render(props)}</g>)}
-            {drawZero.render()}
-            {drawnIds.map((drawnId, idx) => <g key={idx}>{drawnId.render()}</g>)}
-        </svg>
+        const handleButtonModification = (type: ModificationType) => props.onButtonModification && props.onButtonModification(type);
+
+        return <>
+            <svg {...{ style: this.style }}
+                onMouseDown={(e) => {
+                    const { left, top } = e.currentTarget.getBoundingClientRect();
+                    props?.onMouseDownContainer && props.onMouseDownContainer(e.clientX - left, e.clientY - top);
+                }}
+                onMouseUp={e => {
+                    const { left, top } = e.currentTarget.getBoundingClientRect();
+                    props?.onMouseUpContainer && props.onMouseUpContainer(e.clientX - left, e.clientY - top);
+                }}
+                ref={props.svgRef}
+            >
+                {resultRect}
+                {selectedRect}
+                {drawValues.map((drawValue, idx) => <g key={idx}>{drawValue.render(props)}</g>)}
+                {drawOperators.map((drawOperator, idx) => <g key={idx}>{drawOperator.render(props)}</g>)}
+                {drawZero.render()}
+                {drawnIds.map((drawnId, idx) => <g key={idx}>{drawnId.render()}</g>)}
+            </svg>
+            <ul className="additional-modifications">
+                <li onClick={() => handleButtonModification('substitute')}>Substitute</li>
+                <li onClick={() => handleButtonModification('swap1DAnd2D')}>{'1D <==> 2D'}</li>
+            </ul>
+        </>
     }
 }
 
@@ -105,6 +117,7 @@ const DrawRoot = ({
     onMouseUpContainer = () => { },
     onSelectedMouseDown = () => { },
     onSelectedMouseUp = () => { },
+    onButtonModification = () => { },
     svgRef,
     hoveredID,
     selectedID,
@@ -124,6 +137,7 @@ const DrawRoot = ({
         onMouseUpContainer,
         onSelectedMouseDown,
         onSelectedMouseUp,
+        onButtonModification,
         svgRef,
         hoveredID,
         selectedID,
