@@ -1,6 +1,6 @@
 import React from 'react';
 // import logo from './logo.svg';
-import './App.css';
+import './App.scss';
 import GAbstractRoot from './expression/gExpression/GAbstractRoot';
 import { getExpressionFromJSON } from './conversion';
 import { DrawRoot, useInteractionHandlers } from './drawReact';
