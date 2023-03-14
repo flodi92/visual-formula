@@ -3,12 +3,10 @@ import { InteractionProps } from "../draw/AbstractDraw";
 import AbstractDrawOperators from "../draw/AbstractDrawOperators";
 import {
     OPERATOR_OUTER_RADIUS as OORADIUS,
-    OPERATOR_RADIUS as ORADIUS,
-    OPERATOR_COLOR_1,
-    OPERATOR_COLOR_2,
+    OPERATOR_RADIUS as ORADIUS
 } from "../draw/config";
-import { Operator, ID } from "../types";
-import { handlersOfId, interactionStyle } from "./drawUtils";
+import { ID, Operator } from "../types";
+import { getInteractionClasses, handlersOfId } from "./drawUtils";
 
 class DrawOperators extends AbstractDrawOperators<ReactNode> {
     protected renderOperator(
@@ -19,10 +17,10 @@ class DrawOperators extends AbstractDrawOperators<ReactNode> {
         const lineProps = { stroke: "black" }
 
         return operatorPositions.map(([cx, cy]) =>
-            <g {...(handlersOfId(id, props))}>
+            <g className="operator" {...(handlersOfId(id, props))}>
                 <circle {...{ cx, cy }} r={OORADIUS} fill="white" /> {/* white background because style has some opacity */}
-                <circle {...{ cx, cy }} r={OORADIUS} fill={isTerm1 ? OPERATOR_COLOR_1 : OPERATOR_COLOR_2} stroke={"#000000"} strokeWidth={1}
-                    style={interactionStyle(this.gExpression, props)}
+                <circle {...{ cx, cy }} r={OORADIUS} stroke={"#000000"} strokeWidth={1}
+                    className={getInteractionClasses(this.gExpression, props)}
                 />
                 {
                     {

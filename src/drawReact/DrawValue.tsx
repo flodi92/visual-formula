@@ -2,13 +2,15 @@ import { ReactNode } from "react";
 import { InteractionProps } from "../draw/AbstractDraw";
 import AbstractDrawValue from "../draw/AbstractDrawValue";
 import {
-    CORNER_PADDING, FONT_SIZE, GHOST_STROKE_WIDTH, G_COLOR_1, G_COLOR_2, ROUND_PADDING, STROKE_DASH_ARRAY
+    CORNER_PADDING, FONT_SIZE, GHOST_STROKE_WIDTH, ROUND_PADDING, STROKE_DASH_ARRAY
 } from "../draw/config";
 import { GAbstractValue, GSimpleValue, GValue } from "../expression/gExpression";
 import { MExpression } from "../expression/mExpression";
 import { ID } from "../types";
 import DrawMValue from "./DrawMValue";
-import { handlersOfId, interactionStyle } from "./drawUtils";
+import { getInteractionClasses, handlersOfId } from "./drawUtils";
+
+import './draw.scss';
 
 class DrawValue extends AbstractDrawValue<ReactNode> {
     protected _renderRoundGValue({ id, coords: { a, ba, b, bc, c }, strokeWidth, isTerm1 }: {
@@ -25,9 +27,8 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
                 <path
                     id={`path-${id}`}
                     key={`path-${id}`}
-                    style={interactionStyle(this.gExpression, props)}
+                    className={getInteractionClasses(this.gExpression, props)}
                     d={d} strokeWidth={strokeWidth}
-                    stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
                     fill="none" />
                 <GhostPath {...{ id, d }} />
             </g>
@@ -49,16 +50,14 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
                 <path
                     id={`path1-${id}`}
                     key={`path1-${id}`}
-                    style={interactionStyle(this.gExpression, props)}
+                    className={getInteractionClasses(this.gExpression, props)}
                     d={d1} strokeWidth={abStrokeWidth}
-                    stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
                     fill="none" />
                 <path
                     id={`path2-${id}`}
                     key={`path2-${id}`}
-                    style={interactionStyle(this.gExpression, props)}
+                    className={getInteractionClasses(this.gExpression, props)}
                     d={d2} strokeWidth={bcStrokeWidth}
-                    stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
                     fill="none" />
                 <GhostPath {...{ id, d: `${d1} ${d2}` }} />
             </g>
@@ -78,9 +77,8 @@ class DrawValue extends AbstractDrawValue<ReactNode> {
                 <path
                     id={`path-${id}`}
                     key={`path-${id}`}
-                    style={interactionStyle(this.gExpression, props)}
+                    className={getInteractionClasses(this.gExpression, props)}
                     d={d} strokeWidth={strokeWidth}
-                    stroke={isTerm1 ? G_COLOR_1 : G_COLOR_2}
                     strokeDasharray={STROKE_DASH_ARRAY}
                     fill="none" />
                 <GhostPath {...{ id, d }} />

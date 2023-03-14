@@ -1,19 +1,14 @@
 import { InteractionProps } from "../draw/AbstractDraw";
-import { M_COLOR_1, M_COLOR_2 } from "../draw/config";
 import { MDifference, MEquation, MExpression, MProduct, MQuotient, MSum, MValue } from "../expression/mExpression";
-import { handlersOfId, interactionStyle } from "./drawUtils";
+import { getInteractionClasses, handlersOfId } from "./drawUtils";
 
 import './DrawMValue.scss';
 
 const DrawMExpression = ({ mExpression, interactionProps }: ({ mExpression?: MExpression, interactionProps: InteractionProps })): JSX.Element => {
     if (!mExpression) return <></>
 
-
     const props = {
-        style: {
-            color: mExpression.isTerm1 ? M_COLOR_1 : M_COLOR_2,
-            ...interactionStyle(mExpression, interactionProps),
-        },
+        className: getInteractionClasses(mExpression, interactionProps),        
         ...handlersOfId(mExpression?.id, interactionProps)
     }
 

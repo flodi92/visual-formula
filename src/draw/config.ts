@@ -9,26 +9,12 @@ export const FONT_SIZE = 11;
 export const ZERO_RADIUS = 5;
 export const CONTAINER_PADDING = 5;
 
-export const G_COLOR_1 = 'black';
-export const G_COLOR_2 = 'red';
-export const M_COLOR_1 = 'black';
-export const M_COLOR_2 = 'red';
 export const ID_COLOR_1 = 'blue';
 export const ID_COLOR_2 = 'orange';
-export const RESULT_COLOR = '#88888844';
-export const SELECTED_COLOR = '#5490de44';
-export const SELECTED_TEXT_COLOR = '#5490de77';
 
 export const STROKE_DASH_ARRAY = "4,2";
 
-export const HOVERED_SELECTED_OPACITY = 1;
-export const SELECTED_OPACITY = 0.75;
-export const HOVERED_OPACITY = 0.65;
-export const DEFAULT_OPACITY = 0.5;
-
 export const OPERATOR_OUTER_RADIUS = 4.3;
 export const OPERATOR_RADIUS = 2.5;
-export const OPERATOR_COLOR_1 = 'white';
-export const OPERATOR_COLOR_2 = 'red';
 
 export const MIN_DRAG_AND_DROP = 3;

@@ -1,0 +1,87 @@
+$term1Color: #414141;
+$term1SelectedColor: #011eac;
+
+$term2Color: #ff4141;
+$term2SelectedColor: #a73ea1;
+
+
+$term1OperatorColor: #ffffff;
+$term1SelectedOperatorColor: #5871f0;
+
+$term2OperatorColor: #fa6060;;
+$term2SelectedOperatorColor: #a850a4;
+
+$hoverOpacity: 0.6;
+
+$resultColor: #88888844;
+$selectedColor: #5490de44;
+$selectedTextColor: #5490de77;
+
+svg {
+  path {
+    &.isTerm1 {
+      stroke: $term1Color;
+      &.isSelected {
+        stroke: $term1SelectedColor;
+      }
+    }
+    &.isTerm2 {
+      stroke: $term2Color;
+      &.isSelected {
+        stroke: $term2SelectedColor;
+      }
+    }
+    &.isHovering {
+      opacity: $hoverOpacity;
+    }
+  }
+  rect {
+    &.result-area {
+      fill: #88888844;
+    }
+    &.selected-area {
+      fill: #5490de44;
+    }
+  }
+
+  .operator {
+    circle {
+      &.isTerm1 {
+        fill: $term1OperatorColor;
+        &.isSelected {
+          fill: $term1SelectedOperatorColor;
+        }
+      }
+      &.isTerm2 {
+        fill: $term2OperatorColor;
+        &.isSelected {
+          fill: $term2SelectedOperatorColor;
+        }
+      }
+      &.isHovering {
+        opacity: $hoverOpacity;
+        
+      }
+    }
+  }
+}
+
+math {
+  .isTerm1 {
+    color: $term1Color;
+    &.isSelected {
+      color: $term1SelectedColor;
+      background-color: $selectedTextColor;
+    }
+  }
+  .isTerm2 {
+    color: $term2Color;
+    &.isSelected {
+      color: $term2SelectedColor;
+      background-color: $selectedTextColor;
+    }
+  }
+  .isHovering {
+    opacity: $hoverOpacity;
+  }
+}

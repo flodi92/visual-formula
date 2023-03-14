@@ -1,9 +1,8 @@
 import { ReactNode, RefObject } from "react";
 import { InteractionProps } from "../draw/AbstractDraw";
 import AbstractDrawRoot from "../draw/AbstractDrawRoot";
-import { ModificationType } from '../types';
-import { RESULT_COLOR, SELECTED_COLOR } from "../draw/config";
 import { GAbstractRoot, GDifference, GExpression, GProduct1D, GProduct2D, GQuotient1D, GQuotient2D, GSum } from "../expression/gExpression";
+import { ModificationType } from '../types';
 import { expressionToArray, find } from "../utils/expression";
 import { getGAbstractValues } from "../utils/gExpression";
 import DrawId from "./DrawId";
@@ -11,6 +10,7 @@ import DrawOperators from "./DrawOperators";
 import DrawValue from "./DrawValue";
 import DrawZeros from "./DrawZeros";
 
+import './draw.scss';
 import './DrawRoot.scss';
 
 type DrawRootProps = InteractionProps & {
@@ -46,19 +46,19 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
             .map(expression => new DrawOperators(expression))
 
         const resultRect = <rect
-            fill={RESULT_COLOR}
+            className="result-area"
             {...{
                 x: this.gExpression.x,
                 y: this.gExpression.y,
                 width: this.gExpression.width,
                 height: this.gExpression.height
             }}
-        />;
-
-        const selectedGExpression = props.selectedID !== undefined ? find(props.selectedID, this.gExpression) : undefined;
-        const selectedRect = (selectedGExpression instanceof GExpression) ?
+            />;
+            
+            const selectedGExpression = props.selectedID !== undefined ? find(props.selectedID, this.gExpression) : undefined;
+            const selectedRect = (selectedGExpression instanceof GExpression) ?
             <rect
-                fill={SELECTED_COLOR}
+                className="selected-area"
                 onMouseDown={e => {
                     e.preventDefault();
                     props?.onSelectedMouseDown && props.onSelectedMouseDown();
