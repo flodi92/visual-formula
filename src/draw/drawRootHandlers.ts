@@ -1,17 +1,15 @@
 import Expression from "../expression/Expression";
 import { GAbstractRoot, GExpression } from "../expression/gExpression";
-import { expressionToArray, find } from "../utils/expression";
 import getModification from "../modification/getModification";
 import Modification from "../modification/Modification";
-import modify from "../modification/modify";
 import { ID, ModificationType, XY } from "../types";
+import { expressionToArray, find } from "../utils/expression";
 import { MIN_DRAG_AND_DROP } from "./config";
 
 const drawRootHandlers = ({
-    root, setRoot, selectedID, setSelectedID, dragValue, dragContainer, hoveredID, setHoveredID, getBox
+    root, selectedID, setSelectedID, dragValue, dragContainer, hoveredID, setHoveredID, onModify,
 }: {
-    root: GAbstractRoot,
-    setRoot: (val: GAbstractRoot) => void,
+    root?: GAbstractRoot,
 
     selectedID: ID | undefined,
     setSelectedID: (val: ID | undefined) => void,
@@ -22,7 +20,7 @@ const drawRootHandlers = ({
     hoveredID: ID | undefined,
     setHoveredID: (val: ID | undefined) => void,
 
-    getBox: () => { width: number, height: number }
+    onModify: (modification: Modification) => void,
 }) => {
 
     const computeSelectedID = (newID: ID | undefined, oldID: ID | undefined): ID | undefined => {
@@ -40,11 +38,6 @@ const drawRootHandlers = ({
         return newID
     }
 
-    const handleModify = (modification: Modification) => {
-        modify(root, modification, getBox());
-        setRoot(root);
-    }
-
     const handleTryModify = ({ dropExpressions, dragExpressions, isDragSelected, isDropSelected, isDragResult, isDropResult, dragXY }: {
         dropExpressions?: GExpression[],
         dragExpressions?: GExpression[],
@@ -56,6 +49,8 @@ const drawRootHandlers = ({
 
         dragXY?: XY,
     }) => {
+        if (!root) return;
+
         const selectedExpression = selectedID !== undefined ? find(selectedID, root) : undefined;
 
         const modification = getModification({
@@ -69,7 +64,7 @@ const drawRootHandlers = ({
             dragXY,
         });
 
-        modification !== undefined && handleModify(modification);
+        modification !== undefined && onModify(modification);
     }
 
     return {
@@ -91,6 +86,8 @@ const drawRootHandlers = ({
         },
 
         onMouseUpContainer: (x: number, y: number) => {
+            if (!root) return;
+
             const { x: _x, y: _y } = dragContainer.current || {};
 
             if (_x === undefined || _y === undefined) return;
@@ -151,7 +148,7 @@ const drawRootHandlers = ({
         onSelectedMouseUp: () => { },
 
         onButtonModification: (type: ModificationType) =>
-            handleModify({ type, id: selectedID })
+            onModify({ type, id: selectedID })
     };
 }
 

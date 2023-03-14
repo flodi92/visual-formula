@@ -20,6 +20,8 @@ type DrawRootProps = InteractionProps & {
     onSelectedMouseUp?: () => void,
     svgRef?: RefObject<SVGSVGElement>,
     onButtonModification?: (type: ModificationType) => void,
+    onForward?: () => void,
+    onBackward?: () => void,
 };
 
 class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
@@ -53,10 +55,10 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
                 width: this.gExpression.width,
                 height: this.gExpression.height
             }}
-            />;
-            
-            const selectedGExpression = props.selectedID !== undefined ? find(props.selectedID, this.gExpression) : undefined;
-            const selectedRect = (selectedGExpression instanceof GExpression) ?
+        />;
+
+        const selectedGExpression = props.selectedID !== undefined ? find(props.selectedID, this.gExpression) : undefined;
+        const selectedRect = (selectedGExpression instanceof GExpression) ?
             <rect
                 className="selected-area"
                 onMouseDown={e => {
@@ -79,6 +81,10 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
         const handleButtonModification = (type: ModificationType) => props.onButtonModification && props.onButtonModification(type);
 
         return <>
+            <ul className="menu">
+                <li onClick={() => props.onForward && props.onForward()}>{">"}</li>
+                <li onClick={() => props.onBackward && props.onBackward()}>{"<"}</li>
+            </ul>
             <svg {...{ style: this.style }}
                 onMouseDown={(e) => {
                     const { left, top } = e.currentTarget.getBoundingClientRect();
@@ -97,7 +103,7 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
                 {drawZero.render()}
                 {drawnIds.map((drawnId, idx) => <g key={idx}>{drawnId.render()}</g>)}
             </svg>
-            <ul className="additional-modifications">
+            <ul className="menu">
                 <li onClick={() => handleButtonModification('substitute')}>Substitute</li>
                 <li onClick={() => handleButtonModification('swap1DAnd2D')}>{'1D <==> 2D'}</li>
             </ul>
@@ -118,6 +124,8 @@ const DrawRoot = ({
     onSelectedMouseDown = () => { },
     onSelectedMouseUp = () => { },
     onButtonModification = () => { },
+    onForward = () => { },
+    onBackward = () => { },
     svgRef,
     hoveredID,
     selectedID,
@@ -138,6 +146,8 @@ const DrawRoot = ({
         onSelectedMouseDown,
         onSelectedMouseUp,
         onButtonModification,
+        onForward,
+        onBackward,
         svgRef,
         hoveredID,
         selectedID,

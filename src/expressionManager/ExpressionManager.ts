@@ -1,48 +1,91 @@
-import Expression from "../expression/Expression";
-import { GAbstractRoot, GExpression } from "../expression/gExpression";
-import { MExpression } from "../expression/mExpression";
+import { GAbstractRoot } from "../expression/gExpression";
 import Modification from "../modification/Modification";
-import { ID } from "../types";
-import CreationManager from "./CreationManager";
-import HistoryManager, { ModificationResult } from "./HistoryManager";
+import modify from "../modification/modify";
 
 export default class ExpressionManager {
-    private readonly history = new HistoryManager();
-    private readonly creator = new CreationManager();
+    private _getBox: () => { width: number; height: number; } = () => ({ width: 100, height: 100 });
 
-    // TODO auto positioning
+    private history: GAbstractRoot[] = [];
+    private historyI: number = 0;
 
-    public init() {
-        this.creator.expression && this.history.init(this.creator.expression)
+    public modify(modification: Modification): boolean {
+        const buffer = this.root?.clone({ isAdoptIDs: true });
+        const success = !!buffer ? modify(buffer, modification, this.getBox()) : false;
+        if (success && !!buffer) { this.pushHistory(buffer); }
+        return success;
     }
 
-    // creator delegates
-    public get json() { return this.creator.json }
-    public set json(value: object | string | undefined) { this.creator.json = value }
+    public forward() {
+        this.historyI = Math.min(this.historyI + 1, this.history.length - 1);
+    }
 
-    public get formulaString() { return this.creator.formulaString }
-    public set formulaString(value: string | undefined) { this.creator.formulaString = value }
+    public backward() {
+        this.historyI = Math.max(this.historyI - 1, 0);
+    }
 
-    public get mExpression() { return this.creator.mExpression }
-    public set mExpression(value: MExpression | undefined) { this.creator.mExpression = value }
+    private pushHistory(root: GAbstractRoot) {
+        this.historyI++;
+        this.history = this.history.slice(0, this.historyI);
+        this.history.push(root);
+    }
 
-    public get expression() { return this.creator.expression }
-    public get creationState() { return this.creator.creationState }
+    public get root(): GAbstractRoot | undefined {
+        return this.history[this.historyI];
+    }
 
+    public init(value: GAbstractRoot | undefined) {
+        value && this.pushHistory(value);
+        this.history = !!value ? [value] : [];
+        this.historyI = 0
+    }
 
-    // history delegates
-    public get possibleModifications() { return this.history.possibleModifications }
-
-    public get currentResult() { return this.history.currentResult }
-
-    public get currentExpression() { return this.history.currentExpression }
-
-    public get currentModification() { return this.history.currentModification }
-
-    public get selectedID() { return this.history.selectedID }
-    public set selectedID(value: ID) { this.history.selectedID = value }
-
-    public pushHistory(modificationResult: ModificationResult) { this.history.pushHistory(modificationResult) }
-    public backward() { this.history.backward() }
-    public forward() { this.history.forward() }
+    public get getBox(): () => { width: number; height: number; } {
+        return this._getBox;
+    }
+    public set getBox(value: () => { width: number; height: number; }) {
+        this._getBox = value;
+    }
 }
+
+/// TODO what is still needed
+
+// export default class ExpressionManager {
+//     private readonly history = new HistoryManager();
+//     private readonly creator = new CreationManager();
+
+//     // TODO auto positioning
+
+//     public init() {
+//         this.creator.expression && this.history.init(this.creator.expression)
+//     }
+
+//     // creator delegates
+//     public get json() { return this.creator.json }
+//     public set json(value: object | string | undefined) { this.creator.json = value }
+
+//     public get formulaString() { return this.creator.formulaString }
+//     public set formulaString(value: string | undefined) { this.creator.formulaString = value }
+
+//     public get mExpression() { return this.creator.mExpression }
+//     public set mExpression(value: MExpression | undefined) { this.creator.mExpression = value }
+
+//     public get expression() { return this.creator.expression }
+//     public get creationState() { return this.creator.creationState }
+
+
+//     // history delegates
+//     public get possibleModifications() { return this.history.possibleModifications }
+
+//     public get currentResult() { return this.history.currentResult }
+
+//     public get currentExpression() { return this.history.currentExpression }
+
+//     public get currentModification() { return this.history.currentModification }
+
+//     public get selectedID() { return this.history.selectedID }
+//     public set selectedID(value: ID) { this.history.selectedID = value }
+
+//     public pushHistory(modificationResult: ModificationResult) { this.history.pushHistory(modificationResult) }
+//     public backward() { this.history.backward() }
+//     public forward() { this.history.forward() }
+// }

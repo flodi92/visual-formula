@@ -26,7 +26,7 @@ export default abstract class GAbstractRoot extends GExpression {
         return getFormulaStringFromExpression(this);
     }
 
-    public clone() {
-        return cloneExpression(this) as GAbstractRoot;
+    public clone(props: { isAddRoot?: boolean, isAdoptIDs?: boolean, isSetUnsetIDs?: boolean } = {}) {
+        return cloneExpression(this, props) as GAbstractRoot;
     }
 }

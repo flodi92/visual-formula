@@ -20,6 +20,8 @@ const Test = () => {
   _root.layerTransformation = { x: 30, y: 30, scaleX: 10, scaleY: 10 }
 
   const { root, ...interactionProps } = useInteractionHandlers(_root);
+
+  if (!root) return <></>;
   
   return <DrawRoot {...{ root, ...interactionProps }} style={{ backgroundColor: 'gray', width: '100%', height: '100%' }} />
 }

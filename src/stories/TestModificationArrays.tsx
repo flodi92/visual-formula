@@ -115,6 +115,8 @@ export const TestModificationArrays = ({
 
   const { root, ...interactionProps } = useInteractionHandlers(gEquation);
 
+  if (!root) return <></>;
+
   return <>
     <div style={{ fontStyle: "italic", fontSize: "13px" }}>{JSON.stringify({ id, modification, parameters })}</div>
     <DrawRoot {...{ root, ...interactionProps }} style={{ width: '600px', height: '200px' }} />
