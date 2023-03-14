@@ -52,7 +52,7 @@ export const getInteractionClasses = (expression: Expression | undefined, props:
     return [
         isSelected ? 'isSelected' : undefined,
         isHovering ? 'isHovering' : undefined,
-        isTerm1 === true ? 'isTerm1' : isTerm1 === false ? 'isTerm2' : undefined,
+        isTerm1 === true ? 'isTerm1' : isTerm1 === false ? 'isTerm2' : 'isTerm1',
     ].filter(className => !!className).join(' ');
 
 }
