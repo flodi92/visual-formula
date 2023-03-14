@@ -11,7 +11,7 @@ import DrawOperators from "./DrawOperators";
 import DrawValue from "./DrawValue";
 import DrawZeros from "./DrawZeros";
 
-import './DrawRoot.css';
+import './DrawRoot.scss';
 
 type DrawRootProps = InteractionProps & {
     onMouseDownContainer?: (x: number, y: number) => void,
