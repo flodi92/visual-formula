@@ -4,11 +4,10 @@ $term1SelectedColor: #011eac;
 $term2Color: #ff4141;
 $term2SelectedColor: #a73ea1;
 
-
 $term1OperatorColor: #ffffff;
 $term1SelectedOperatorColor: #5871f0;
 
-$term2OperatorColor: #fa6060;;
+$term2OperatorColor: #fa6060;
 $term2SelectedOperatorColor: #a850a4;
 
 $hoverOpacity: 0.6;
@@ -16,6 +15,15 @@ $hoverOpacity: 0.6;
 $resultColor: #88888844;
 $selectedColor: #5490de44;
 $selectedTextColor: #5490de77;
+
+$selectedAreaTerm1: #5490de44;
+$selectedAreaTerm2: #de549444;
+
+$hoveredAreaTerm1: #5490de22;
+$hoveredAreaTerm2: #de549422;
+
+$selectedHoveredAreaTerm2: #5490de99;
+$hoveredAHoveredreaTerm2: #de549499;
 
 svg {
   path {
@@ -31,16 +39,26 @@ svg {
         stroke: $term2SelectedColor;
       }
     }
-    &.isHovering {
-      opacity: $hoverOpacity;
-    }
   }
   rect {
     &.result-area {
       fill: #88888844;
     }
     &.selected-area {
-      fill: #5490de44;
+      &.isTerm1 {
+        fill: $selectedAreaTerm1;
+      }
+      &.isTerm2 {
+        fill: $selectedAreaTerm2;
+      }
+    }
+    &.hovered-area {
+      &.isTerm1 {
+        fill: $hoveredAreaTerm1;
+      }
+      &.isTerm2 {
+        fill: $hoveredAreaTerm2;
+      }
     }
   }
 
@@ -58,10 +76,6 @@ svg {
           fill: $term2SelectedOperatorColor;
         }
       }
-      &.isHovering {
-        opacity: $hoverOpacity;
-        
-      }
     }
   }
 }
@@ -71,17 +85,26 @@ math {
     color: $term1Color;
     &.isSelected {
       color: $term1SelectedColor;
-      background-color: $selectedTextColor;
+      background-color: $selectedAreaTerm1;
+    }
+    &.isHovering {
+      background-color: $hoveredAreaTerm1;
+    }
+    &.isHovering.isSelected {
+      background-color: $selectedHoveredAreaTerm2;
     }
   }
   .isTerm2 {
     color: $term2Color;
     &.isSelected {
       color: $term2SelectedColor;
-      background-color: $selectedTextColor;
+      background-color: $selectedAreaTerm2;
     }
-  }
-  .isHovering {
-    opacity: $hoverOpacity;
+    &.isHovering {
+      background-color: $hoveredAreaTerm2;
+    }
+    &.isHovering.isSelected {
+      background-color: $hoveredAHoveredreaTerm2;
+    }
   }
 }
