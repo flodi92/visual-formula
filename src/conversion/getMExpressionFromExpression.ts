@@ -44,7 +44,7 @@ const getMExpressionFromExpression = (expression?: Expression): MExpression | un
     }
     else if (expression instanceof GProduct1D) {
         buffer = new MProduct();
-        buffer.mFactors = [expression.gSimpleFactor, expression.gComplexFactor].map(gFactor => getMExpressionFromExpression(gFactor));
+        buffer.mFactors = [expression.gComplexFactor, expression.gSimpleFactor].map(gFactor => getMExpressionFromExpression(gFactor));
     }
     else if (expression instanceof GProduct2D) {
         buffer = new MProduct();
