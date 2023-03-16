@@ -59,9 +59,9 @@ const DrawMExpression = ({ mExpression, interactionProps }: ({ mExpression?: MEx
             // @ts-ignore
             <mfrac {...props}>
                 {/* @ts-ignore */}
-                <mrow> <DrawMExpression mExpression={mExpression.mDivident} /> </mrow>
+                <mrow> <DrawMExpression mExpression={mExpression.mDivident} {...{ interactionProps }} /> </mrow>
                 {/* @ts-ignore */}
-                <mrow> <DrawMExpression mExpression={mExpression.mDivisor} /> </mrow>
+                <mrow> <DrawMExpression mExpression={mExpression.mDivisor} {...{ interactionProps }} /> </mrow>
                 {/* @ts-ignore */}
             </mfrac>
         );

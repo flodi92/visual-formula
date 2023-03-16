@@ -35,9 +35,9 @@ export const getInteractionClasses = (expression: Expression | undefined, props:
 
 
     const isSelected = ((_expression: Expression | undefined) => {
-        if (_expression?.id === undefined) return false;
-
+        if (props?.selectedID === undefined) return false;
         while (!!_expression) {
+            if (_expression?.id === undefined) return false;
             if (_expression.id === props?.selectedID) return true;
             _expression = _expression.parent;
         }
@@ -45,7 +45,7 @@ export const getInteractionClasses = (expression: Expression | undefined, props:
         return false;
     })(expression)
 
-    const isHovering = props?.hoveredID!==undefined && expression?.id === props?.hoveredID;
+    const isHovering = props?.hoveredID !== undefined && expression?.id === props?.hoveredID;
 
     const isTerm1 = expression?.isTerm1;
 
