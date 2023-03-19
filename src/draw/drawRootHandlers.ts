@@ -1,4 +1,3 @@
-import Expression from "../expression/Expression";
 import { GAbstractRoot, GExpression } from "../expression/gExpression";
 import getModification from "../modification/getModification";
 import Modification from "../modification/Modification";
@@ -7,12 +6,12 @@ import { expressionToArray, find } from "../utils/expression";
 import { MIN_DRAG_AND_DROP } from "./config";
 
 const drawRootHandlers = ({
-    root, selectedID, setSelectedID, dragValue, dragContainer, hoveredID, setHoveredID, onModify,
+    root, selectedIDs = [undefined, undefined], setSelectedIDs, dragValue, dragContainer, hoveredID, setHoveredID, onModify,
 }: {
     root?: GAbstractRoot,
 
-    selectedID: ID | undefined,
-    setSelectedID: (val: ID | undefined) => void,
+    selectedIDs?: [ID | undefined, ID | undefined],
+    setSelectedIDs: (val: [ID | undefined, ID | undefined]) => void,
 
     dragValue: ({ current: ID | undefined }),
     dragContainer: ({ current: { x?: number, y?: number } | undefined }),
@@ -23,19 +22,34 @@ const drawRootHandlers = ({
     onModify: (modification: Modification) => void,
 }) => {
 
-    const computeSelectedID = (newID: ID | undefined, oldID: ID | undefined): ID | undefined => {
-        if (newID === undefined) return undefined;
+    const computeSelectedID = (clickedID: ID | undefined, selectedIDs: [ID | undefined, ID | undefined])
+        : [ID | undefined, ID | undefined] => {
+        if (clickedID === undefined) return [undefined, undefined];
 
-        let buffer: Expression | undefined = root && find(newID, root);
+        const [id1, id2] = selectedIDs;
+        let buffer = root && find(clickedID, root);
 
-        while (!!buffer && oldID !== undefined) {
-            if (buffer.id === oldID) {
-                return buffer.parent?.id;
+        if (id1 === undefined && id2 === undefined) {
+            return [clickedID, undefined];
+        } else if (id1 !== undefined && id2 === undefined) {
+            while (!!buffer && id1 !== undefined) {
+                if (buffer.id === id1) {
+                    return [buffer.parent?.id, undefined];
+                }
+                buffer = buffer.parent;
             }
-            buffer = buffer.parent;
+            return [id1, clickedID];
+        } else if (id1 !== undefined && id2 !== undefined) {
+            while (!!buffer && id2 !== undefined) {
+                if (buffer.id === id2) {
+                    return [id1, buffer.parent?.id];
+                }
+                buffer = buffer.parent;
+            }
+            return [undefined, undefined];
         }
 
-        return newID
+        return [undefined, undefined];
     }
 
     const handleTryModify = ({ dropExpressions, dragExpressions, isDragSelected, isDropSelected, isDragResult, isDropResult, dragXY }: {
@@ -51,7 +65,7 @@ const drawRootHandlers = ({
     }) => {
         if (!root) return;
 
-        const selectedExpression = selectedID !== undefined ? find(selectedID, root) : undefined;
+        const selectedExpression = selectedIDs[0] !== undefined ? find(selectedIDs[0], root) : undefined;
 
         const modification = getModification({
             selectedExpression,
@@ -69,7 +83,7 @@ const drawRootHandlers = ({
 
     return {
         onClickID: (id: ID | undefined) => {
-            setSelectedID(computeSelectedID(id, selectedID));
+            setSelectedIDs(computeSelectedID(id, selectedIDs));
             dragValue.current = (undefined);
         },
 
@@ -110,7 +124,7 @@ const drawRootHandlers = ({
                     && withinRange({ x, y }, gExpression)
                 ) as GExpression[];
 
-            const selectedExpression = find(selectedID, root);
+            const selectedExpression = find(selectedIDs[0], root); // TODO use all ids;
 
             const isDragSelected = (selectedExpression instanceof GExpression)
                 && withinRange({ x: _x, y: _y }, selectedExpression);
@@ -136,7 +150,7 @@ const drawRootHandlers = ({
                     dragXY,
                 });
             } else {
-                setSelectedID(undefined);
+                setSelectedIDs([undefined, undefined]);
             }
 
             dragContainer.current = ({ x: undefined, y: undefined });
@@ -148,7 +162,7 @@ const drawRootHandlers = ({
         onSelectedMouseUp: () => { },
 
         onButtonModification: (type: ModificationType) =>
-            onModify({ type, id: selectedID })
+            onModify({ type, id: selectedIDs[0] }) // TODO all ids
     };
 }
 

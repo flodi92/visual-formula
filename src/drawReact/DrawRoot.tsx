@@ -57,27 +57,34 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
             }}
         />;
 
-        const selectedGExpression = props.selectedID !== undefined ? find(props.selectedID, this.gExpression) : undefined;
 
-        const selectedRect = (selectedGExpression instanceof GExpression) ?
-            <rect
-                className={`selected-area ${selectedGExpression?.isTerm1 === true ? 'isTerm1' : selectedGExpression?.isTerm1 === false ? 'isTerm2' : 'isTerm1'}`}
-                onMouseDown={e => {
-                    e.preventDefault();
-                    props?.onSelectedMouseDown && props.onSelectedMouseDown();
-                }}
-                onMouseUp={e => {
-                    e.preventDefault();
-                    props?.onSelectedMouseUp && props.onSelectedMouseUp();
-                }}
-                {...{
-                    x: selectedGExpression.x,
-                    y: selectedGExpression.y,
-                    width: selectedGExpression.width,
-                    height: selectedGExpression.height
-                }}
-            />
-            : <></>;
+
+        const selectedRects = props.selectedIDs?.map(
+            selectedID => {
+                const selectedGExpression = selectedID !== undefined ? find(selectedID, this.gExpression) : undefined;
+
+                return (selectedGExpression instanceof GExpression) ?
+                    <rect
+                        key={selectedID}
+                        className={`selected-area ${selectedGExpression?.isTerm1 === true ? 'isTerm1' : selectedGExpression?.isTerm1 === false ? 'isTerm2' : 'isTerm1'}`}
+                        onMouseDown={e => {
+                            e.preventDefault();
+                            props?.onSelectedMouseDown && props.onSelectedMouseDown();
+                        }}
+                        onMouseUp={e => {
+                            e.preventDefault();
+                            props?.onSelectedMouseUp && props.onSelectedMouseUp();
+                        }}
+                        {...{
+                            x: selectedGExpression.x,
+                            y: selectedGExpression.y,
+                            width: selectedGExpression.width,
+                            height: selectedGExpression.height
+                        }}
+                    />
+                    : <></>;
+            }
+        )
 
         const hoveredGExpression = props.hoveredID !== undefined ? find(props.hoveredID, this.gExpression) : undefined;
 
@@ -112,7 +119,7 @@ class _DrawRoot extends AbstractDrawRoot<ReactNode, any> {
                 ref={props.svgRef}
             >
                 {resultRect}
-                {selectedRect}
+                {selectedRects}
                 {hoveredRect}
                 {drawValues.map((drawValue, idx) => <g key={idx}>{drawValue.render(props)}</g>)}
                 {drawOperators.map((drawOperator, idx) => <g key={idx}>{drawOperator.render(props)}</g>)}
@@ -144,7 +151,7 @@ const DrawRoot = ({
     onBackward = () => { },
     svgRef,
     hoveredID,
-    selectedID,
+    selectedIDs,
 }: DrawRootProps & {
     root: GAbstractRoot,
     style: any,
@@ -166,7 +173,7 @@ const DrawRoot = ({
         onBackward,
         svgRef,
         hoveredID,
-        selectedID,
+        selectedIDs,
     })}</>;
 }
 

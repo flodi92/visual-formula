@@ -9,12 +9,12 @@ import { ID } from "../types";
 const useInteractionHandlers = (initialRoot: GAbstractRoot) => {
     const { current: expressionManager } = useRef<ExpressionManager>(new ExpressionManager())
 
-    const [{ root, selectedID, hoveredID }, setState]
-        = useState<{ root?: GAbstractRoot, selectedID?: ID | undefined, hoveredID?: ID | undefined }>({});
+    const [{ root, selectedIDs, hoveredID }, setState]
+        = useState<{ root?: GAbstractRoot, selectedIDs?: [ID | undefined, ID | undefined], hoveredID?: ID | undefined }>({});
 
-    const setRoot = (root?: GAbstractRoot) => setState({ root, selectedID, hoveredID })
-    const setSelectedID = (selectedID?: ID) => setState({ root, selectedID, hoveredID })
-    const setHoveredID = (hoveredID?: ID) => setState({ root, selectedID, hoveredID })
+    const setRoot = (root?: GAbstractRoot) => setState({ root, selectedIDs, hoveredID })
+    const setSelectedIDs = (selectedIDs?: [ID | undefined, ID | undefined]) => setState({ root, selectedIDs, hoveredID })
+    const setHoveredID = (hoveredID?: ID) => setState({ root, selectedIDs, hoveredID })
 
     const dragContainerRef = useRef<{ x?: number, y?: number }>();
     const dragValueRef = useRef<ID>();
@@ -51,7 +51,7 @@ const useInteractionHandlers = (initialRoot: GAbstractRoot) => {
 
     return {
         hoveredID,
-        selectedID,
+        selectedIDs,
         svgRef,
         root,
         onForward: handleForward,
@@ -59,8 +59,8 @@ const useInteractionHandlers = (initialRoot: GAbstractRoot) => {
         ...drawRootHandlers({
             root,
             onModify: handleModify,
-            selectedID,
-            setSelectedID,
+            selectedIDs,
+            setSelectedIDs,
             dragValue: dragValueRef,
             dragContainer: dragContainerRef,
             hoveredID,

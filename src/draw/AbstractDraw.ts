@@ -15,7 +15,7 @@ export interface InteractionProps {
     onLeaveID?: ((id: ID) => void),
     onMouseDownID?: ((id: ID) => void),
     hoveredID?: ID,
-    selectedID?: ID,
+    selectedIDs?: [ID | undefined, ID | undefined],
 }
 
 export default AbstractDraw;

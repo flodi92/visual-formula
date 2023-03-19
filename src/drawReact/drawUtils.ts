@@ -35,11 +35,20 @@ export const getInteractionClasses = (expression: Expression | undefined, props:
 
 
     const isSelected = ((_expression: Expression | undefined) => {
-        if (props?.selectedID === undefined) return false;
-        while (!!_expression) {
-            if (_expression?.id === undefined) return false;
-            if (_expression.id === props?.selectedID) return true;
-            _expression = _expression.parent;
+        if (!props?.selectedIDs) return false;
+
+        let __expression = _expression;
+        while (!!__expression) {
+            if (__expression?.id === undefined) break;
+            if (__expression.id === props.selectedIDs[0]) return true;
+            __expression = __expression.parent;
+        }
+
+        __expression = _expression;
+        while (!!__expression) {
+            if (__expression?.id === undefined) break;
+            if (__expression.id === props.selectedIDs[1]) return true;
+            __expression = __expression.parent;
         }
 
         return false;
