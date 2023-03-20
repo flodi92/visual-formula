@@ -1,3 +1,4 @@
+import Expression from "../expression/Expression";
 import { GAbstractRoot, GExpression } from "../expression/gExpression";
 import getModification from "../modification/getModification";
 import Modification from "../modification/Modification";
@@ -67,8 +68,13 @@ const drawRootHandlers = ({
 
         const selectedExpression = selectedIDs[0] !== undefined ? find(selectedIDs[0], root) : undefined;
 
+        const selectedExpressions = [
+            selectedIDs[0] !== undefined ? find(selectedIDs[0], root) : undefined,
+            selectedIDs[1] !== undefined ? find(selectedIDs[1], root) : undefined,
+        ] as [Expression | undefined, Expression | undefined];
+
         const modification = getModification({
-            selectedExpression,
+            selectedExpressions,
             dropExpressions,
             dragExpressions,
             isDragSelected,
