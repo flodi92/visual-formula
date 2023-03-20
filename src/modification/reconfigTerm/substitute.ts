@@ -37,8 +37,6 @@ export const substitute = (expression: GAbstractRoot, { id, ids }: Substitute | 
 
     });
 
-    autoAdaptEdges(replacedTerm)
-
     replace(id, expression, replacedTerm);
     return true;
   }
