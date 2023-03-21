@@ -1,9 +1,9 @@
 import Expression from "../expression/Expression";
-import { GExpression, GProduct2D, GSum } from "../expression/gExpression";
+import { GExpression, GSum } from "../expression/gExpression";
 import { XY } from "../types";
 import Modification from "./Modification";
 import { MoveDivisor, MoveFactor, MoveSubtrahend, MoveSummand } from "./modifyEquation";
-import { Distribute, SwapFactors1D, SwapFactors2D, SwapSummands } from "./modifyTerm";
+import { Distribute, ReverseDistribute, SwapFactors1D, SwapFactors2D, SwapSummands } from "./modifyTerm";
 import { Reverse } from "./reconfigTerm";
 
 const getModification = (
@@ -57,12 +57,28 @@ const getModification = (
         }
     }
 
-    if(selectedExpression1?.parent instanceof GProduct2D && isDragSelected && !dropExpressions?.length ) {
-        return {
-            type: "distribute",
-            id: selectedExpression1.parent.id,
-            xy: dragXY
-        } as Distribute
+    if (['gFactorX', 'gFactorY', 'gDivisor'].some(type => type === selectedExpression1?.typeInParent) && isDragSelected
+    ) {
+        if (selectedExpression1?.parent?.id !== undefined && !dropExpressions?.length) {
+            return {
+                type: "distribute",
+                id: selectedExpression1.parent.id,
+                xy: dragXY
+            } as Distribute
+        }
+
+        if (
+            selectedExpression1?.parent?.parent?.id !== undefined &&
+            ['gSummand', 'gMinuend', 'gSubtrahend'].some(type => type === selectedExpression1?.parent?.typeInParent) &&
+            dropExpressions?.some(gExpression => (
+                gExpression?.parent?.parent?.id === selectedExpression1?.parent?.parent?.id))
+        ) {
+            return {
+                type: "reverseDistribute",
+                id: selectedExpression1?.parent?.parent?.id,
+                xy: dragXY
+            } as ReverseDistribute
+        }
     }
 
     if (isDragSelected
