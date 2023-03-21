@@ -51,8 +51,8 @@ const modify = (gRoot: GAbstractRoot, modification: Modification, box: { width: 
     if (!buffer) return false;
 
     setUnsetIDs(gRoot);
-    
-    autoAdaptTransformation({ gRoot, ...box, padding: CONTAINER_PADDING }, positionForTransformation);
+
+    autoAdaptTransformation({ gRoot, modifiedID: modification.id, ...box, padding: CONTAINER_PADDING }, positionForTransformation);
 
     if (['substitute', 'swap1DAnd2D', 'swapXToY', 'distribute'].some(val => val === modification.type)) {
         const child = find(modification.id, gRoot);
