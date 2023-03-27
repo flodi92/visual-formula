@@ -102,7 +102,7 @@ const json1 = {
 export const Primary = Template.bind({});
 
 Primary.args = {
-  steps: 1,
+  steps: 0,
   modifications: [
     { type: 'moveDivisor', id: 48 } as MoveDivisor,
     { type: 'distribute', id: 57, xy: 'X' } as Distribute,
@@ -110,14 +110,13 @@ Primary.args = {
     { type: 'moveSubtrahend', id: 47 } as MoveSubtrahend,
   ],
   json: json1,
-  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
 };
 
 
 export const SolveAll = Template.bind({});
 
 SolveAll.args = {
-  steps: 1,
+  steps: 0,
   modifications: [
     { type: 'moveDivisor', id: 48, } as MoveDivisor,
     { type: 'distribute', id: 57, xy: 'X' } as Distribute,
@@ -133,7 +132,6 @@ SolveAll.args = {
     { type: 'moveFactor', id: 72, } as MoveFactor,
   ],
   json: json1,
-  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
 };
 
 // TODO ids might be wrong

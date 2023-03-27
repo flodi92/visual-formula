@@ -1,45 +1,21 @@
 import './button.css';
 
-import { autoAdaptEdges, autoAdaptTransformation, autoConfigSize, keepPositionForTransformation } from '../autoAdapt';
-import { getExpressionFromJSON, getMExpressionFromExpression } from '../conversion';
+import { getMExpressionFromExpression } from '../conversion';
 import { DrawMValue, DrawRoot, useInteractionHandlers } from '../drawReact';
-import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
 import Modification from '../modification/Modification';
-import { rotate } from '../modification/reconfigTerm';
 
 interface TestModificationArraysProps {
   steps: number,
-  rotations: 0 | 1 | 2 | 3,
-  layerTransformation: { x: number, y: number, scaleX: number, scaleY: number }
+  scale: number,
   modifications: Modification[],
-  isAutoAdaptEdges: boolean,
   json: object,
 }
 
 export const TestModificationArrays = ({
-  steps,
+  steps = 0,
+  scale = 20,
   modifications,
-  rotations,
-  isAutoAdaptEdges = true,
-  json,
-  layerTransformation }: TestModificationArraysProps) => {
-  const gEquation = getExpressionFromJSON(json) as GAbstractRoot;
-
-  if (!gEquation) return <>gEquation is undefined</>
-
-  for (let index = 0; index < rotations; index++)
-    rotate(gEquation);
-
-  gEquation.layerTransformation = layerTransformation;
-
-  const modifiedID = !!modifications?.length ? modifications[0]?.id : undefined;
-
-  const positionForTransformation
-    = keepPositionForTransformation({ gRoot: gEquation, modifiedID });
-
-  autoConfigSize(gEquation);
-
-  if (isAutoAdaptEdges) autoAdaptEdges(gEquation)
+  json }: TestModificationArraysProps) => {
 
   if (steps > modifications.length || steps < 0) return <h1>Overflow!!</h1>
 
@@ -47,12 +23,8 @@ export const TestModificationArrays = ({
   const modification = modifications[steps - 1];
   modifications = modifications.slice(0, steps);
 
-  autoAdaptTransformation(
-    { gRoot: gEquation, modifiedID, width: 500, height: 200, padding: 5 },
-    positionForTransformation
-  );
 
-  const { root, ...interactionProps } = useInteractionHandlers(gEquation, modifications);
+  const { root, ...interactionProps } = useInteractionHandlers(json, scale, modifications);
 
   if (!root) return <></>;
 
