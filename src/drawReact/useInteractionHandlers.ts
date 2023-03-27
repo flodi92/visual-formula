@@ -6,7 +6,7 @@ import ExpressionManager from "../expressionManager/ExpressionManager";
 import Modification from "../modification/Modification";
 import { ID } from "../types";
 
-const useInteractionHandlers = (initialRoot: GAbstractRoot) => {
+const useInteractionHandlers = (initialRoot: GAbstractRoot, initialModifications: Modification[] = []) => {
     const { current: expressionManager } = useRef<ExpressionManager>(new ExpressionManager())
 
     const [{ root, selectedIDs, hoveredID }, setState]
@@ -24,19 +24,28 @@ const useInteractionHandlers = (initialRoot: GAbstractRoot) => {
     useLayoutEffect(
         () => {
             expressionManager.init(cloneExpression(initialRoot, { isAdoptIDs: true }))
+            if (!!initialModifications?.length) { handleModify(...initialModifications); }
             setRoot(expressionManager.root);
             expressionManager.getBox = () => ({
                 width: svgRef.current?.width.animVal.value || 0,
                 height: svgRef.current?.height.animVal.value || 0
             });
+
         },
-        [JSON.stringify(initialRoot.json)]
+        [JSON.stringify(initialRoot.json) + JSON.stringify(initialModifications)]
     );
 
-    const handleModify = (modification: Modification) => {
-        const success = expressionManager.modify(modification);
+    const handleModify = (...modifications: Modification[]) => {
+        for (let idx = 0; idx < modifications.length; idx++) {
+            const success = expressionManager.modify(modifications[idx]);
+            if (!success) {
+                setRoot(expressionManager.root)
+                return false;
+            }
+        }
+
         setRoot(expressionManager.root)
-        return success;
+        return true;
     }
 
     const handleForward = () => {

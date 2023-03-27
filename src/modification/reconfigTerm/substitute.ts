@@ -8,13 +8,13 @@ import Modification from "../Modification";
 
 export interface Substitute extends Modification {
   type?: "substitute",
-  ids?: [ID, ID],
-  id?: undefined
+  id?: ID
+  ids?: undefined,
 }
 export interface MultiSubstitute extends Modification {
   type?: "substitute",
-  id?: ID
-  ids?: undefined,
+  ids?: [ID, ID],
+  id?: undefined
 }
 
 export const substitute = (expression: GAbstractRoot, { id, ids }: Substitute | MultiSubstitute): boolean => {

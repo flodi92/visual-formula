@@ -1,4 +1,4 @@
-import { autoAdaptEdges, autoAdaptTransformation, keepPositionForTransformation } from "../autoAdapt";
+import { autoAdaptEdges, autoAdaptTransformation, autoConfigSize, keepPositionForTransformation } from "../autoAdapt";
 import { CONTAINER_PADDING } from "../draw/config";
 import { GAbstractRoot } from "../expression/gExpression";
 import { find, setUnsetIDs } from "../utils/expression";
@@ -51,6 +51,10 @@ const modify = (gRoot: GAbstractRoot, modification: Modification, box: { width: 
     if (!buffer) return false;
 
     setUnsetIDs(gRoot);
+
+    if (["swap1DAnd2D"].some(val => val === modification.type)) {
+        autoConfigSize(gRoot);
+    }
 
     autoAdaptTransformation({ gRoot, modifiedID: modification.id, ...box, padding: CONTAINER_PADDING }, positionForTransformation);
 
