@@ -1,4 +1,7 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { MoveDivisor, MoveFactor, MoveSubtrahend, MoveSummand } from '../modification/modifyEquation';
+import { Distribute, ReverseDistribute, SwapSummands } from '../modification/modifyTerm';
+import { Reverse, Substitute, MultiSubstitute,  Swap1DAnd2D } from '../modification/reconfigTerm';
 import { TestModificationArrays } from './TestModificationArrays';
 
 export default {
@@ -100,81 +103,79 @@ export const Primary = Template.bind({});
 
 Primary.args = {
   steps: 1,
-  idModificationParameters: [
-    [48, 'moveDivisor'],
-    [61, 'distribute', { xy: 'X' }],
-    [47, 'moveSummand'],
-    [47, 'moveSubtrahend'],
+  modifications: [
+    { type: 'moveDivisor', id: 48 } as MoveDivisor,
+    { type: 'distribute', id: 57, xy: 'X' } as Distribute,
+    { type: 'moveSummand', id: 47 } as MoveSummand,
+    { type: 'moveSubtrahend', id: 47 } as MoveSubtrahend,
   ],
   json: json1,
   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
 };
+
 
 export const SolveAll = Template.bind({});
 
 SolveAll.args = {
   steps: 1,
-  idModificationParameters: [
-    [48, 'moveDivisor'],
-    [61, 'distribute', { xy: 'X' }],
-    [50, 'reverse', { xy: 'Y' }],
-    [53, 'reverse', { xy: 'Y' }],
-    [53, 'reverse', { xy: 'X' }],
-    [43, 'swapSummands', { indexA: 0, indexB: 1 }],
-    [64, 'reverse', { xy: 'Y' }],
-    [44, 'moveSummand'],
-    [67, 'reverse', { xy: 'X' }],
-    [64, 'moveSubtrahend'],
-    [67, 'substitute'],
-    [50, 'reverse', { xy: 'X' }],
-    [[62, 51], 'substitute'],
-    [[44, 61], 'swap1DAnd2D'],
-    [49, 'reverseDistribute', { xy: 'X' }],
-    [69, 'moveFactor'],
-
+  modifications: [
+    { type: 'moveDivisor', id: 48, } as MoveDivisor,
+    { type: 'distribute', id: 57, xy: 'X' } as Distribute,
+    { type: 'swapSummands', id: 43, indexA: 0, indexB: 1 } as SwapSummands,
+    { type: 'moveSummand', id: 44, } as MoveSummand,
+    { type: 'reverse', id: 69, xy: 'X' } as Reverse,
+    { type: 'moveSubtrahend', id: 62, } as MoveSubtrahend,
+    { type: 'substitute', id: 65 } as Substitute,
+    { type: 'reverse', id: 50, xy: 'X' } as Reverse,
+    { type: 'substitute', ids: [60, 51], } as MultiSubstitute,
+    { type: 'swap1DAnd2D', ids: [44, 57], } as Swap1DAnd2D,
+    { type: 'reverseDistribute', id: 49, xy: 'X' } as ReverseDistribute,
+    { type: 'moveFactor', id: 72, } as MoveFactor,
   ],
   json: json1,
   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
 };
 
-export const TryWrong = Template.bind({});
+// TODO ids might be wrong
 
-TryWrong.args = {
-  steps: 1,
-  idModificationParameters: [
-    [48, 'moveDivisor'],
-    [61, 'distribute', { xy: 'X' }],
-    [44, 'moveSummand']
-  ],
-  json: json1,
-  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
-};
+// export const TryWrong = Template.bind({});
 
-export const WithReverse = Template.bind({});
+// TryWrong.args = {
+//   steps: 1,
+//   idModificationParameters: [
+//     [48, 'moveDivisor'],
+//     [61, 'distribute', { xy: 'X' }],
+//     [44, 'moveSummand']
+//   ],
+//   json: json1,
+//   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+// };
 
-WithReverse.args = {
-  steps: 1,
-  idModificationParameters: [
-    [48, 'moveDivisor'],
-    [61, 'distribute', { xy: 'X' }],
-    [43, 'reverse', { xy: 'X', isRecursive: false }],
-    [44, 'moveSummand'],
-    [44, 'moveSubtrahend']
-  ],
-  json: json1,
-  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
-};
+// export const WithReverse = Template.bind({});
 
-export const WithReverseTryWrong = Template.bind({});
+// WithReverse.args = {
+//   steps: 1,
+//   idModificationParameters: [
+//     [48, 'moveDivisor'],
+//     [61, 'distribute', { xy: 'X' }],
+//     [43, 'reverse', { xy: 'X', isRecursive: false }],
+//     [44, 'moveSummand'],
+//     [44, 'moveSubtrahend']
+//   ],
+//   json: json1,
+//   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+// };
 
-WithReverseTryWrong.args = {
-  steps: 1,
-  idModificationParameters: [
-    [48, 'moveDivisor'],
-    [61, 'distribute', { xy: 'X' }],
-    [43, 'reverse', { xy: 'X', isRecursive: false }],
-    [47, 'moveSummand'],
-  ],
-  json: json1,
-  layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
-};
+// export const WithReverseTryWrong = Template.bind({});
+
+// WithReverseTryWrong.args = {
+//   steps: 1,
+//   idModificationParameters: [
+//     [48, 'moveDivisor'],
+//     [61, 'distribute', { xy: 'X' }],
+//     [43, 'reverse', { xy: 'X', isRecursive: false }],
+//     [47, 'moveSummand'],
+//   ],
+//   json: json1,
+//   layerTransformation: { x: 30, y: 30, scaleX: 20, scaleY: 20 }
+// };

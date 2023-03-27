@@ -1,36 +1,24 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import './button.css';
 
-import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
-import { DrawMValue, DrawRoot, useInteractionHandlers } from '../drawReact';
-import { getExpressionFromJSON, getMExpressionFromExpression } from '../conversion';
-import { ID } from '../types';
-import { moveSummand, moveSubtrahend, moveFactor, moveDivisor } from '../modification/modifyEquation';
-import { swapSummands, swapFactors1D, swapFactors2D, distribute, reverseDistribute } from '../modification/modifyTerm';
-import { reverse, rotate, substitute, swap1DAnd2D, swapXToY } from '../modification/reconfigTerm';
 import { autoAdaptEdges, autoAdaptTransformation, autoConfigSize, keepPositionForTransformation } from '../autoAdapt';
-import { setUnsetIDs } from '../utils/expression';
+import { getExpressionFromJSON, getMExpressionFromExpression } from '../conversion';
+import { DrawMValue, DrawRoot, useInteractionHandlers } from '../drawReact';
+import GAbstractRoot from '../expression/gExpression/GAbstractRoot';
+import Modification from '../modification/Modification';
+import { rotate } from '../modification/reconfigTerm';
 
 interface TestModificationArraysProps {
   steps: number,
   rotations: 0 | 1 | 2 | 3,
   layerTransformation: { x: number, y: number, scaleX: number, scaleY: number }
-  idModificationParameters:
-  [
-    ID | [ID, ID],
-    'moveSummand' | 'moveSubtrahend' | 'moveFactor' | 'moveDivisor' | 'swapSummands'
-    | 'swapFactors1D' | 'swapFactors2D' | 'distribute' | 'reverseDistribute'
-    | 'reverse' | 'rotate' | 'substitute' | 'swap1DAnd2D' | 'swapXToY',
-    any?
-  ][],
+  modifications: Modification[],
   isAutoAdaptEdges: boolean,
   json: object,
 }
 
 export const TestModificationArrays = ({
   steps,
-  idModificationParameters,
+  modifications,
   rotations,
   isAutoAdaptEdges = true,
   json,
@@ -44,8 +32,7 @@ export const TestModificationArrays = ({
 
   gEquation.layerTransformation = layerTransformation;
 
-  const [_modifiedID] = idModificationParameters[0];
-  const modifiedID = Array.isArray(_modifiedID) ? _modifiedID[0] : _modifiedID;
+  const modifiedID = !!modifications?.length ? modifications[0]?.id : undefined;
 
   const positionForTransformation
     = keepPositionForTransformation({ gRoot: gEquation, modifiedID });
@@ -54,71 +41,23 @@ export const TestModificationArrays = ({
 
   if (isAutoAdaptEdges) autoAdaptEdges(gEquation)
 
-  if (steps > idModificationParameters.length) return <h1>Overflow!!</h1>
+  if (steps > modifications.length || steps < 0) return <h1>Overflow!!</h1>
 
-  for (let i = 0; i < steps; i++) {
-    const [idOrIds, modification, parameters] = idModificationParameters[i];
 
-    const [id, ids] = Array.isArray(idOrIds) ? [undefined, idOrIds] : [idOrIds, undefined]
-    if (id !== undefined) {
-      switch (modification) {
-        case "moveSummand":
-          moveSummand(gEquation, { id }); break;
-        case "moveSubtrahend":
-          moveSubtrahend(gEquation, { id }); break;
-        case "moveFactor":
-          moveFactor(gEquation, { id }); break;
-        case "moveDivisor":
-          moveDivisor(gEquation, { id }); break;
-        case "swapSummands":
-          swapSummands(gEquation, { id, ...parameters }); break;
-        case "swapFactors1D":
-          swapFactors1D(gEquation, { id, ...parameters }); break;
-        case "swapFactors2D":
-          swapFactors2D(gEquation, { id, ...parameters }); break;
-        case "distribute":
-          distribute(gEquation, { id, ...parameters }); break;
-        case "reverseDistribute":
-          reverseDistribute(gEquation, { id, ...parameters }); break;
-        case "reverse":
-          reverse(gEquation, { id, ...parameters }); break;
-        case "rotate":
-          rotate(gEquation, { id, ...parameters }); break;
-        case "substitute":
-          substitute(gEquation, { id }); break;
-        case "swap1DAnd2D":
-          swap1DAnd2D(gEquation, { id }); break;
-        case "swapXToY":
-          swapXToY(gEquation, { id }); break;
-      }
-    } else if (ids !== undefined) {
-      switch (modification) {
-        case "swap1DAnd2D":
-          swap1DAnd2D(gEquation, { ids });
-          autoConfigSize(gEquation);
-          break;
-        case "substitute":
-          substitute(gEquation, { ids });
-          break;
-      }
-    }
-
-    setUnsetIDs(gEquation);
-  }
+  const modification = modifications[steps - 1];
+  modifications = modifications.slice(0, steps);
 
   autoAdaptTransformation(
     { gRoot: gEquation, modifiedID, width: 500, height: 200, padding: 5 },
     positionForTransformation
   );
 
-  const [id, modification, parameters] = steps > 0 ? idModificationParameters[steps - 1] : [];
-
-  const { root, ...interactionProps } = useInteractionHandlers(gEquation);
+  const { root, ...interactionProps } = useInteractionHandlers(gEquation, modifications);
 
   if (!root) return <></>;
 
   return <>
-    <div style={{ fontStyle: "italic", fontSize: "13px" }}>{JSON.stringify({ id, modification, parameters })}</div>
+    <div style={{ fontStyle: "italic", fontSize: "13px" }}>Id: {interactionProps.selectedIDs?.join(" ")}<br />{JSON.stringify(modification)}</div>
     <DrawRoot {...{ root, ...interactionProps }} style={{ width: '600px', height: '200px' }} />
     <DrawMValue mExpression={getMExpressionFromExpression(root)}{...interactionProps} />
     <div style={{ whiteSpace: "pre", fontSize: "10px" }}>{`${JSON.stringify(root.json, null, 2)}`}</div>
