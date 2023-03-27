@@ -1,12 +1,11 @@
 import { RefObject, useLayoutEffect, useRef, useState } from "react";
-import { cloneExpression } from "../conversion";
 import drawRootHandlers from "../draw/drawRootHandlers";
 import { GAbstractRoot } from "../expression/gExpression";
 import ExpressionManager from "../expressionManager/ExpressionManager";
 import Modification from "../modification/Modification";
 import { ID } from "../types";
 
-const useInteractionHandlers = (initialRoot: GAbstractRoot, initialModifications: Modification[] = []) => {
+const useInteractionHandlers = (initialRootJSON: object, scale: number, initialModifications: Modification[] = []) => {
     const { current: expressionManager } = useRef<ExpressionManager>(new ExpressionManager())
 
     const [{ root, selectedIDs, hoveredID }, setState]
@@ -23,29 +22,23 @@ const useInteractionHandlers = (initialRoot: GAbstractRoot, initialModifications
 
     useLayoutEffect(
         () => {
-            expressionManager.init(cloneExpression(initialRoot, { isAdoptIDs: true }))
-            if (!!initialModifications?.length) { handleModify(...initialModifications); }
-            setRoot(expressionManager.root);
             expressionManager.getBox = () => ({
-                width: svgRef.current?.width.animVal.value || 0,
-                height: svgRef.current?.height.animVal.value || 0
+                width: svgRef.current?.width.animVal.value || 500,
+                height: svgRef.current?.height.animVal.value || 500
             });
+            expressionManager.initFromJSON(initialRootJSON, scale);
+            if (!!initialModifications?.length) { expressionManager.modify(...initialModifications); }
 
+            setRoot(expressionManager.root);
         },
-        [JSON.stringify(initialRoot.json) + JSON.stringify(initialModifications)]
+        [initialRootJSON + JSON.stringify(initialModifications)]
     );
 
     const handleModify = (...modifications: Modification[]) => {
-        for (let idx = 0; idx < modifications.length; idx++) {
-            const success = expressionManager.modify(modifications[idx]);
-            if (!success) {
-                setRoot(expressionManager.root)
-                return false;
-            }
-        }
+        const success = expressionManager.modify(...modifications);
 
         setRoot(expressionManager.root)
-        return true;
+        return success;
     }
 
     const handleForward = () => {

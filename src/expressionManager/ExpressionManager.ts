@@ -1,3 +1,6 @@
+import { autoAdaptEdges, autoAdaptTransformation, autoConfigSize } from "../autoAdapt";
+import { getExpressionFromJSON } from "../conversion";
+import { CONTAINER_PADDING } from "../draw/config";
 import { GAbstractRoot } from "../expression/gExpression";
 import Modification from "../modification/Modification";
 import modify from "../modification/modify";
@@ -8,11 +11,15 @@ export default class ExpressionManager {
     private history: GAbstractRoot[] = [];
     private historyI: number = 0;
 
-    public modify(modification: Modification): boolean {
-        const buffer = this.root?.clone({ isAdoptIDs: true });
-        const success = !!buffer ? modify(buffer, modification, this.getBox()) : false;
-        if (success && !!buffer) { this.pushHistory(buffer); }
-        return success;
+    public modify(...modifications: Modification[]) {
+        for (let idx = 0; idx < modifications.length; idx++) {
+            const buffer = this.root?.clone({ isAdoptIDs: true });
+            const success = !!buffer ? modify(buffer, modifications[idx], this.getBox()) : false;
+            if (success && !!buffer) { this.pushHistory(buffer); }
+            if (!success) { return false; }
+        }
+
+        return true;
     }
 
     public forward() {
@@ -37,6 +44,20 @@ export default class ExpressionManager {
         value && this.pushHistory(value);
         this.history = !!value ? [value] : [];
         this.historyI = 0
+    }
+
+    public initFromJSON(json: object, scale: number) {
+        const root = getExpressionFromJSON(json) as GAbstractRoot;
+        if (!root) return;
+
+        root.layerTransformation = { scaleX: scale, scaleY: scale, x: 0, y: 0 }
+
+        autoConfigSize(root);
+
+        autoAdaptTransformation({ gRoot: root, padding: CONTAINER_PADDING, ...this.getBox() })
+        autoAdaptEdges(root);
+
+        this.init(root);
     }
 
     public get getBox(): () => { width: number; height: number; } {
