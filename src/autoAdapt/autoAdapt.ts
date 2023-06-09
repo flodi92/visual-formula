@@ -18,13 +18,13 @@ export interface AutoAdaption<ConfigurationT extends Configuration> {
     resetConfigurations(configurations: ConfigurationT[]): void;
 }
 
-export default function autoAdapt<AutoAdaptionT extends AutoAdaption<any>>(root: GExpression, adaption: AutoAdaptionT) {
+export default function autoAdapt<ConfigurationT extends Configuration, AutoAdaptionT extends AutoAdaption<ConfigurationT>>(root: GExpression, adaption: AutoAdaptionT) {
     adaption.root = root;
     adaption.resetAll()
 
     const adaptedIds = adaption.getAdaptedIds();
 
-    const _autoAdapt = (_adaptedIds: ID[], _configPath: Configuration[]): Configuration[] | undefined => {
+    const _autoAdapt = (_adaptedIds: ID[], _configPath: ConfigurationT[]): ConfigurationT[] | undefined => {
         if (!_adaptedIds.length) return _configPath;
 
         const [adaptedId, ...adaptedIds] = _adaptedIds;
@@ -37,7 +37,7 @@ export default function autoAdapt<AutoAdaptionT extends AutoAdaption<any>>(root:
             const configPath = _autoAdapt(adaptedIds, [..._configPath, currConfig]);
             adaption.resetConfiguration(currConfig);
             return configPath
-        }).filter(configPath => !!configPath) as Configuration[][];
+        }).filter(configPath => !!configPath) as ConfigurationT[][];
 
         if (!configPaths.length) return undefined;
 
