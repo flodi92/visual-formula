@@ -34,8 +34,8 @@ export default function autoAdapt<AutoAdaptionT extends AutoAdaption<any>>(root:
 
         const configPaths = possibleConfigs.map(currConfig => {
             adaption.applyConfiguration(currConfig);
-            const configPath = _autoAdapt(adaptedIds, [..._configPath, currConfig])
-            !!configPath && adaption.resetConfigurations(configPath);
+            const configPath = _autoAdapt(adaptedIds, [..._configPath, currConfig]);
+            adaption.resetConfiguration(currConfig);
             return configPath
         }).filter(configPath => !!configPath) as Configuration[][];
 
@@ -47,11 +47,10 @@ export default function autoAdapt<AutoAdaptionT extends AutoAdaption<any>>(root:
                 badPreferenceSum: configPath.reduce((val, { badPreference }) => val + badPreference, 0)
             }))
             .reduce((prev, curr) => curr.badPreferenceSum < prev.badPreferenceSum ? curr : prev);
-
-        adaption.applyConfigurations(bestConfigPath)
-
+            
         return bestConfigPath;
     }
-
-    _autoAdapt(adaptedIds, []);
+        
+        const bestConfigPath = _autoAdapt(adaptedIds, []);
+        bestConfigPath && adaption.applyConfigurations(bestConfigPath)
 }

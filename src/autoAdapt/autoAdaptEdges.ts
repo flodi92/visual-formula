@@ -1,12 +1,12 @@
 import { cloneExpression } from "../conversion";
 import Expression from "../expression/Expression";
 import {
-    GAbstractDirectedExpression, GAbstractValue, GExpression, GProduct2D, GSimpleValue, GValue
+    GAbstractDirectedExpression, GAbstractValue, GExpression, GProduct1D, GProduct2D, GQuotient1D, GQuotient2D, GSimpleValue, GValue
 } from "../expression/gExpression";
 import { Direction, ID, XDirection, YDirection } from "../types";
 import { expressionToArray, find } from "../utils/expression";
-import { directionsToNumber, directionToNumber, directionToXY, oppositeDirection } from "../utils/general";
-import { getGAbstractValueIds } from "../utils/gExpression";
+import { directionToXY, oppositeDirection } from "../utils/general";
+import { getGSimpleValues, getGValues } from "../utils/gExpression";
 import getPossibleEdges from "../utils/gExpression/getPossibleEdges";
 import autoAdapt, { AutoAdaption, Configuration } from "./autoAdapt";
 
@@ -38,10 +38,13 @@ class AutoEdgeAdaption implements AutoAdaption<EdgesConfiguration> {
         this._root = value;
 
         if (!value) return;
-        this._referenceRoot = cloneExpression(value) as GExpression;
+        this._referenceRoot = cloneExpression(value, { isAdoptIDs: true }) as GExpression;
     }
     getAdaptedIds(): ID[] {
-        return this.root ? getGAbstractValueIds(this.root) : [];
+        return this.root ? ([...getGValues(this.root), ...getGSimpleValues(this.root)]
+            .map(expression => expression.id))
+            .filter(id => id !== undefined) as ID[]
+            : [];
     }
     getPossibleConfigurations(id: ID) {
         let buffer: EdgesConfiguration[] = []
@@ -73,7 +76,7 @@ class AutoEdgeAdaption implements AutoAdaption<EdgesConfiguration> {
                 possibleYdirections : possibleXdirections;
 
             possibleDirections.forEach(edge => {
-                const badPreference = 1; // TODO
+                const badPreference = this.getGSimpleValueBadPreference(expression, edge);
                 const config = new OneEdgeConfiguration(id, badPreference, edge);
                 buffer.push(config)
             }
@@ -116,43 +119,42 @@ class AutoEdgeAdaption implements AutoAdaption<EdgesConfiguration> {
         configurations.map(configuration => this.resetConfiguration(configuration));
     };
 
+    private getGSimpleValueBadPreference(expression: GSimpleValue, edge: Direction) {
+        const { parent } = expression;
+        const complexValue = (parent instanceof GProduct1D) ? parent.gComplexFactor : (parent instanceof GQuotient1D) ? parent.gComplexDivident : undefined;
+
+        return (complexValue instanceof GValue && (complexValue.xEdge === edge || complexValue.yEdge === edge)) ? 2 : 3;
+    }
+
     private getGValueBadPreference(expression: GValue, xEdge: YDirection, yEdge: XDirection) {
         const { parent, id } = expression;
 
         const reference = ((id !== undefined && !!this._referenceRoot)
             ? find(id, this._referenceRoot) : undefined) as GValue | undefined;
 
-        const [_xEdge, _yEdge] = [reference?.xEdge, reference?.yEdge]
+        const [_xEdge, _yEdge] = [reference?.xEdge, reference?.yEdge];
 
         if (!!_xEdge && !!_yEdge && xEdge === _xEdge && yEdge === _yEdge) {
             return 0;
         }
 
-        if (parent instanceof GAbstractDirectedExpression && !!parent.startDirection) {
+        let isEdgeToInside = false;
 
-            // assure same badPreferences if relative constelation is the same
-
-            const startDirectionNumber = <number>directionToNumber(parent.startDirection);
-            const edgesNumber = <number>directionsToNumber(yEdge, xEdge);
-
-            return (edgesNumber - startDirectionNumber + 4) % 4;
-        } else if (parent instanceof GProduct2D && !!parent.yEdge && !!parent.xEdge) {
-
-            const isEdgeToInside =
-                (expression.typeInParent === "gFactorX" && yEdge === oppositeDirection(parent.yEdge))
+        if (parent instanceof GProduct2D && !!parent.yEdge && !!parent.xEdge) {
+            isEdgeToInside =
+                (expression.typeInParent === "gFactorX" && xEdge === oppositeDirection(parent.xEdge))
                 ||
-                (expression.typeInParent === "gFactorY" && xEdge === oppositeDirection(parent.xEdge))
+                (expression.typeInParent === "gFactorY" && yEdge === oppositeDirection(parent.yEdge))
                 ;
-
-            const productEdgesNumber = <number>directionsToNumber(parent.yEdge, parent.xEdge);
-            const edgesNumber = <number>directionsToNumber(yEdge, xEdge);
-
-            const discriminationValue = (productEdgesNumber - edgesNumber + 4) % 4;
-
-            return discriminationValue + (isEdgeToInside ? 0 : 5);
+        } else if (parent instanceof GQuotient2D && expression.typeInParent === "gDivisor") {
+            isEdgeToInside =
+                (directionToXY(parent.divisorEdge) === 'X' && xEdge === oppositeDirection(parent.divisorEdge))
+                ||
+                (directionToXY(parent.divisorEdge) === 'Y' && yEdge === oppositeDirection(parent.divisorEdge))
+                ;
         }
 
-        return 2;
+        return isEdgeToInside ? 2 : 3;
     }
 }
 

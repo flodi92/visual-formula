@@ -1,12 +1,11 @@
 import { autoAdaptEdges, autoAdaptTransformation, autoConfigSize, keepPositionForTransformation } from "../autoAdapt";
 import { CONTAINER_PADDING } from "../draw/config";
 import { GAbstractRoot } from "../expression/gExpression";
-import { find, setUnsetIDs } from "../utils/expression";
-import { removeEdges } from "../utils/gExpression";
+import { setUnsetIDs } from "../utils/expression";
 import Modification from "./Modification";
-import { MoveDivisor, moveDivisor, moveFactor, MoveFactor, moveSubtrahend, MoveSubtrahend, MoveSummand, moveSummand } from "./modifyEquation";
-import { distribute, Distribute, reverseDistribute, ReverseDistribute, swapFactors1D, SwapFactors1D, swapFactors2D, SwapFactors2D, SwapSummands, swapSummands } from "./modifyTerm";
-import { reverse, Reverse, rotate, Rotate, substitute, Substitute, swap1DAnd2D, Swap1DAnd2D, swapXToY, SwapXToY } from "./reconfigTerm";
+import { MoveDivisor, MoveFactor, MoveSubtrahend, MoveSummand, moveDivisor, moveFactor, moveSubtrahend, moveSummand } from "./modifyEquation";
+import { Distribute, ReverseDistribute, SwapFactors1D, SwapFactors2D, SwapSummands, distribute, reverseDistribute, swapFactors1D, swapFactors2D, swapSummands } from "./modifyTerm";
+import { Reverse, Rotate, Substitute, Swap1DAnd2D, SwapXToY, reverse, rotate, substitute, swap1DAnd2D, swapXToY } from "./reconfigTerm";
 
 const modify = (gRoot: GAbstractRoot, modification: Modification, box: { width: number, height: number }): boolean => {
 
@@ -58,9 +57,18 @@ const modify = (gRoot: GAbstractRoot, modification: Modification, box: { width: 
 
     autoAdaptTransformation({ gRoot, modifiedID: modification.id, ...box, padding: CONTAINER_PADDING }, positionForTransformation);
 
-    if (['substitute', 'swap1DAnd2D', 'swapXToY', 'distribute'].some(val => val === modification.type)) {
-        const child = find(modification.id, gRoot);
-        removeEdges(child);
+    if ([
+        "swapSummands",
+        "swapFactors2D",
+        "swapFactors1D",
+        "distribute",
+        "reverseDistribute",
+        "reverse",
+        "rotate",
+        "substitute",
+        "swap1DAnd2D",
+        "swapXToY",
+    ].some(val => val === modification.type)) {
         autoAdaptEdges(gRoot);
     }
 
