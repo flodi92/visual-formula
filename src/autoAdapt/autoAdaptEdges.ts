@@ -170,7 +170,7 @@ const resetEdges = (expression: Expression) => {
 }
 
 export default function autoAdaptEdges(root: GExpression) {
-    return autoAdapt<AutoEdgeAdaption>(root, new AutoEdgeAdaption())
+    return autoAdapt<EdgesConfiguration, AutoEdgeAdaption>(root, new AutoEdgeAdaption())
 }
 
 
