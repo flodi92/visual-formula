@@ -1,0 +1,5 @@
+allowBuilds:
+  core-js: false
+  core-js-pure: false
+patchedDependencies:
+  '@storybook/preset-create-react-app@4.1.2': patches/@storybook__preset-create-react-app@4.1.2.patch
