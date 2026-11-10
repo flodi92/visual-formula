@@ -1,0 +1,18 @@
+diff --git a/dist/helpers/getReactScriptsPath.js b/dist/helpers/getReactScriptsPath.js
+index 62787215e0b916180586e0e8dde11ed7f53d6992..0883ab2c74f61ee203d832b9f2e13d6f992a6e67 100644
+--- a/dist/helpers/getReactScriptsPath.js
++++ b/dist/helpers/getReactScriptsPath.js
+@@ -31,8 +31,11 @@ var getReactScriptsPath = function () {
+          */
+         try {
+             var resolvedBinPath = fs_1.realpathSync(scriptsBinPath);
+-            var scriptsPath = path_1.join(resolvedBinPath, '..', '..');
+-            return scriptsPath;
++            // pnpm creates shell shims instead of symlinks, so only trust a resolved path inside the package
++            if (path_1.basename(path_1.dirname(resolvedBinPath)) === 'bin') {
++                var scriptsPath = path_1.join(resolvedBinPath, '..', '..');
++                return scriptsPath;
++            }
+         }
+         catch (e) {
+             // NOOP
