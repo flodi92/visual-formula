@@ -17,14 +17,14 @@ export const TestModificationArrays = ({
   modifications,
   json }: TestModificationArraysProps) => {
 
-  if (steps > modifications.length || steps < 0) return <h1>Overflow!!</h1>
-
+  const isOverflow = steps > modifications.length || steps < 0;
 
   const modification = modifications[steps - 1];
-  modifications = modifications.slice(0, steps);
+  const slicedModifications = modifications.slice(0, Math.max(0, steps));
 
+  const { root, ...interactionProps } = useInteractionHandlers(json, scale, slicedModifications);
 
-  const { root, ...interactionProps } = useInteractionHandlers(json, scale, modifications);
+  if (isOverflow) return <h1>Overflow!!</h1>;
 
   if (!root) return <></>;
 
